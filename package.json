@@ -1,0 +1,53 @@
+{
+  "name": "fox-angular-gulp-workflow",
+  "version": "0.1.0",
+  "description": "A workflow for Angular made with Gulp",
+  "scripts": {
+    "install": "bower install",
+    "test": "gulp testem"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Foxandxss/fox-angular-gulp-workflow.git"
+  },
+  "author": {
+    "name": "Jesus Rodriguez"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Foxandxss/fox-angular-gulp-workflow/issues"
+  },
+  "homepage": "https://github.com/Foxandxss/fox-angular-gulp-workflow",
+  "devDependencies": {
+    "connect-history-api-fallback": "0.0.5",
+    "del": "^0.1.3",
+    "event-stream": "^3.1.7",
+    "gulp": "^3.8.8",
+    "gulp-angular-templatecache": "^1.3.0",
+    "gulp-concat": "^2.3.4",
+    "gulp-connect": "^2.0.6",
+    "gulp-if": "^1.2.4",
+    "gulp-jshint": "^1.8.5",
+    "gulp-load-plugins": "^0.7.0",
+    "gulp-minify-css": "^0.3.8",
+    "gulp-minify-html": "^0.1.4",
+    "gulp-ng-annotate": "^0.3.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-rev": "^2.0.1",
+    "gulp-sass": "^0.7.3",
+    "gulp-sourcemaps": "^1.2.4",
+    "gulp-template": "^1.1.1",
+    "gulp-testem": "0.0.1",
+    "gulp-uglify": "^1.0.1",
+    "gulp-util": "^3.0.1",
+    "jshint-stylish": "^1.0.0",
+    "proxy-middleware": "^0.6.0"
+  },
+  "readme": "# Fox's Angular.js Gulp Workflow\n\nHere is *yet another angular boilerplate* opinionated in how I work with Angular. I made it for myself but if you find that my opinions are good for you, feel free to use it and collaborate with issues or pull requests.\n\nLet's start with the `app` folder:\n\n![App folder](http://i.imgur.com/Fppy0Ge.png)\n\nIn the `app` folder you can find 3 subdirectories:\n\n* **images**: You can put there the images you need, nothing special here.\n* **scss**: There is a `main.scss` file there were you import all your other `.scss` files.\n* **js**: There is where you put your javascript code. It comes with a `app.js` file with the main `app` module created.\n\nYou can also find:\n\n**index.html**: It is only the basic skeleton with the angular application loaded. It is a `lodash template` so we can have cache-busting on production.\n\n## Structuring your Angular app in the `js` folder.\n\nWe split our application per `features`, so if we have an application to manage `users`, we can decide that a page to manage those `users` is a feature and also the `settings` page is another feature. Also we need some authentication services and stuff like that. That is not a feature of our app, but something **common** to the entire app. How can we organize that?\n\n![App structure](http://i.imgur.com/RtlhXuE.png)\n\nLooking at the image, we can see that `features` folder where we put all our features. We create a subdirectory with the feature name and then inside a `javascript` file to code that feature and also a `.tpl.html` file for its template. the `.tpl.html` is my convention, you can change that in the `gulpfile.js`.\n\nIf a feature gets big enough, you can create multiple `.js` files, that is not a problem.\n\nFor **common** stuff, we created a `common` folder where we can put all our `services` and `directives`. Notice how I put the `foo` directive template inside the same folder.\n\nThe workflow won't force you to use this structure, the only forced convention here is to put your templates under `/js` and not under `/templates` or something like that. Also the extension being `*.tpl.html` is needed (again, easy to change in the `gulpfile.js`). Leaving that aside, you're free to code your app in the way you like.\n\n```javascript\nappTemplates:     'app/js/**/*.tpl.html',\n```\n\n## Testing your app\n\nThe only convention here is to name your tests like: `*_spec.js`. Leaving that aside, you can structure it the way you like.\n\nYou can do it per features like our main code or organize them per type (`controllers`, `directives`, etc.).\n\nAs a test runner we are using `test'em`, `jasmine 2` as the framework of choice and `Chrome` to run the tests. You can change `jasmine` and `Chrome` in `testem.json`.\n\n```json\n{\n  \"framework\" : \"jasmine2\",\n  \"launch_in_dev\" : [\"Chrome\"],\n  \"src_files\" : [\n    \"tmp/js/app.js\",\n    \"vendor/angular-mocks/angular-mocks.js\",\n    \"spec/**/*_spec.js\"\n  ]\n}\n```\n\n## Talking with the backend\n\nOur angular app will run on the port `5000` and by default all the requests to the backend are going to use a `proxy` to the port `8080`. How does that work?\n\nImagine you have a `Rails` backend (the workflow is backend agnostic) running on port `8080` and it serves some `users` information at `/api/users`. Since the `Rails` app runs on port `8080` and our `Angular` app runs on the port `5000` we would need to do something like:\n\n```javascript\n$http.get('localhost:8080/api/users');\n```\nAnd then activate `CORS` in our `Rails` app. That is not needed here, we can safely do:\n\n```javascript\n$http.get('/api/users');\n```\nWithout any need of `CORS`. Thanks to our `proxy`, our `Angular` app will think that the backend is running in the same domain and port so if we deploy both application together (like putting our `angular` app into `Rails'` `/public` directory) we don't need to change anything in our code.\n\n```javascript\ngulp.task('webserver', ['indexHtml-dev', 'images-dev'], function() {\n  plugins.connect.server({\n    root: paths.tmpFolder,\n    port: 5000,\n    livereload: true,\n    middleware: function(connect, o) {\n        return [ (function() {\n            var url = require('url');\n            var proxy = require('proxy-middleware');\n            var options = url.parse('http://localhost:8080/api');\n            options.route = '/api';\n            return proxy(options);\n        })(), historyApiFallback ];\n    }\n  });\n});\n```\n\nThere you change our app port and also the port where our backend is running. Also notice that the requests that goes through the `proxy` are the ones that starts with `/api`.\n\n## The gulp tasks\n\nTo run our tasks and watch for file changes, we just need to run:\n\n```\n$ gulp\n```\n\nThat will generate a `tmp` folder with all our `javascript` files concatenated in one central place. That free us of having to create a `<script>` tag for every javascript we create. Also, our `templates` are going to be cached in `$templateCache` and also appended to the main `app.js` file.\n\nAlso that will compile our `scss`, move our images and compile our `index.hbs`, run the webserver and watch for file changes.\n\nAll our `javascript` are going to be linted by `jshint`.\n\nTo run our tests, having that `gulp` watching our files for changes, we can do in another terminal:\n\n```\n$ gulp testem\n```\nThat will fire `test'em` which will grab all our changes and re-run the tests.\n\n## Compiling your project for production\n\nWhen you finish your project and you need to generate the final result with all your assets minified and your Angular annotated (for minification purposes), you can do:\n\n```\n$ gulp production\n```\n\nThat will generate a `dist` folder and you can safely move its content to a backend `/public` folder or serve it as is.\n\n## Managing vendors\n\nFor the vendors this workflow uses `bower`.\n\nAll the bower packages are installed directly on `/vendor` so if you want to install `angular-toastr` for example, you only need to:\n\n```\n$ bower install angular-toastr --save\n```\n\nThat will install `angular-toastr` on `/vendor` and also save it on the `bower.json`.\n\nThen you will need to tell `Gulp` that you want to load it, for that you need to open `/vendor/manifest.js` and modify it like:\n\n```javascript\nexports.javascript = [\n  'vendor/angular/angular.js',\n  'vendor/lodash/dist/lodash.js',\n  'vendor/angular-toastr/dist/angular-toastr.js'\n];\n```\n\nThere is also a `css` array:\n\n```javascript\nexports.css = [\n\n];\n```\n\nBy default this project comes with `angular` and `lodash` already loaded for you.\n\n**NOTE**: `npm install` will also do a `bower install`.\n\n## Known Issues\n\nSometimes when adding new files (and the watch is running) you can see errors regarding sourcemaps. A restart of gulp fix that.\n\n## TODO\n\n* Proxying for sockets\n* If you add new stuff to `/vendor/manifest.js` you will need to restart `Gulp`.\n* Fix possible issues, this need to be used on real projects yet :P\n* Anything you want?\n",
+  "readmeFilename": "README.md",
+  "_id": "fox-angular-gulp-workflow@0.1.0",
+  "_shasum": "d7fe991dd3e9184825dd2b4c3f9e8b63397c3114",
+  "_resolved": "git://github.com/Foxandxss/fox-angular-gulp-workflow#8c96519dde8eeffaeaa207da9b984e0eb09505b2",
+  "_from": "git://github.com/Foxandxss/fox-angular-gulp-workflow",
+  "_fromGithub": true
+}
