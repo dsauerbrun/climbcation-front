@@ -1,0 +1,12 @@
+// Place all the styles related to the locations controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.info-section:nth-of-type(odd){
+	background-color: #f9f9f9;
+}
+.info-section{
+	padding: 1em 0;
+}
+#map-canvas{
+	height: 25em;
+}

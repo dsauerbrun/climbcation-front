@@ -1,0 +1,21 @@
+.icon {
+	height: 32px;
+	width: 32px;
+}
+.icon.button{
+	height:20px;
+}
+.icon-row{
+	margin: 1em 0;
+}
+.filter-button{
+}
+.location-row:nth-of-type(odd){
+	background-color: #f9f9f9;
+}
+.location-row{
+	padding: 1em 0;
+}
+.jumbotron.homepage{
+	margin-bottom: 0px;
+}

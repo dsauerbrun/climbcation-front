@@ -1,0 +1,32 @@
+<div class="row location-row">
+		<div class="col-md-1">
+		</div>
+		<div class="col-md-2">
+			<a ng-href="/location/{{ locationData['slug'] }}">
+				<img ng-src="{{ locationData['home_thumb'] }}" class ='img-circle' height='192' width='192'>	
+			</a>
+		</div>
+		<div class="col-md-8">
+			<h3>{{ locationData['name'] }}, {{ locationData['country'] }} <small>{{ locationData['price_range_floor_cents']}}  - {{ locationData['price_range_ceiling_cents'] }} / day</small></h3>
+			<div class="icon-row row">
+				<h4 class="col-md-4">Why Should I go?</h4>
+				<div class="col-md-2">
+					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon'>	
+				</div>
+				<h4 class="col-md-4">Where am I going to sleep?</h4>
+				<div class="col-md-2">
+					<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" class='icon'>	
+				</div>
+			</div>
+			<div class="icon-row row">
+				<h4 class="col-md-4">When Should I go?</h4>
+				<div class="col-md-2">
+					<img ng-repeat="season in locationData['seasons']" ng-src="{{ season['url'] }}" class='icon'>	
+				</div>
+				<h4 class="col-md-4">How hard should I climb?</h4>
+				<div class="col-md-2">
+					<h4>{{ locationData['grade'] }}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
