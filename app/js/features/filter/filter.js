@@ -129,18 +129,3 @@ function numberOfButtonGroupActive(buttonGroup){
 	});
 	return count;
 }
-function toggleButtonActive(clickedButton){
-	if(clickedButton.hasClass('active')){
-		clickedButton.removeClass('active');
-	}
-	else{
-		clickedButton.addClass('active');
-	}
-
-}
-
-function resetButtonGroup(buttonGroup){
-	buttonGroup.children('button').each(function(){
-		$(this).removeClass('active');
-	});
-}

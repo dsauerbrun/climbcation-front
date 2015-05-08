@@ -32,12 +32,16 @@
       </div>
     </nav>
 
-	<div ng-controller='StoreController as store'>
+	<div ng-controller='ScopeParentTestController'>
 		{{ store.products["first"] }}
 		hellp
+		<div ng-controller="ScopeTestController">
+
+		</div>
 	</div>
+	<section ng-controller='LocationsController'>
 	<filter></filter>
-	<section ng-controller='LocationsController as locations'>
+		<button ng-click='LocationsGetter.getLocations()'>hello</button>
 		<location ng-repeat="locationData in locationData"></location>
 	</section>
   <script type="text/javascript" src="<%= js %>"></script>
