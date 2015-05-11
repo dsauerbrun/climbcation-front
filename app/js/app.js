@@ -1,19 +1,34 @@
-var home = angular.module('app', ['filter-directives','location-list-item-directives']);
-home.controller('ScopeParentTestController', function($scope,$http){
-	var store = this;
-	store.products = [];
-	store.test = 'iiii';
-	$scope.tester= 'erere';
-
-	$http.get('http://localhost:3000/angtest').success(function(data){
-		store.products = data;
+var home = angular.module('app', ['filter-directives','location-list-item-directives','ngRoute']);
+home.config(['$routeProvider', function($routeProvider) {
+	$routeProvider
+	.when('/home', {
+		templateUrl: 'views/home/home.tpl.html',
+	})
+	.when('/location/:slug', {
+		templateUrl: 'views/location/location.tpl.html',
+		controller: 'LocationPageController',
+	})
+	.otherwise({
+		redirectTo: '/home'
 	});
-});
-home.controller('ScopeTestController', function($scope,$http){
-	console.log($scope.tester);
+
+}]);
+home.controller('MapController',function($scope){
+	var map =new GMaps({
+		div: '#map-canvas',
+		lat: $scope.latitude,
+		lng: $scope.longitude,
+		zoom: 8
+	});
 
 });
-
+home.controller('LocationPageController',function($scope){
+	console.log('hello');
+	$scope.longitude = -119.5677;
+	$scope.latitude = 37.8499;
+	$scope.name = 'hello';
+	$scope.mapLocations = {"4":{"lat":"37.8499","lng":"-119.5677","slug":"yosemite","name":"Yosemite"}};
+});
 home.controller('LocationsController',function($scope, LocationsGetter){
 	var locations = this;
 	$scope.locationData = [];

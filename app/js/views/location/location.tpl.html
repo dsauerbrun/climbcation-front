@@ -1,0 +1,148 @@
+<section >
+<div class="container-fluid" ng-controller='MapController'>
+	<style type="text/css">
+		html, body, #map-canvas { height: 25em; margin: 0; padding: 0;}
+	</style>
+	<script type="text/javascript">
+		
+	</script>
+
+	<div class="jumbotron">
+		<div id="map-canvas">
+
+		</div>
+	</div>
+
+</div>
+
+<!-- INFO SECTION
+<div class="container">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-4">
+					<%= image_tag(@location.home_thumb, :class => 'img-circle', size: '192x192') %>
+				</div>
+				<div class="col-md-8">
+					<h1><%= @location.name << ', '<< @location.country %></h1>
+					<div class="row">
+						<div class="col-md-3">
+							<h5>When Should I go?</h5>
+							<% @location.seasons.each do |season| %>
+								<%= image_tag(season.icon, :class => 'icon') %>
+							<% end %>
+						</div>
+						<div class="col-md-3">
+							<h5>Where can I stay?</h5>
+							<% @location.accommodations.each do |accommodation| %>
+								<%= image_tag(accommodation.icon, :class => 'icon') %>
+							<% end %>
+						</div>
+						<div class="col-md-3">
+							<h5>What should I climb?</h5>
+							<% @location.climbing_types.each do |climbing_type| %>
+								<%= image_tag(climbing_type.icon, :class => 'icon') %>
+							<% end %>
+						</div>
+						<div class="col-md-3">
+							<div class="">I should climb around <mark><strong><%= @location.grade.us %></strong></mark> to get the most out of my trip</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">Table of Contents</div>
+					<ul class="list-group">
+						<% @location.info_sections.each do |section| %>
+							<li class="list-group-item">
+								<%= link_to '#'<<URI.escape(section.title) do %>
+									<%= section.title %>
+								<% end %>
+							</li>
+						<% end %>
+							<li class="list-group-item">
+								<%= link_to '#nearby' do %>
+									Nearby Destinations
+								<% end %>
+							</li>
+					</ul>
+			</div>
+		</div>
+	</div>
+</div>
+-->
+<div class="container">
+
+	<!-- SECTION SPOT
+		<div id="<%= URI.escape(@section.title) %>" class="container info-section">
+			<div class="row" >
+				<div class="col-md-12">
+					<h3><u><%= @section.title %></u></h3>
+					<p class="lead">
+						<%= @section.body %>
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<% count = 0 %>
+				<% is_row_closed = 1  %>
+				<% if !@section.metadata.nil? %>
+					<% @section.metadata.each do |key,value|  %>
+						<% if count%2 == 0 and is_row_closed == 1 %>
+							<div class="row col-md-12">
+							<% is_row_closed = 0 %>
+						<% end %>
+						<div class="col-md-6">
+							<h5><%= key %></h5>
+							<ul class="list-group">
+							<% value.each do |value| %>
+								<li class="list-group-item"><%= value %></li>	
+							<% end %>
+							</ul>
+						</div>
+
+						<% if count%2 == 1 and is_row_closed == 0 and count != 0 %>
+							</div>
+							<% is_row_closed = 1 %>
+						<% end %>
+
+						<% count += 1 %>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+	-->
+
+	<!-- NEARBY LOCATIONS SECTION
+	<div id="nearby" class="container info-section">
+		<div class="row" >
+			<div class="col-md-12">
+				<h3><u>Nearby Destinations</u></h3>
+				<p class="lead">
+					Don't end your trip in <%= @location.name %>. There's plenty to see nearby
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="row col-md-12">
+				<div class="col-md-12">
+					<h5>Destinations within 200 miles of <%= @location.name %></h5>
+					<ul class="list-group">
+						<% @close_locations.each do |location|  %>
+							<%= link_to location_path(location), 'data-no-turbolink' => true do %>
+							<li class="list-group-item">
+								<%= location.name<<', '<<location.country %> ----------- <%= @location.distance_to(location).to_i %> miles
+							</li>	
+							<% end %>
+						<% end %>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	-->
+</div>
+</section>
+
