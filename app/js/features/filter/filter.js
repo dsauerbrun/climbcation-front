@@ -25,7 +25,7 @@ filterDir.directive('filter', function(){
 				}
 				filterLocations();
 			}
-			$http.get('http://localhost:3000/filters').success(function(data){
+			$http.get('/api/filters').success(function(data){
 				filter.fixVar = data;
 				console.log(data['continents'])
 				filter.continents = data['continents'];

@@ -147,7 +147,7 @@ gulp.task('webserver', ['indexHtml-dev', 'images-dev'], function() {
       return [ (function() {
         var url = require('url');
         var proxy = require('proxy-middleware');
-        var options = url.parse('http://localhost:8080/api');
+        var options = url.parse('http://localhost:3000/api/');
         options.route = '/api';
         return proxy(options);
       })(), historyApiFallback ];

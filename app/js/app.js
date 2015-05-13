@@ -29,7 +29,7 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 			scrollTop: $('#'+id.replace(/\s+/g, '')).offset().top
 		}, 1000);
 	};
-	$http.get('http://localhost:3000/location/'+slug).success(function(data){
+	$http.get('api/location/'+slug).success(function(data){
 		deferred.resolve(data);
 	});
 	deferred.promise.then(
@@ -103,7 +103,7 @@ home.factory("LocationsGetter",function($q,$http){
 	LocationsGetter.getLocations = function(){
 		locationData = []
 		var deferred = $q.defer();
-		$http.post('http://localhost:3000/filter_locations', {filter: filter}).success(function(data){
+		$http.post('/api/filter_locations', {filter: filter}).success(function(data){
 			deferred.resolve(data);
 		});
 		LocationsGetter.locationsPromise = deferred.promise;
