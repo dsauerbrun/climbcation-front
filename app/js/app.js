@@ -53,6 +53,7 @@ home.controller('LocationsController',function($scope, LocationsGetter){
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
 		LocationsGetter.locationsPromise.then(
 			function(promiseLocations){
+				console.log(promiseLocations);
 				$scope.locationData = promiseLocations;
 			},
 			function(failure){
@@ -71,10 +72,14 @@ home.factory("LocationsGetter",function($q,$http){
 	filter['climbing_types'] = [];
 	filter['continents'] = [];
 	filter['price_max'] = [];
+	filter['sort'] = [];
+	var sort = {};
+	sort['price'] = [];
+	sort['grade'] = [];
 	LocationsGetter.toggleFilterButton = function(eventItem,filterArray,filterValue){
 		toggleButtonActive(angular.element(eventItem.currentTarget));
 
-		if($.inArray(filterValue,filter[filterArray]) != -1){
+		if(filterValue != 'sort' && $.inArray(filterValue,filter[filterArray]) != -1){
 			//remove item from filter
 			filter[filterArray].splice($.inArray(filterValue,filter[filterArray]), 1);
 		}
@@ -84,6 +89,13 @@ home.factory("LocationsGetter",function($q,$http){
 		}
 		else{
 			filter[filterArray].push(filterValue);
+			inactivateGroupAll(angular.element(eventItem.currentTarget).parent());
+			//only one sorter can be active at a time so we have special cases for it
+			if(filterArray == 'sort'){
+				resetButtonsGroup(angular.element(eventItem.currentTarget).parent());
+				toggleButtonActive(angular.element(eventItem.currentTarget));
+				inactivateGroupAll(angular.element(eventItem.currentTarget).parent());
+			}
 		}
 		LocationsGetter.getLocations();
 	
@@ -117,9 +129,18 @@ function toggleButtonActive(clickedButton){
 function resetButtonsGroup(buttonGroup){
 	buttonGroup.children('button').each(function(){
 		$(this).removeClass('active');
-		if($(this).hasClass('all'))
+		if($(this).hasClass('all')){
 			$(this).addClass('active');
+		}
 	});
+}
+function inactivateGroupAll(buttonGroup){
+	buttonGroup.children('button').each(function(){
+		if($(this).hasClass('all')){
+			$(this).removeClass('active');
+		}
+	});
+
 }
 
 function createMap(latitude,longitude){

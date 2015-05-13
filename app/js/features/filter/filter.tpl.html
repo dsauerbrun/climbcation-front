@@ -21,9 +21,9 @@
 				</h2>
 				<h2>Sort:
 					<div class="btn-group btn-group-sort" data="sort" role="group">
-						<button type="button" data="all" class="sort-button btn btn-lg btn-default all">All</button>
-						<button type="button" data="price" class="sort-button btn btn-lg btn-default">$</button>
-						<button type="button" data="grade" class="sort-button btn btn-lg btn-default">Grade</button>
+						<button type="button" data="all" class="sort-button btn btn-lg btn-default all" ng-click="LocationsGetter.toggleFilterButton($event,'sort','All')">All</button>
+						<button type="button" data="price" class="sort-button btn btn-lg btn-default" ng-click="LocationsGetter.toggleFilterButton($event,'sort','price')">$</button>
+						<button type="button" data="grade" class="sort-button btn btn-lg btn-default" ng-click="LocationsGetter.toggleFilterButton($event,'sort','grade')">Grade</button>
 					</div>
 				</h2>
       </div>
