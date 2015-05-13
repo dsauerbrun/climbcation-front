@@ -1,5 +1,5 @@
 <section >
-<div class="container-fluid" ng-controller='MapController'>
+<div class="container-fluid">
 	<style type="text/css">
 		html, body, #map-canvas { height: 25em; margin: 0; padding: 0;}
 	</style>
@@ -15,37 +15,31 @@
 
 </div>
 
-<!-- INFO SECTION
+<!-- INFO SECTION -->
 <div class="container">
 	<div class="row">
 		<div class="col-md-8">
 			<div class="row">
 				<div class="col-md-4">
-					<%= image_tag(@location.home_thumb, :class => 'img-circle', size: '192x192') %>
+					<img ng-src="{{ locationData['home_thumb'] }}" class='img-circle' width='192' height='192' />
 				</div>
 				<div class="col-md-8">
-					<h1><%= @location.name << ', '<< @location.country %></h1>
+					<h1> {{ locationData['name'] }}, {{ locationData['country'] }}</h1>
 					<div class="row">
 						<div class="col-md-3">
 							<h5>When Should I go?</h5>
-							<% @location.seasons.each do |season| %>
-								<%= image_tag(season.icon, :class => 'icon') %>
-							<% end %>
+							<img ng-repeat="season in locationData['seasons']" ng-src="{{ season['url'] }}" title="{{ season['name'] }}" class="icon"/>
 						</div>
 						<div class="col-md-3">
 							<h5>Where can I stay?</h5>
-							<% @location.accommodations.each do |accommodation| %>
-								<%= image_tag(accommodation.icon, :class => 'icon') %>
-							<% end %>
+							<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" title="{{ accommodation['name'] }}" class="icon"/>
 						</div>
 						<div class="col-md-3">
 							<h5>What should I climb?</h5>
-							<% @location.climbing_types.each do |climbing_type| %>
-								<%= image_tag(climbing_type.icon, :class => 'icon') %>
-							<% end %>
+							<img ng-repeat="climbing_type in locationData['climbing_types']" ng-src="{{ climbing_type['url'] }}" title="{{ climbing_type['name'] }}" class="icon"/>
 						</div>
 						<div class="col-md-3">
-							<div class="">I should climb around <mark><strong><%= @location.grade.us %></strong></mark> to get the most out of my trip</div>
+							<div class="">I should climb around <mark><strong>{{ locationData['grade'] }}</strong></mark> to get the most out of my trip</div>
 						</div>
 					</div>
 				</div>
@@ -55,94 +49,51 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">Table of Contents</div>
 					<ul class="list-group">
-						<% @location.info_sections.each do |section| %>
-							<li class="list-group-item">
-								<%= link_to '#'<<URI.escape(section.title) do %>
-									<%= section.title %>
-								<% end %>
+							<li class="list-group-item" ng-repeat="section in sections">
+								<a ng-click="scrollTo(section.title)" target="_self">
+									{{ section['title'] }}
+								</a>
 							</li>
-						<% end %>
 							<li class="list-group-item">
-								<%= link_to '#nearby' do %>
+								<a ng-click='scrollTo("nearby")'>
 									Nearby Destinations
-								<% end %>
+								</a>
 							</li>
 					</ul>
 			</div>
 		</div>
 	</div>
 </div>
--->
+
 <div class="container">
+	<locationsection ng-repeat="section in sections"></locationsection>
 
-	<!-- SECTION SPOT
-		<div id="<%= URI.escape(@section.title) %>" class="container info-section">
-			<div class="row" >
-				<div class="col-md-12">
-					<h3><u><%= @section.title %></u></h3>
-					<p class="lead">
-						<%= @section.body %>
-					</p>
-				</div>
-			</div>
-			<div class="row">
-				<% count = 0 %>
-				<% is_row_closed = 1  %>
-				<% if !@section.metadata.nil? %>
-					<% @section.metadata.each do |key,value|  %>
-						<% if count%2 == 0 and is_row_closed == 1 %>
-							<div class="row col-md-12">
-							<% is_row_closed = 0 %>
-						<% end %>
-						<div class="col-md-6">
-							<h5><%= key %></h5>
-							<ul class="list-group">
-							<% value.each do |value| %>
-								<li class="list-group-item"><%= value %></li>	
-							<% end %>
-							</ul>
-						</div>
-
-						<% if count%2 == 1 and is_row_closed == 0 and count != 0 %>
-							</div>
-							<% is_row_closed = 1 %>
-						<% end %>
-
-						<% count += 1 %>
-					<% end %>
-				<% end %>
-			</div>
-		</div>
-	-->
-
-	<!-- NEARBY LOCATIONS SECTION
 	<div id="nearby" class="container info-section">
 		<div class="row" >
 			<div class="col-md-12">
 				<h3><u>Nearby Destinations</u></h3>
 				<p class="lead">
-					Don't end your trip in <%= @location.name %>. There's plenty to see nearby
+					Don't end your trip in {{locationData.name}}. There's plenty to see nearby
 				</p>
 			</div>
 		</div>
 		<div class="row">
 			<div class="row col-md-12">
 				<div class="col-md-12">
-					<h5>Destinations within 200 miles of <%= @location.name %></h5>
+					<h5>Destinations within 200 miles of {{ locationData['name'] }} </h5>
 					<ul class="list-group">
-						<% @close_locations.each do |location|  %>
-							<%= link_to location_path(location), 'data-no-turbolink' => true do %>
+						
+						<a ng-repeat="nearLocation in nearby"ng-href="/#location/{{ nearLocation.slug }}">
 							<li class="list-group-item">
-								<%= location.name<<', '<<location.country %> ----------- <%= @location.distance_to(location).to_i %> miles
+								{{nearLocation.name}}, {{nearLocation.country}} ----------- {{nearLocation.distance}} miles
 							</li>	
-							<% end %>
-						<% end %>
+						</a>
+				
 					</ul>
 				</div>
 			</div>
 		</div>
 	</div>
-	-->
 </div>
 </section>
 

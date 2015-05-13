@@ -1,0 +1,24 @@
+<div id="{{ section.title | removeSpaces }}" class="container info-section">
+	<div class="row" >
+		<div class="col-md-12">
+			<h3><u>{{ section.title }}</u></h3>
+			<p class="lead">
+				{{ section.body }}
+			</p>
+		</div>
+	</div>
+	<div class="row">
+		<div ng-repeat="pair in section.data" class="row col-md-12">
+			
+			<div ng-repeat="(key,dataArray) in pair" class="col-md-6">
+				<h5> {{key}}</h5>
+				<ul class="list-group">
+						<li ng-repeat='information in dataArray[0]' class="list-group-item">{{information}}</li>	
+				</ul>
+			</div>
+		</div>
+		
+
+
+	</div>
+</div>
