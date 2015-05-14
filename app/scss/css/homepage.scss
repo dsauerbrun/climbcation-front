@@ -18,13 +18,17 @@
 }
 .jumbotron.homepage{
 	margin-bottom: 0px;
+	padding: .5em 0;
+}
+.navbar.home {
+	margin-bottom: 0;	
 }
 #mapFilter{
 	height:25em;
-	
+
 }
 .locations-window{
 	position: relative;
-	height: 40em;
+	height: 50em;
 	overflow: auto;
 }
