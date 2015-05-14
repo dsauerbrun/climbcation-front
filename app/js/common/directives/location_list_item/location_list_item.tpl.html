@@ -1,15 +1,14 @@
 <div class="row location-row">
-		<div class="col-md-1">
-		</div>
 		<div class="col-md-2">
 			<a ng-href="/#location/{{ locationData['slug'] }}">
 				<img ng-src="{{ locationData['home_thumb'] }}" class ='img-circle' height='192' width='192'>	
 			</a>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-10">
 			<h3>{{ locationData['name'] }}, {{ locationData['country'] }} <small>{{ locationData['price_range_floor_cents']}}  - {{ locationData['price_range_ceiling_cents'] }} / day</small></h3>
 			<div class="icon-row row">
-				<h4 class="col-md-4">Why Should I go?</h4>
+
+				<h4 class="col-md-3 col-md-offset-1">Why Should I go?</h4>
 				<div class="col-md-2">
 					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon'>	
 				</div>
@@ -19,7 +18,7 @@
 				</div>
 			</div>
 			<div class="icon-row row">
-				<h4 class="col-md-4">When Should I go?</h4>
+				<h4 class="col-md-3 col-md-offset-1">When Should I go?</h4>
 				<div class="col-md-2">
 					<img ng-repeat="season in locationData['seasons']" ng-src="{{ season['url'] }}" class='icon'>	
 				</div>

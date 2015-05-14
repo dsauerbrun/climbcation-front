@@ -1,4 +1,11 @@
 <section ng-controller='LocationsController'>
 <filter></filter>
-	<location ng-repeat="locationData in locationData"></location>
+<div class="row">
+	<div class="col-md-9 locations-window" data-spy="scroll" >
+		<location ng-repeat="locationData in locationData"></location>
+	</div>
+	<div id='mapFilter' ng-controller='MapFilterController' class="col-md-3">
+		
+	</div>
+</div>
 </section>

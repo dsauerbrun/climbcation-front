@@ -40,7 +40,7 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 			$scope.sections = success['sections'];
 			$scope.locationData = success['location']
 			$scope.nearby = success['nearby'];
-			$scope.gmap = createMap($scope.latitude,$scope.longitude);
+			$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,8);
 			addCloseLocations($scope.gmap,success['nearby']);
 			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 		}
@@ -66,13 +66,63 @@ home.controller('LocationsController',function($scope, LocationsGetter){
 	});
 });
 
+home.controller('MapFilterController',function($scope,LocationsGetter){
+	$scope.filterMap = createMap('mapFilter',0,0,1);
+	LocationsGetter.markerMap = {};
+	$scope.filterMap.addListener('dragend', function() {
+		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
+		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
+		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
+		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
+		LocationsGetter.getLocations();
+	});
+	$scope.filterMap.addListener('zoom_changed', function() {
+		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
+		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
+		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
+		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
+		LocationsGetter.getLocations();
+	});
+	$scope.$watch('LocationsGetter.locationsPromise', function(){
+		LocationsGetter.locationsPromise.then(
+			function(promiseLocations){
+				//redo map points
+				$scope.filterMap.removeMarkers();
+				LocationsGetter.markerMap = {};
+				$.each(promiseLocations,function(){
+					LocationsGetter.markerMap[this['slug']] = addMarker($scope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/#location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+					LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
+				});
+				console.log($scope.markerMap)
+
+			},
+			function(failure){
+				
+			},
+			function(notify){
+				
+			}
+		);
+	});
+
+});
+
 home.factory("LocationsGetter",function($q,$http){
 	var LocationsGetter = {};
 	var filter = {};
+	LocationsGetter.mapFilter = {};
+	LocationsGetter.markerMap = {};
+
 	filter['climbing_types'] = [];
 	filter['continents'] = [];
 	filter['price_max'] = [];
 	filter['sort'] = [];
+	LocationsGetter.mapFilter['northeast'] = {};
+	LocationsGetter.mapFilter['northeast']['longitude'] = null;
+	LocationsGetter.mapFilter['northeast']['latitude'] = null;
+	LocationsGetter.mapFilter['southwest'] = {};
+	LocationsGetter.mapFilter['southwest']['longitude'] = null;
+	LocationsGetter.mapFilter['southwest']['latitude'] = null;
 	var sort = {};
 	sort['price'] = [];
 	sort['grade'] = [];
@@ -103,7 +153,7 @@ home.factory("LocationsGetter",function($q,$http){
 	LocationsGetter.getLocations = function(){
 		locationData = []
 		var deferred = $q.defer();
-		$http.post('/api/filter_locations', {filter: filter}).success(function(data){
+		$http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter}).success(function(data){
 			deferred.resolve(data);
 		});
 		LocationsGetter.locationsPromise = deferred.promise;
@@ -113,6 +163,7 @@ home.factory("LocationsGetter",function($q,$http){
 	return LocationsGetter;
 
 });
+
 
 
 
@@ -143,12 +194,12 @@ function inactivateGroupAll(buttonGroup){
 
 }
 
-function createMap(latitude,longitude){
+function createMap(mapId,latitude,longitude,zoom){
 	var map =new GMaps({
-		div: '#map-canvas',
+		div: '#'+mapId,
 		lat: latitude,
 		lng: longitude,
-		zoom: 8
+		zoom: zoom
 	});
 	return map;
 }
@@ -156,11 +207,11 @@ function createMap(latitude,longitude){
 function addCloseLocations(map,locationMap){
 	$.each(locationMap,function(){
 		addMarker(map,this['lat'],this['lng'],this['name'],'<p><a href="/#location/'+this['slug']+'">'+this['name']+'</a></p>',true);
-	})
+	});
 }
 
 function addMarker(map,lat,lng,title,infowindow,isSecondary){
-		map.addMarker({
+		return map.addMarker({
 			lat: lat,
 			lng: lng,
 			title: title,
