@@ -13,6 +13,7 @@ home.config(['$routeProvider', function($routeProvider) {
 	});
 
 }]);
+
 home.filter('removeSpaces', function () {
 	return function (text) {
 		var str = text.replace(/\s+/g, '');
@@ -38,6 +39,7 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 			$scope.latitude = success['location']['latitude'];
 			processSectionsByPair(success['sections']);
 			$scope.sections = success['sections'];
+			$scope.tableOfContents = processTableContents($scope.sections);
 			$scope.locationData = success['location']
 			$scope.nearby = success['nearby'];
 			$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,8);
@@ -220,6 +222,20 @@ function addMarker(map,lat,lng,title,infowindow,isSecondary){
 				content: infowindow
 			}
 		});
+}
+function processTableContents(sectionMap){
+	var titleArray = [];
+	var counter = 0;
+	$.each(sectionMap,function(){
+		index = parseInt(counter/3)
+		if(!(index in titleArray)){
+			titleArray[index] = [];
+		}
+		titleArray[index].push(this['title']);
+		counter++;
+	});
+	return titleArray;
+
 }
 function processSectionsByPair(sectionMap){
 	pairMap = {};

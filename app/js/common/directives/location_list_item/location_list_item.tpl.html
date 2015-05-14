@@ -10,17 +10,17 @@
 
 				<h4 class="col-md-3 col-md-offset-1">Why Should I go?</h4>
 				<div class="col-md-2">
-					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon'>	
+					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">	
 				</div>
 				<h4 class="col-md-4">Where am I going to sleep?</h4>
 				<div class="col-md-2">
-					<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" class='icon'>	
+					<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" class='icon' title="{{ accommodation['name'] }}">	
 				</div>
 			</div>
 			<div class="icon-row row">
 				<h4 class="col-md-3 col-md-offset-1">When Should I go?</h4>
 				<div class="col-md-2">
-					<img ng-repeat="season in locationData['seasons']" ng-src="{{ season['url'] }}" class='icon'>	
+					<img ng-repeat="season in locationData['seasons']" ng-src="{{ season['url'] }}" class='icon' title="{{ season['name'] }}">	
 				</div>
 				<h4 class="col-md-4">How hard should I climb?</h4>
 				<div class="col-md-2">
