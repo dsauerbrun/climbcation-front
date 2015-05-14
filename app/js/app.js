@@ -300,7 +300,8 @@ function setHighcharts(locationQuoteData){
 		});
 		$('#highchart'+slug).highcharts({
 	        chart: {
-	            type: 'column'
+	            type: 'column',
+	            height: '200'
 	        },
 	        title: {
 	            text: 'One Way cost from ORIGINFILLER to DESTINATIONFILLER'
