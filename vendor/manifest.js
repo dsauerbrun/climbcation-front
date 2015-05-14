@@ -4,7 +4,8 @@ exports.javascript = [
   'vendor/angular-route/angular-route.js',
   'vendor/lodash/dist/lodash.js',
 	'vendor/bootstrap/dist/js/bootstrap.min.js',
-  'vendor/gmapsjs/gmaps.js'
+  'vendor/gmapsjs/gmaps.js',
+  'vendor/highcharts/highcharts.js'
 
 ];
 

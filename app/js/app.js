@@ -48,15 +48,23 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 		}
 	);
 });
-home.controller('LocationsController',function($scope, LocationsGetter){
+home.controller('LocationsController',function($scope, $timeout,LocationsGetter){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
+
+
+	
+
+
+
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
 		LocationsGetter.locationsPromise.then(
 			function(promiseLocations){
-				console.log(promiseLocations);
 				$scope.locationData = promiseLocations;
+				$timeout(function(){
+					setHighcharts($scope.locationData);
+				});
 			},
 			function(failure){
 				$scope.locationData = failure;
@@ -65,6 +73,7 @@ home.controller('LocationsController',function($scope, LocationsGetter){
 				$scope.locationData = notify;
 			}
 		);
+
 	});
 });
 
@@ -257,5 +266,94 @@ function processSectionsByPair(sectionMap){
 			this['data'] = pairMap;
 		}
 		sectCounter++;
+	});
+}
+
+function setHighcharts(locationData){
+	
+	$.each(locationData,function(){
+		//console.log(this['quotes']['5']);
+		quote_array = [];
+		$.each(this['quotes'],function(monthKey,value){
+			$.each(value, function(dayKey,cost){
+				quote_array.push([monthKey+'/'+dayKey,cost])
+
+			})
+
+		})
+		$('#highchart'+this['slug']).highcharts({
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: 'One Way cost from ORIGINFILLER to DESTINATIONFILLER'
+	        },
+	        subtitle: {
+	            text: 'Source: Skyscanner'
+	        },
+	        xAxis: {
+	            type: 'category',
+	            title: {
+	            	text: 'Date'
+	            },
+	            labels: {
+	                rotation: -45,
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Price(USD)'
+	            }
+	        },
+	        legend: {
+	            enabled: false
+	        },
+	        tooltip: {
+	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
+	        },
+	        series: [{
+	            name: 'Price',
+	            data: quote_array/*[
+	                ['Shanghai', 23.7],
+	                ['Lagos', 16.1],
+	                ['Instanbul', 14.2],
+	                ['Karachi', 14.0],
+	                ['Mumbai', 12.5],
+	                ['Moscow', 12.1],
+	                ['São Paulo', 11.8],
+	                ['Beijing', 11.7],
+	                ['Guangzhou', 11.1],
+	                ['Delhi', 11.1],
+	                ['Shenzhen', 10.5],
+	                ['Seoul', 10.4],
+	                ['Jakarta', 10.0],
+	                ['Kinshasa', 9.3],
+	                ['Tianjin', 9.3],
+	                ['Tokyo', 9.0],
+	                ['Cairo', 8.9],
+	                ['Dhaka', 8.9],
+	                ['Mexico City', 8.9],
+	                ['Lima', 8.9]
+	            ]*/,
+	            dataLabels: {
+	                enabled: false,
+	                rotation: -90,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                format: '{point.y:.1f}', // one decimal
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        }]
+	    });
+console.log('high as chart')
 	});
 }
