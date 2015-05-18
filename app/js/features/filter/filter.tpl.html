@@ -19,13 +19,16 @@
 							<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}"><img ng-src="{{ climbType }}" class ='icon button'></button>
 					</div>
 				</h2>
-				<h2>Sort:
+				<span class="h2">Sort:
 					<div class="btn-group btn-group-sort" data="sort" role="group">
 						<button type="button" data="all" class="sort-button btn btn-lg btn-default all" ng-click="LocationsGetter.toggleFilterButton($event,'sort','All')">All</button>
 						<button type="button" data="price" class="sort-button btn btn-lg btn-default" ng-click="LocationsGetter.toggleFilterButton($event,'sort','price')">$</button>
 						<button type="button" data="grade" class="sort-button btn btn-lg btn-default" ng-click="LocationsGetter.toggleFilterButton($event,'sort','grade')">Grade</button>
 					</div>
-				</h2>
+				</span>
+				<span class="h2">
+					Your Airport: <input type="text" ng-model="origin_airport" ng-trim="true" ng-minlength="3" ng-maxlength="3" />
+				</span>
       </div>
     </div>
 </section>

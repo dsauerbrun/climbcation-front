@@ -52,30 +52,34 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
-
-
+	$scope.origin_airport = "SFO";
+	$scope.slugArray = [];
 	
 
 	$scope.$watch('LocationsGetter.flightQuotesPromise', function(){
 		LocationsGetter.flightQuotesPromise.then(
 			function(promiseQuotes){
 				$timeout(function(){
-					setHighcharts(promiseQuotes);
+					setHighcharts(promiseQuotes,$scope.origin_airport);
 				});
 			}
 		);
 
 	});
-
+	$scope.$watch('origin_airport', function(){
+		if($scope.origin_airport != null){
+			LocationsGetter.getFlightQuotes($scope.slugArray,$scope.origin_airport);
+		}
+	});
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
 		LocationsGetter.locationsPromise.then(
 			function(promiseLocations){
 				$scope.locationData = promiseLocations;
-				slugArray = []
+				$scope.slugArray = []
 				$.each(promiseLocations, function(){
-					slugArray.push(this['slug'])
+					$scope.slugArray.push(this['slug'])
 				});
-				LocationsGetter.getFlightQuotes(slugArray);
+				LocationsGetter.getFlightQuotes($scope.slugArray,$scope.origin_airport);
 			},
 			function(failure){
 				$scope.locationData = failure;
@@ -170,9 +174,9 @@ home.factory("LocationsGetter",function($q,$http){
 		LocationsGetter.getLocations();
 	
 	};
-	LocationsGetter.getFlightQuotes = function(slugs){
+	LocationsGetter.getFlightQuotes = function(slugs,originAirportCode){
 		var deferred = $q.defer();
-		$http.post('/api/collect_locations_quotes', {slugs: slugs}).success(function(data){
+		$http.post('/api/collect_locations_quotes', {slugs: slugs, origin_airport: originAirportCode}).success(function(data){
 			deferred.resolve(data);
 		});
 		LocationsGetter.flightQuotesPromise = deferred.promise;
@@ -187,7 +191,7 @@ home.factory("LocationsGetter",function($q,$http){
 		return deferred.promise;
 	};
 	LocationsGetter.getLocations();
-	LocationsGetter.getFlightQuotes([]);
+	LocationsGetter.getFlightQuotes([],null);
 	return LocationsGetter;
 
 });
@@ -286,8 +290,9 @@ function processSectionsByPair(sectionMap){
 	});
 }
 
-function setHighcharts(locationQuoteData){
+function setHighcharts(locationQuoteData, origin_airport){
 	$.each(locationQuoteData,function(slug,months){
+		destinationAirport = slug.split("-")[0]
 		quote_array = [];
 		var maxPrice = 0;
 		$.each(this,function(monthKey,value){
@@ -304,10 +309,10 @@ function setHighcharts(locationQuoteData){
 	            height: '200'
 	        },
 	        title: {
-	            text: 'One Way cost from ORIGINFILLER to DESTINATIONFILLER'
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport
 	        },
 	        subtitle: {
-	            text: 'Source: Skyscanner'
+	            text: 'Source: Skyscanner.com(prices subject to change)'
 	        },
 	        xAxis: {
 	            type: 'category',
