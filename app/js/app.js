@@ -1,8 +1,11 @@
-var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','ngRoute']);
+var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute']);
 home.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 	.when('/home', {
 		templateUrl: 'views/home/home.tpl.html',
+	})
+	.when('/new-location', {
+		templateUrl: 'views/new_location/submitpage.tpl.html',
 	})
 	.when('/location/:slug', {
 		templateUrl: 'views/location/location.tpl.html',
@@ -52,7 +55,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
-	$scope.origin_airport = "SFO";
+	$scope.origin_airport = "BER";
 	$scope.slugArray = [];
 	
 
@@ -100,6 +103,7 @@ home.controller('MapFilterController',function($scope,LocationsGetter){
 		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
+		LocationsGetter.page_num = 1;
 		LocationsGetter.getLocations();
 	});
 	$scope.filterMap.addListener('zoom_changed', function() {
@@ -107,6 +111,7 @@ home.controller('MapFilterController',function($scope,LocationsGetter){
 		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
+		LocationsGetter.page_num = 1;
 		LocationsGetter.getLocations();
 	});
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
@@ -136,23 +141,25 @@ home.factory("LocationsGetter",function($q,$http){
 	var filter = {};
 	LocationsGetter.mapFilter = {};
 	LocationsGetter.markerMap = {};
-
+	LocationsGetter.page_num = 1
 	filter['climbing_types'] = [];
 	filter['continents'] = [];
 	filter['price_max'] = [];
 	filter['sort'] = [];
+	filter['search'] = '';
 	LocationsGetter.mapFilter['northeast'] = {};
 	LocationsGetter.mapFilter['northeast']['longitude'] = null;
 	LocationsGetter.mapFilter['northeast']['latitude'] = null;
 	LocationsGetter.mapFilter['southwest'] = {};
 	LocationsGetter.mapFilter['southwest']['longitude'] = null;
 	LocationsGetter.mapFilter['southwest']['latitude'] = null;
+
 	var sort = {};
 	sort['price'] = [];
 	sort['grade'] = [];
 	LocationsGetter.toggleFilterButton = function(eventItem,filterArray,filterValue){
 		toggleButtonActive(angular.element(eventItem.currentTarget));
-
+		angular.element(eventItem.currentTarget).blur();
 		if(filterValue != 'sort' && $.inArray(filterValue,filter[filterArray]) != -1){
 			//remove item from filter
 			filter[filterArray].splice($.inArray(filterValue,filter[filterArray]), 1);
@@ -171,9 +178,21 @@ home.factory("LocationsGetter",function($q,$http){
 				inactivateGroupAll(angular.element(eventItem.currentTarget).parent());
 			}
 		}
+		LocationsGetter.page_num = 1;
 		LocationsGetter.getLocations();
 	
 	};
+	LocationsGetter.pageChange = function(page){
+		LocationsGetter.page_num = page;
+		if(LocationsGetter.page_num < 1)
+			LocationsGetter.page_num = 1;
+		LocationsGetter.getLocations();
+	}
+	LocationsGetter.filterByQuery = function(eventItem){
+		filter['search'] = eventItem;
+		LocationsGetter.page_num = 1;
+		LocationsGetter.getLocations();
+	}
 	LocationsGetter.getFlightQuotes = function(slugs,originAirportCode){
 		var deferred = $q.defer();
 		$http.post('/api/collect_locations_quotes', {slugs: slugs, origin_airport: originAirportCode}).success(function(data){
@@ -184,7 +203,7 @@ home.factory("LocationsGetter",function($q,$http){
 	}
 	LocationsGetter.getLocations = function(){
 		var deferred = $q.defer();
-		$http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter}).success(function(data){
+		$http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.page_num}).success(function(data){
 			deferred.resolve(data);
 		});
 		LocationsGetter.locationsPromise = deferred.promise;

@@ -1,0 +1,54 @@
+{
+  "name": "angular-formly",
+  "version": "6.12.0",
+  "authors": [
+    "Astrism <astrisms@gmail.com>"
+  ],
+  "contributors": [
+    "Astrism <astrisms@gmail.com>",
+    "Kent C. Dodds <kent@doddsfamily.us>"
+  ],
+  "main": "dist/formly.js",
+  "description": "AngularJS directive which takes JSON representing a form and renders to HTML",
+  "keywords": [
+    "AngularJs",
+    "form",
+    "formly",
+    "json",
+    "html"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "tests",
+    "local-examples",
+    ".editorconfig",
+    ".gitignore",
+    ".eslintrc",
+    ".npmignore",
+    ".travis.yml",
+    "CONTRIBUTING.md",
+    "karma.conf.js",
+    "src",
+    "webpack.config.js",
+    "coverage",
+    "other",
+    ".test",
+    "scripts"
+  ],
+  "dependencies": {
+    "angular": "^1.2.x",
+    "api-check": "^7.0.0"
+  },
+  "homepage": "https://github.com/formly-js/angular-formly",
+  "_release": "6.12.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "6.12.0",
+    "commit": "73f97a15d758538843fbfb3ba80c029e9bfd3af3"
+  },
+  "_source": "git://github.com/formly-js/angular-formly.git",
+  "_target": "~6.12.0",
+  "_originalSource": "angular-formly",
+  "_direct": true
+}

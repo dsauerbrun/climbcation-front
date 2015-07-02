@@ -2,7 +2,9 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron homepage">
       <div class="container">
-        <h2>Find Your Next Climbcation</h2>
+        		<span class="h2">
+					Search: <input type="text" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="limestone"/>
+				</span>
 				<h2>Filter:
 					<div class="btn-group btn-group-filter" data="price" role="group">
 							<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
@@ -29,6 +31,7 @@
 				<span class="h2">
 					Your Airport: <input type="text" ng-model="origin_airport" ng-trim="true" ng-minlength="3" ng-maxlength="3" />
 				</span>
+				
       </div>
     </div>
 </section>

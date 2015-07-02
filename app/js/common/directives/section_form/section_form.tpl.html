@@ -1,0 +1,136 @@
+
+<form name="locationForm">
+<div class="container">
+	{{ locationObj |json }}
+	<button class="btn" ng-disabled="locationForm.$invalid" ng-click="submitLocation()"> submit this new location</button>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-3 jumbotron drop-box" ngf-drop ng-model="image" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true" ngf-accept="'image/*,application/pdf'">
+					<div>Drop Images or PDFs files here</div>
+					Image thumbnail: <img class="img-circle"ngf-src="image[0]" ngf-default-src="'/thumb.jpg'" ngf-accept="'image/*'" width="192" height="192">
+		
+					<!--
+						<img ng-src="{{ locationData['home_thumb'] }}" class='img-circle' width='192' height='192' />
+					-->
+				</div>
+				<div class="col-md-9">
+					<h4 class="row"> 
+						<span class="form-group col-md-4" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
+							<input name="name" ng-model="locationObj.name" placeholder="name, ex. Yosemite" ng-required="true" class="form-control" novalidate />
+						</span>
+						
+						<span class="form-group col-md-4" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >
+							<input name="country" ng-model="locationObj.country" placeholder="Country" class="form-control" required/> 
+						</span>
+						<span class="form-group col-md-4" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
+							<input name="airport" ng-model="locationObj.airport" placeholder="Airport code, ex. SFO" class="form-control" ng-trim="true" ng-minlength="3" ng-maxlength="3" required/>
+						</span>
+					</h4>
+					<h4 class="row">
+						<div class="col-md-5">Daily expenditures range(in USD, not including accommodation):</div> 
+						<div ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }" class="form-group col-md-3"  >
+							<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control" />
+						</div> 
+						<div class="col-md-1">
+							-
+						</div>
+						<div ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }" class="col-md-3 form-group">
+							<input name="price_ceiling" class="form-control" ng-model="locationObj.price_ceiling" integer/>
+						</div>
+					</h4>
+					<div class="row">
+						<div class="col-md-3">
+							<h5>When Should I go?</h5>
+							<div ng-repeat="month in months">
+								<label for="{{ month['name'] }}" class="btn btn-sm btn-default" ng-class="{'active': locationForm[month.name].$viewValue == true}">
+									<input class="hide" name="{{month['name']}}" type="checkbox" id="{{ month['name'] }}" ng-model="locationObj.months[month.id]"/>
+									{{ month['name'] }}
+								</label>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<h5>Where can I stay?</h5>
+							
+							<div ng-repeat="accommodation in accommodations">
+								
+								<label class="btn btn-lg btn-default"  for="{{ accommodation['name'] }}" ng-class="{'active': locationForm[accommodation.name].$viewValue == true}" >
+									<input class="hide" name="{{accommodation['name']}}" type="checkbox" id="{{ accommodation['name'] }}" ng-model="locationObj.accommodations[accommodation.id]" >
+									<img ng-src="{{ accommodation['url'] }}" title="{{ accommodation['name'] }}" class="icon"/>
+								</label>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<h5>What should I climb?</h5>
+							<div ng-repeat="climbing_type in climbingTypes">
+								<label class="btn btn-lg btn-default" for="{{ climbing_type['name'] }}" ng-class="{'active': locationForm[climbing_type.name].$viewValue == true}">
+								<input class="hide" name={{climbing_type['name']}} type="checkbox" id="{{ climbing_type['name'] }}" ng-model="locationObj.climbingTypes[climbing_type.id]">
+								<img  ng-src="{{ climbing_type['url'] }}" title="{{ climbing_type['name'] }}" class="icon"/>
+								</label>
+							</div>	
+						</div>
+						<div class="col-md-3">
+							<h5>How hard should I climb to get the most out of my trip?</h5>
+							<select name="grade" ng-model="locationObj.grade" class="form-control">
+								<option ng-repeat="grade in grades" ng-value="grade.id">{{ grade.grade }}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- section start -->
+	<div ng-repeat="section in locationObj.sections track by $index">
+		<div class="row">
+			<div class="col-md-2">
+						<div class="btn btn-success" ng-if="$index == 0" ng-click="addSection(section)">Save section</div>
+						<div class="btn btn-danger" ng-if="$index != 0" ng-click="removeSection(section,locationObj.sections)">remove section</div>
+			</div>
+			<div class=" col-md-10">
+				<div class="form-group input-group-lg">
+					<input type="text" placeholder="Section Title" class="form-control" ng-model="section.title"/>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="row col-md-9 col-md-offset-3">
+				<div class="form-group">
+					<textarea placeholder="Section Description" class="form-control" rows="6" ng-model="section.description"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<!-- subsection start -->
+			
+			<div class="col-md-10 col-md-offset-2" ng-repeat="subsection in section.subsections track by $index">
+				<div class="row">
+					<div class="col-md-2">
+						<div class="btn btn-success" ng-if="$index == 0" ng-click="addSubsection(subsection,section)">Save subsection</div>
+						<div class="btn btn-danger" ng-if="$index != 0" ng-click="removeSubsection(subsection,section.subsections)">remove subsection</div>
+					</div>
+					<div class="col-md-10 form-group">
+						<input type="text" placeholder="Sub-Section Title" class="form-control" ng-model="subsection.title" />
+					</div>
+				</div>
+				<div class="form-group row">
+					
+					<!-- subsection descriptions start -->
+					<div class="row col-md-9 col-md-offset-3" ng-repeat="subsectionDesc in subsection.descriptions track by $index">
+						<div class="input-group input-group-sm">
+							<span ng-if="$index == 0" class="input-group-addon" id="add-row" ng-click="addSubsectionDesc(subsectionDesc,subsection.descriptions)">+</span>
+							<span ng-if="$index != 0" class="input-group-addon" id="add-row" ng-click="removeSubsectionDesc(subsectionDesc,subsection.descriptions)">-</span>
+							<input type="text" placeholder="Sub-Section Desc" class="form-control" aria-describedby="add-row" ng-model="subsectionDesc.text"/>
+						</div>
+					</div>
+					<!-- subsection descriptions end -->
+				</div>
+			</div>
+			<!-- subsection end -->
+		</div>
+	</div>
+	<!-- section end -->
+</div>
+</form>
