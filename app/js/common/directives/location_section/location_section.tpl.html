@@ -8,14 +8,15 @@
 		</div>
 	</div>
 	<div class="row">
-		<div ng-repeat="pair in section.data" class="row col-md-12">
-			
-			<div ng-repeat="(key,dataArray) in pair" class="col-md-6">
-				<h5> {{key}}</h5>
+		<div ng-repeat="(subsectionName,subsectionData) in section.subsections track by $index" >
+			<div class="clearfix" ng-if="$index % 2 == 0"></div>
+			<div class="col-md-6">
+				<h5> {{subsectionData.title}}</h5>
 				<ul class="list-group">
-						<li ng-repeat='information in dataArray[0]' class="list-group-item">{{information}}</li>	
+					<li ng-repeat='information in subsectionData.subsectionDescriptions' class="list-group-item" ng-if="information.desc != '' && information.desc != null">{{information.desc}}</li>	
 				</ul>
 			</div>
+			
 		</div>
 		
 

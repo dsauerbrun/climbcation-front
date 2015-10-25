@@ -40,7 +40,7 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 		function(success){
 			$scope.longitude = success['location']['longitude'];
 			$scope.latitude = success['location']['latitude'];
-			processSectionsByPair(success['sections']);
+			//processSectionsByPair(success['sections']);
 			$scope.sections = success['sections'];
 			$scope.tableOfContents = processTableContents($scope.sections);
 			$scope.locationData = success['location']

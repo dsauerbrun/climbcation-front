@@ -1,14 +1,56 @@
 
+<div id="successModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Thank you!</h4>
+      </div>
+      <div class="modal-body">
+        <p>Your location has been submitted for approval by an administrator. You should see it up in 2-3 days!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeSuccessModal()">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <form name="locationForm">
+
 <div class="container">
+	<br />
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			Please Read Before Submitting
+		</div>
+		<ul class="list-group">
+			<li class="list-group-item">
+				This application is primarily used for people looking for climbing vacation destinations, please do not attempt to list local crags(unless they are world/country class) as they will not be approved
+			</li>
+			
+			<li class="list-group-item">
+				Your submission will not appear automatically. An administrator will review the details and approve your submission(will verify airport code, size of crag, etc...)
+			</li>
+			<li class="list-group-item">
+				There are required sections to make this application useful. You will need to provide a "Getting in" section(explaining different ways to get to the crag, whether it be by car, train, or flight), an "Accommodation" section(explaining different accomodation options with approximate pricing), a "Cost" section(explaining what to expect for daily costs), and a "Transportation" section(explaining whether or not you need a car to get around this crag, if you can hitchhike, or if walking is an acceptable option)
+			</li>
+			<li class="list-group-item">
+				If you would like a prime example of a location to build your location off of, please refer to <a href="#/location/bishop" target="_blank">Bishop</a>
+			</li>
+		</ul>
+	</div>
 	<!-- {{ locationObj |json }} -->
 	<button class="btn" ng-disabled="locationForm.$invalid" ng-click="submitLocation()"> submit this new location</button>
+	<div>
+		<br />
+	</div>
 	<div class="row">
 		<div class="col-md-12">
 			<div class="row">
 				<div class="col-md-3 jumbotron drop-box" ngf-drop ng-model="image" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true" ngf-accept="'image/*,application/pdf'">
 					<div>Drop Images or PDFs files here</div>
-					Image thumbnail: <img class="img-circle"ngf-src="image[0]" ngf-default-src="'/thumb.jpg'" ngf-accept="'image/*'" width="192" height="192">
+					Image thumbnail: <img class="img-circle"ngf-src="image[0]" ngf-default-src="" ngf-accept="'image/*'" width="192" height="192">
 		
 					<!--
 						<img ng-src="{{ locationData['home_thumb'] }}" class='img-circle' width='192' height='192' />
@@ -28,7 +70,7 @@
 						</span>
 					</h4>
 					<h4 class="row">
-						<div class="col-md-5">Daily expenditures range(in USD, not including accommodation):</div> 
+						<div class="col-md-5">Daily expenditures range(in USD, not including accommodation):<span class="text-danger">*</span></div> 
 						<div ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }" class="form-group col-md-3"  >
 							<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control" />
 						</div> 
@@ -38,6 +80,12 @@
 						<div ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }" class="col-md-3 form-group">
 							<input name="price_ceiling" class="form-control" ng-model="locationObj.price_ceiling" integer/>
 						</div>
+					</h4>
+					<h4 class="row">
+						<div class="col-md-5">email(only to be used if admin needs additional information from you):</div> 
+						<div ng-class="{ 'has-success': locationForm.submitter_email.$valid && locationForm.submitter_email.$dirty, 'has-error': locationForm.submitter_email.$invalid && locationForm.submitter_email.$dirty }" class="form-group col-md-7"  >
+							<input type="email" name="submitter_email" ng-model="locationObj.submitter_email" email class="form-control" /> 
+						</div> 
 					</h4>
 					<div class="row">
 						<div class="col-md-3">
@@ -70,8 +118,8 @@
 							</div>	
 						</div>
 						<div class="col-md-3">
-							<h5>How hard should I climb to get the most out of my trip?</h5>
-							<select name="grade" ng-model="locationObj.grade" class="form-control">
+							<h5>How hard should I climb to get the most out of my trip? <span class="text-danger">*</span></h5>
+							<select name="grade" ng-model="locationObj.grade" class="form-control" ng-required="true">
 								<option ng-repeat="grade in grades" ng-value="grade.id">{{ grade.grade }}</option>
 							</select>
 						</div>
@@ -83,54 +131,60 @@
 
 
 	<!-- section start -->
-	<div ng-repeat="section in locationObj.sections track by $index">
-		<div class="row">
-			<div class="col-md-2">
-						<div class="btn btn-success" ng-if="$index == 0" ng-click="addSection(section)">Save section</div>
-						<div class="btn btn-danger" ng-if="$index != 0" ng-click="removeSection(section,locationObj.sections)">remove section</div>
-			</div>
-			<div class=" col-md-10">
-				<div class="form-group input-group-lg">
-					<input type="text" placeholder="Section Title" class="form-control" ng-model="section.title"/>
-				</div>
-			</div>
+	<div class="panel panel-default" ng-repeat="section in locationObj.sections track by $index">
+		<div class="panel-heading">
+			<div class="btn btn-success" ng-if="$index == locationObj.sections.length - 1" ng-click="addSection()">Save section</div>
+			<div class="btn btn-danger" ng-if="$index != locationObj.sections.length-1 && notDefaultSection(section)" ng-click="removeSection(section,locationObj.sections)">remove section</div>
+			<div class="btn btn-default" ng-click="previewSection(section)">{{ section.previewOn?'Edit':'Preview' }} section</div>
 		</div>
-		<div class="row">
-			<div class="row col-md-9 col-md-offset-3">
-				<div class="form-group">
-					<textarea placeholder="Section Description" class="form-control" rows="6" ng-model="section.description"></textarea>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<!-- subsection start -->
-			
-			<div class="col-md-10 col-md-offset-2" ng-repeat="subsection in section.subsections track by $index">
-				<div class="row">
-					<div class="col-md-2">
-						<div class="btn btn-success" ng-if="$index == 0" ng-click="addSubsection(subsection,section)">Save subsection</div>
-						<div class="btn btn-danger" ng-if="$index != 0" ng-click="removeSubsection(subsection,section.subsections)">remove subsection</div>
-					</div>
-					<div class="col-md-10 form-group">
-						<input type="text" placeholder="Sub-Section Title" class="form-control" ng-model="subsection.title" />
+		<locationsection class="panel-body" ng-if="section.previewOn" section="section"></locationsection>
+		<span class="panel-body" ng-if="!section.previewOn">
+			<div class="row">
+				<div class="col-md-offset-1 col-md-10">
+					<div class="form-group input-group-lg">
+						<input type="text" placeholder="Section Title" class="form-control" ng-model="section.title"/>
 					</div>
 				</div>
-				<div class="form-group row">
-					
-					<!-- subsection descriptions start -->
-					<div class="row col-md-9 col-md-offset-3" ng-repeat="subsectionDesc in subsection.descriptions track by $index">
-						<div class="input-group input-group-sm">
-							<span ng-if="$index == 0" class="input-group-addon" id="add-row" ng-click="addSubsectionDesc(subsectionDesc,subsection.descriptions)">+</span>
-							<span ng-if="$index != 0" class="input-group-addon" id="add-row" ng-click="removeSubsectionDesc(subsectionDesc,subsection.descriptions)">-</span>
-							<input type="text" placeholder="Sub-Section Desc" class="form-control" aria-describedby="add-row" ng-model="subsectionDesc.text"/>
+			</div>
+			<div class="row">
+				<div class="row col-md-9 col-md-offset-1">
+					<div class="form-group">
+						<textarea placeholder="{{sectionDescriptionPlaceholder(section)}}" class="form-control" rows="6" ng-model="section.body"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- subsection start -->
+				
+				<div class="col-md-5" ng-class="$index%2 ==0? 'col-md-offset-1': ''" ng-repeat="subsection in section.subsections track by $index">
+					<div class="row">
+						<div class="col-md-2">
+							<div class="btn btn-xs btn-success" ng-if="$index == 0" ng-click="addSubsection(subsection,section)">Save subsection</div>
+							<div class="btn btn-xs btn-danger" ng-if="$index != 0" ng-click="removeSubsection(subsection,section.subsections)">remove subsection</div>
+						</div>
+						<div class="col-md-offset-1 col-md-9 form-group">
+							<input type="text" placeholder="{{subsectionTitlePlaceholder(section)}}" class="form-control" ng-model="subsection.title" />
 						</div>
 					</div>
-					<!-- subsection descriptions end -->
+					<div class="form-group row">
+						
+						<!-- subsection descriptions start -->
+						<div class="row col-md-9 col-md-offset-3" ng-repeat="subsectionDesc in subsection.subsectionDescriptions track by $index">
+							<div class="input-group input-group-sm">
+								<span ng-if="$index == 0" class="input-group-addon" id="add-row" ng-click="addSubsectionDesc(subsectionDesc,subsection.subsectionDescriptions)">+</span>
+								<span ng-if="$index != 0" class="input-group-addon" id="add-row" ng-click="removeSubsectionDesc(subsectionDesc,subsection.subsectionDescriptions)">-</span>
+								<input type="text" placeholder="{{subsectionDescriptionPlaceholder(section)}}" class="form-control" aria-describedby="add-row" ng-model="subsectionDesc.desc"/>
+							</div>
+						</div>
+						<!-- subsection descriptions end -->
+					</div>
 				</div>
+				<!-- subsection end -->
 			</div>
-			<!-- subsection end -->
-		</div>
+		</span>
 	</div>
 	<!-- section end -->
+	<button class="btn" ng-disabled="locationForm.$invalid" ng-click="submitLocation()"> submit this new location</button>
 </div>
+
 </form>
