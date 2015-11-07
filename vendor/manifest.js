@@ -1,5 +1,6 @@
 exports.javascript = [
 	'vendor/jquery/dist/jquery.min.js',
+	'vendor/bootstrap/dist/js/bootstrap.min.js',
 	'vendor/api-check/dist/api-check.js',
   'vendor/angular/angular.js',
 	'vendor/ng-file-upload/ng-file-upload.js',
@@ -12,7 +13,6 @@ exports.javascript = [
 	'vendor/angular-schema-form/dist/bootstrap-decorator.min.js',
   'vendor/angular-route/angular-route.js',
   'vendor/lodash/dist/lodash.js',
-	'vendor/bootstrap/dist/js/bootstrap.min.js',
   'vendor/gmapsjs/gmaps.js',
   'vendor/highcharts/highcharts.js'
 
