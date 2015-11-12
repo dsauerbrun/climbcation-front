@@ -17,6 +17,7 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.climbingTypes = [];
 	$scope.months =[];
 	$scope.grades = [];
+	$scope.existingLocations = [];
 	
 	$scope.$watch('locationForm.$valid', function(){
 
@@ -37,6 +38,8 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 			$scope.months = respData['months'];
 			$scope.grades = respData['grades'];
 	});
+
+	
 
 	$scope.closeSuccessModal = function(){
 				$('#successModal').modal('hide')
@@ -188,6 +191,49 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 
 });
 
+sectionForm.directive('locationExists', function ($http){ 
+	var locations;
+	$http.get('api/location/name/all').then(function(locationList){
+		locations = locationList.data;
+	})
+   return {
+      require: 'ngModel',
+      link: function(scope, elem, attr, ctrl) {
+
+          
+          
+          ctrl.$validators.locationExists = function(modelValue, viewValue){
+          	if (ctrl.$isEmpty(modelValue)) {
+	          // consider empty models to be valid
+	          
+	          return false;
+	        }
+	        if( locations.indexOf(viewValue) == -1){
+	        	ctrl.$setValidity('valid',true);
+	        	return true;
+	        }
+	        else{
+		        ctrl.$setValidity('invalid',false);
+		        return false;	
+	    	}
+
+        	
+          }
+          //For DOM -> model validation
+         /* ngModel.$parsers.unshift(function(value) {
+             var valid = locations.indexOf(value) === -1;
+             ngModel.$setValidity('locationExists', valid);
+             return valid ? value : undefined;
+          });
+
+          //For model -> DOM validation
+          ngModel.$formatters.unshift(function(value) {
+             ngModel.$setValidity('locationExists', locations.indexOf(value) === -1);
+             return value;
+          });*/
+      }
+   };
+});
 
 sectionForm.directive('integer', function() {
 	var INTEGER_REGEXP = /^\-?\d+$/;

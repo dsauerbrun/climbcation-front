@@ -59,7 +59,7 @@
 				<div class="col-md-9">
 					<h4 class="row"> 
 						<span class="form-group col-md-4" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
-							<input name="name" ng-model="locationObj.name" placeholder="name, ex. Yosemite" ng-required="true" class="form-control" novalidate />
+							<input name="name" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="name, ex. Yosemite" ng-required="true" class="form-control"  />
 						</span>
 						
 						<span class="form-group col-md-4" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >
