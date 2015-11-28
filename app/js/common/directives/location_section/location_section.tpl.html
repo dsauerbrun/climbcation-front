@@ -1,4 +1,4 @@
-<div id="{{ section.title | removeSpaces }}" class="container info-section">
+<div id="{{ section.title | removeSpaces }}" ng-if="!section.previewOff" class="container info-section">
 	<div class="row" >
 		<div class="col-md-12">
 			<h3><u>{{ section.title }}</u></h3>
@@ -23,3 +23,52 @@
 
 	</div>
 </div>
+
+<span class="panel-body" ng-if="section.previewOff">
+			<div class="row">
+				<div class="col-md-offset-1 col-md-10">
+					<div class="form-group input-group-lg">
+						<input type="text" placeholder="Section Title" class="form-control" ng-model="section.title"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="row col-md-9 col-md-offset-1">
+					<div class="form-group">
+						<textarea placeholder="{{sectionDescriptionPlaceholder(section)}}" class="form-control" rows="6" ng-model="section.body"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- subsection start -->
+				
+				<div ng-repeat="subsection in section.subsections track by $index">
+					<div class="clearfix" ng-if="$index % 2 == 0"></div>
+					<div class="col-md-5" ng-class="$index%2 ==0? 'col-md-offset-1': ''">
+						
+						<div class="row">
+							<div class="col-md-2">
+								<div class="btn btn-xs btn-success" ng-if="$index == 0" ng-click="addSubsection(subsection,section)">Save subsection</div>
+								<div class="btn btn-xs btn-danger" ng-if="$index != 0" ng-click="removeSubsection(subsection,section.subsections)">remove subsection</div>
+							</div>
+							<div class="col-md-offset-1 col-md-9 form-group">
+								<input type="text" placeholder="{{subsectionTitlePlaceholder(section)}}" class="form-control" ng-model="subsection.title" />
+							</div>
+						</div>
+						<div class="form-group row">
+							
+							<!-- subsection descriptions start -->
+							<div class="row col-md-9 col-md-offset-3" ng-repeat="subsectionDesc in subsection.subsectionDescriptions track by $index">
+								<div class="input-group input-group-sm">
+									<span ng-if="$index == 0" class="input-group-addon" id="add-row" ng-click="addSubsectionDesc(subsectionDesc,subsection.subsectionDescriptions)">+</span>
+									<span ng-if="$index != 0" class="input-group-addon" id="add-row" ng-click="removeSubsectionDesc(subsectionDesc,subsection.subsectionDescriptions)">-</span>
+									<input type="text" placeholder="{{subsectionDescriptionPlaceholder(section)}}" class="form-control" aria-describedby="add-row" ng-model="subsectionDesc.desc"/>
+								</div>
+							</div>
+							<!-- subsection descriptions end -->
+						</div>
+					</div>
+				</div>
+				<!-- subsection end -->
+			</div>
+		</span>

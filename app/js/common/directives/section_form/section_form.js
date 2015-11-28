@@ -11,7 +11,7 @@ sectionForm.directive('sectionform', function(){
 
 sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[]};
-	var emptySection = {'previewOn':false, 'title':'','body':'','subsections':[{'title':'','subsectionDescriptions':[{'desc':''}]}]}
+	var emptySection = {'previewOff':true, 'title':'','body':'','subsections':[{'title':'','subsectionDescriptions':[{'desc':''}]}]}
 	var emptySubsection = {'title':'','subsectionDescriptions':[{'desc':''}]};
 	$scope.accommodations = [];
 	$scope.climbingTypes = [];
@@ -47,7 +47,7 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	}
 
 	$scope.previewSection = function(section){
-		section.previewOn = !section.previewOn;
+		section.previewOff = !section.previewOff;
 	}
 
 	$scope.notDefaultSection = function(section){
