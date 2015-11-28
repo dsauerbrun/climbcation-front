@@ -21,7 +21,7 @@
 </div>
 <div class="panel panel-default" ng-if="section.previewOff">
 	<div class="panel-heading">
-		<div class="btn btn-success" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
+		<div class="btn btn-success" ng-class="{'disabled': section.isSaving }" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
 		<div class="btn btn-danger" ng-if="sectionsLength != -2 && (indexIterator != sectionsLength-1 && notDefaultSection(section))" ng-click="removeSection(section)">remove section</div>
 		<div class="btn btn-default" ng-click="previewSection(section)">{{ section.previewOff?'Preview':'Edit' }} section</div>
 	</div>
@@ -49,7 +49,7 @@
 					
 					<div class="row">
 						<div class="col-md-2">
-							<div class="btn btn-xs btn-success" ng-if="$index == 0" ng-click="addSubsection(subsection,section)">Save subsection</div>
+							<div class="btn btn-xs btn-success" ng-if="$index == 0" ng-click="addSubsection(subsection,section)">Add subsection</div>
 							<div class="btn btn-xs btn-danger" ng-if="$index != 0" ng-click="removeSubsection(subsection,section.subsections)">remove subsection</div>
 						</div>
 						<div class="col-md-offset-1 col-md-9 form-group">

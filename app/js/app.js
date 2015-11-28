@@ -55,8 +55,10 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 		console.log(section)
 		console.log(sectionId)
 		console.log('stuff')
+		section.isSaving = true;
 		$http.post('/api/infosection/'+sectionId,{section: section}).then(function(response){
 			console.log(response);
+			section.isSaving = false;
 			$('#saveSuccessModal').modal()
 		})
 	};
