@@ -1,4 +1,4 @@
-var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments']);
+var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb']);
 home.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 	.when('/home', {
@@ -17,6 +17,12 @@ home.config(['$routeProvider', function($routeProvider) {
 
 }]);
 
+home.config(function(ezfbProvider){
+	ezfbProvider.setInitParams({
+		appId: '604556333018328',
+		version: 'v2.5'
+	})
+})
 
 home.filter('removeSpaces', function () {
 	return function (text) {
@@ -24,7 +30,7 @@ home.filter('removeSpaces', function () {
 		return str;
 	};
 });
-home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$location,$anchorScroll,$timeout){
+home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$routeParams,$location,$anchorScroll,$timeout){
 	slug = $routeParams.slug;
 	$scope.name = 'hello';
 	$scope.gmap;
@@ -63,9 +69,8 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 			$('#saveSuccessModal').modal()
 		})
 	};
-	FB.XFBML.parse();
-
 });
+
 home.controller('LocationsController',function($scope, $timeout,LocationsGetter){
 	var locations = this;
 	$scope.locationData = [];
