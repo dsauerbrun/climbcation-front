@@ -50,6 +50,17 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 		}
 	);
+
+	$scope.updateSection = function(sectionId, section){
+		console.log(section)
+		console.log(sectionId)
+		console.log('stuff')
+		$http.post('/api/infosection/'+sectionId,{section: section}).then(function(response){
+			console.log(response);
+			$('#saveSuccessModal').modal()
+		})
+	};
+
 });
 home.controller('LocationsController',function($scope, $timeout,LocationsGetter){
 	var locations = this;

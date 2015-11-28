@@ -12,7 +12,7 @@ sectionForm.directive('sectionform', function(){
 sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[]};
 	var emptySection = {'previewOff':true, 'title':'','body':'','subsections':[{'title':'','subsectionDescriptions':[{'desc':''}]}]}
-	var emptySubsection = {'title':'','subsectionDescriptions':[{'desc':''}]};
+	
 	$scope.accommodations = [];
 	$scope.climbingTypes = [];
 	$scope.months =[];
@@ -26,9 +26,7 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	emptySection.clone = function(){
 		return jQuery.extend(true, {}, this);
 	};
-	emptySubsection.clone = function(){
-		return jQuery.extend(true, {}, this);
-	};
+	
 	$scope.locationObj.sections.push(emptySection.clone())
 	//get options for seasons, climbing types, accommodations etc...
 	$http.get('api/get_attribute_options').then(function(data){
@@ -42,24 +40,12 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	
 
 	$scope.closeSuccessModal = function(){
-				$('#successModal').modal('hide')
+		$('#successModal').modal('hide')
 		$location.path('#home')
 	}
 
-	$scope.previewSection = function(section){
-		section.previewOff = !section.previewOff;
-	}
 
-	$scope.notDefaultSection = function(section){
-		if(section.title == 'Getting in' || section.title == 'Accommodation' || section.title == 'Cost' || section.title == 'Transportation'){
-			return false;
-		}
-		else{
-			return true;
-		}
-	}
-
-	$scope.addSection = function(section){
+	$scope.saveSection = function(section){
 		//adding default to build page in beginning
 		if(section){
 			$scope.locationObj.sections.push(emptySection.clone());
@@ -72,32 +58,13 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 		}
 	}
 
-	$scope.removeSection = function(section,sections){
+	$scope.removeSection = function(section){
+		var sections = $scope.locationObj.sections;
 		index = sections.indexOf(section);
 		sections.splice(index,1);
 	}
 
-	$scope.addSubsection = function(subsection,section){
-		//$scope.sections.push({'title':title,'description':description,'subsections':subsections})
-		section['subsections'].push(subsection);
-		section['subsections'][0] = emptySubsection.clone();
-		//section['subsections'][0]['descriptions'] = ['']
-	}
-
-	$scope.removeSubsection = function(subsection,subsections){
-		index = subsections.indexOf(subsection);
-		subsections.splice(index,1);
-	};
-
-	$scope.addSubsectionDesc = function(description, subsectionDescArray){
-		subsectionDescArray.push(description);
-		subsectionDescArray[0] = {'text':''};
-	}
-
-	$scope.removeSubsectionDesc = function(description, subsectionDescArray){
-		index = subsectionDescArray.indexOf(description);
-		subsectionDescArray.splice(index,1);
-	}
+	
 
 	$scope.submitLocation = function(){
 		//run validation method, 
@@ -116,76 +83,24 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 
 	}
 
-	$scope.sectionDescriptionPlaceholder = function(section){
-		if(section.title == 'Getting in'){
-			return 'ex: You\'ll need to drive in since there are no nearby airports';
-		}
-		else if(section.title == 'Accommodation'){
-			return 'ex: Smith boasts one of the best campsites out there';
-		}
-		else if(section.title == 'Cost'){
-			return 'ex: You can dirtbag it in the campground and make it a really cheap stay';
-		}
-		else if(section.title == 'Transportation'){
-			return 'ex: If you\'re at the Bivy campsite you can walk to the park but you\'ll probably want to hitchhike into town to get food(very easily done since you can meet plenty of people at the Bivy). A bicycle is ideal if you\'re camping';
-		}
-		else{
-			return 'Section Description';
-		}
-	}
-
-	$scope.subsectionTitlePlaceholder = function(section){
-		if(section.title == 'Getting in'){
-			return 'ex: Flying';
-		}
-		else if(section.title == 'Accommodation'){
-			return 'ex: Camping';
-		}
-		else if(section.title == 'Cost'){
-			return 'ex: Food';
-		}
-		else if(section.title == 'Transportation'){
-			return 'ex: Hitchhiking';
-		}
-		else{
-			return 'Subsection Title';
-		}
-	}
-
-	$scope.subsectionDescriptionPlaceholder = function(section){
-		if(section.title == 'Getting in'){
-			return 'ex: The closest airport is Los angeles(LAX) so you will need to drive or take a bus';
-		}
-		else if(section.title == 'Accommodation'){
-			return 'ex: The campsite is $5/night';
-		}
-		else if(section.title == 'Cost'){
-			return 'ex: You\'ve got safeway, trader joes, costco, etc... nearby.';
-		}
-		else if(section.title == 'Transportation'){
-			return 'ex: if you\'re staying at the bivy, catching a ride in town with a fellow climber will be very easy';
-		}
-		else{
-			return 'Subsection Description';
-		}
-	}
+	
 
 	$scope.addDefaultSections = function(){
 		var defaultSectionAdd = emptySection.clone();
 		defaultSectionAdd.title = "Getting in"
-		$scope.addSection(defaultSectionAdd);
+		$scope.saveSection(defaultSectionAdd);
 
 		var defaultSectionAdd = emptySection.clone();
 		defaultSectionAdd.title = "Accommodation"
-		$scope.addSection(defaultSectionAdd);
+		$scope.saveSection(defaultSectionAdd);
 
 		var defaultSectionAdd = emptySection.clone();
 		defaultSectionAdd.title = "Cost"
-		$scope.addSection(defaultSectionAdd);
+		$scope.saveSection(defaultSectionAdd);
 
 		var defaultSectionAdd = emptySection.clone();
 		defaultSectionAdd.title = "Transportation"
-		$scope.addSection(defaultSectionAdd);
+		$scope.saveSection(defaultSectionAdd);
 	}
 	$scope.addDefaultSections();
 

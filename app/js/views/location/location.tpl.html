@@ -1,3 +1,20 @@
+<div id="saveSuccessModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Thank you!</h4>
+      </div>
+      <div class="modal-body">
+        <p>Your change has been submitted!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <section >
 <div class="container-fluid">
 	<style type="text/css">
@@ -51,9 +68,9 @@
 
 
 <div class="container">
-	<locationsection section="section" ng-repeat="section in sections"></locationsection>
+	<locationsection section="section" sections-length="-2" ng-repeat="(sectionId, section) in sections" save-section="updateSection(sectionId, section)" ></locationsection>
 
-	<div id="nearby" class="container info-section">
+	<div id="nearby" class="info-section">
 		<div class="row" >
 			<div class="col-md-12">
 				<h3><u>Nearby Destinations</u></h3>
