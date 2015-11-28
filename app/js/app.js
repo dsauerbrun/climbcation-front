@@ -1,4 +1,4 @@
-var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute']);
+var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments']);
 home.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 	.when('/home', {
@@ -16,6 +16,7 @@ home.config(['$routeProvider', function($routeProvider) {
 	});
 
 }]);
+
 
 home.filter('removeSpaces', function () {
 	return function (text) {
@@ -62,6 +63,7 @@ home.controller('LocationPageController',function($scope,$q,$http,$routeParams,$
 			$('#saveSuccessModal').modal()
 		})
 	};
+	FB.XFBML.parse();
 
 });
 home.controller('LocationsController',function($scope, $timeout,LocationsGetter){
@@ -106,6 +108,8 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 		);
 
 	});
+
+
 });
 
 home.controller('MapFilterController',function($scope,LocationsGetter){

@@ -15,101 +15,111 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<section >
-<div class="container-fluid">
-	<style type="text/css">
-		html, body, #map-canvas { height: 25em; margin: 0; padding: 0;}
-	</style>
-	<script type="text/javascript">
-		
-	</script>
+<section class="location-info-container">
+	<div class="container-fluid">
+		<style type="text/css">
+			html, body, #map-canvas { height: 25em; margin: 0; padding: 0;}
+		</style>
+		<script type="text/javascript">
+			
+		</script>
 
-	<div class="jumbotron">
-		<div id="map-canvas">
+		<div class="jumbotron">
+			<div id="map-canvas">
 
+			</div>
 		</div>
+
 	</div>
 
-</div>
-
-<!-- INFO SECTION -->
-<div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="row">
-				<div class="col-md-3">
-					<img ng-src="{{ locationData['home_thumb'] }}" class='img-circle' width='192' height='192' />
-				</div>
-				<div class="col-md-9">
-					<h1> {{ locationData['name'] }}, {{ locationData['country'] }}</h1>
-					<div class="row">
-						<div class="col-md-3">
-							<h5>When Should I go?</h5>
-							{{ locationData['date_range'] }}
-						</div>
-						<div class="col-md-3">
-							<h5>Where can I stay?</h5>
-							<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" title="{{ accommodation['name'] }}" class="icon"/>
-						</div>
-						<div class="col-md-3">
-							<h5>What should I climb?</h5>
-							<img ng-repeat="climbing_type in locationData['climbing_types']" ng-src="{{ climbing_type['url'] }}" title="{{ climbing_type['name'] }}" class="icon"/>
-						</div>
-						<div class="col-md-3">
-							<div class="">I should climb around <mark><strong>{{ locationData['grade'] }}</strong></mark> to get the most out of my trip</div>
+	<!-- INFO SECTION -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-3">
+						<img ng-src="{{ locationData['home_thumb'] }}" class='img-circle' width='192' height='192' />
+					</div>
+					<div class="col-md-9">
+						<h1> {{ locationData['name'] }}, {{ locationData['country'] }}</h1>
+						<div class="row">
+							<div class="col-md-3">
+								<h5>When Should I go?</h5>
+								{{ locationData['date_range'] }}
+							</div>
+							<div class="col-md-3">
+								<h5>Where can I stay?</h5>
+								<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" title="{{ accommodation['name'] }}" class="icon"/>
+							</div>
+							<div class="col-md-3">
+								<h5>What should I climb?</h5>
+								<img ng-repeat="climbing_type in locationData['climbing_types']" ng-src="{{ climbing_type['url'] }}" title="{{ climbing_type['name'] }}" class="icon"/>
+							</div>
+							<div class="col-md-3">
+								<div class="">I should climb around <mark><strong>{{ locationData['grade'] }}</strong></mark> to get the most out of my trip</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+			
 	</div>
-		
-</div>
 
 
-<div class="container">
-	<locationsection section="section" sections-length="-2" ng-repeat="(sectionId, section) in sections" save-section="updateSection(sectionId, section)" ></locationsection>
+	<div class="container">
+		<locationsection section="section" sections-length="-2" ng-repeat="(sectionId, section) in sections" save-section="updateSection(sectionId, section)" ></locationsection>
 
-	<div id="nearby" class="info-section">
-		<div class="row" >
-			<div class="col-md-12">
-				<h3><u>Nearby Destinations</u></h3>
-				<p class="lead">
-					Don't end your trip in {{locationData.name}}. There's plenty to see nearby
-				</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="row col-md-12">
+		<div id="nearby" class="info-section">
+			<div class="row" >
 				<div class="col-md-12">
-					<h5>Destinations within 200 miles of {{ locationData['name'] }} </h5>
-					<ul class="list-group">
-						
-						<a ng-repeat="nearLocation in nearby"ng-href="/#location/{{ nearLocation.slug }}">
-							<li class="list-group-item">
-								{{nearLocation.name}}, {{nearLocation.country}} ----------- {{nearLocation.distance}} miles
-							</li>	
-						</a>
-				
-					</ul>
+					<h3><u>Nearby Destinations</u></h3>
+					<p class="lead">
+						Don't end your trip in {{locationData.name}}. There's plenty to see nearby
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="row col-md-12">
+					<div class="col-md-12">
+						<h5>Destinations within 200 miles of {{ locationData['name'] }} </h5>
+						<ul class="list-group">
+							
+							<a ng-repeat="nearLocation in nearby"ng-href="/#location/{{ nearLocation.slug }}">
+								<li class="list-group-item">
+									{{nearLocation.name}}, {{nearLocation.country}} ----------- {{nearLocation.distance}} miles
+								</li>	
+							</a>
+					
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
+		
+		<div id="comments" class="fb-comments info-section" data-width="100%" data-href="http://www.climbcation.com/{{ locationData['name'] }}" data-numposts="5"></div>
+
 	</div>
-</div>
+
 </section>
+
 <nav class="navbar navbar-default navbar-fixed-bottom">
 <!-- <div class="panel-heading">Table of Contents</div> -->
 	<div class="collapse navbar-collapse">
 		<ul class="nav navbar-nav">
-			<li class="" ng-repeat="section in sections">
+			<li class="footer-link" ng-repeat="section in sections">
 				<a ng-click="scrollTo(section.title)" target="_self">
 					{{ section['title'] }}
 				</a>
 			</li>
-			<li class="">
+			<li class="footer-link">
 				<a ng-click='scrollTo("nearby")'>
 					Nearby Destinations
+				</a>
+			</li>
+			<li class="footer-link">
+				<a ng-click='scrollTo("comments")'>
+					Comments
 				</a>
 			</li>
 		</ul>

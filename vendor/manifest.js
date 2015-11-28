@@ -14,7 +14,8 @@ exports.javascript = [
   'vendor/angular-route/angular-route.js',
   'vendor/lodash/dist/lodash.js',
   'vendor/gmapsjs/gmaps.js',
-  'vendor/highcharts/highcharts.js'
+  'vendor/highcharts/highcharts.js',
+	'vendor/angular-easyfb/src/angular-easyfb.js'
 
 ];
 
