@@ -35,6 +35,12 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	$scope.name = 'hello';
 	$scope.gmap;
 	var deferred = $q.defer();
+	var emptySectionTemplate = {previewOff: false, newSection: true, title:'', body: '', subsections: [{title:'', subsectionDescriptions:[{desc:''}]}]}
+	emptySectionTemplate.clone = function(){
+		return jQuery.extend(true, {}, this);
+	};
+
+	$scope.emptySection = {previewOff: false, newSection: true, title:'', body: '', subsections: [{title:'', subsectionDescriptions:[{desc:''}]}]}
 	$scope.scrollTo = function(id){
 		$('html,body').animate({
 			scrollTop: $('#'+id.replace(/\s+/g, '')).offset().top
@@ -67,6 +73,19 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			console.log(response);
 			section.isSaving = false;
 			$('#saveSuccessModal').modal()
+		})
+	};
+
+	$scope.saveSection = function(locationId, section){
+		console.log(section)
+		console.log(locationId)
+		console.log('stuffing')
+		section.isSaving = true;
+		$http.post('/api/infosection/',{locationId: locationId, section: section}).then(function(response){
+			console.log(response);
+			section.isSaving = false;
+			$('#saveSuccessModal').modal()
+			$scope.emptySection = emptySectionTemplate.clone();
 		})
 	};
 });

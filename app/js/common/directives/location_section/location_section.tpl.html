@@ -1,7 +1,7 @@
 <div id="{{ section.title | removeSpaces }}" ng-if="!section.previewOff" class=" info-section">
 	<div class="row" >
 		<div class="col-md-12">
-			<h3><u>{{ section.title }}</u> <a class="pull-right" ng-click="previewSection(section)">Edit section</a></h3>
+			<h3><u>{{ section.title }}</u> <a class="pull-right" ng-click="previewSection(section)">{{ section.newSection?'Add Section':'Edit section' }}</a></h3>
 			<p class="lead" ng-bind-html="section.body | parseUrlFilter:'_blank'">
 				
 			</p>
