@@ -20,8 +20,8 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.existingLocations = [];
 	
 	$scope.$watch('locationForm.$valid', function(){
-
-		console.log(locationForm.$valid)
+		console.log('locationform validation changed')
+		console.log($scope.locationForm.$valid)
 	});
 	emptySection.clone = function(){
 		return jQuery.extend(true, {}, this);
@@ -106,6 +106,28 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 
 });
 
+sectionForm.directive('validationMessage', function () { 
+	return{
+	    restrict: 'A',
+	    template: '<input tooltip tooltip-placement="bottom" >',
+	    replace: true,
+	    require: 'ngModel',
+	    link: function (scope, element, attrs, ctrl) {
+
+	      ctrl.$parsers.unshift(function(viewValue) {
+	        var valid = ctrl.$valid;
+	        if (valid) {
+	          attrs.$set('tooltip', "");
+	        } else {
+	          attrs.$set('tooltip', attrs.validationMessage);
+	          scope.tt_isOpen = true; // doesn't work!?
+	        }
+	        return viewValue;
+	      });
+	    }
+	};
+});
+
 sectionForm.directive('locationExists', function ($http){ 
 	var locations;
 	$http.get('api/location/name/all').then(function(locationList){
@@ -120,15 +142,22 @@ sectionForm.directive('locationExists', function ($http){
           ctrl.$validators.locationExists = function(modelValue, viewValue){
           	if (ctrl.$isEmpty(modelValue)) {
 	          // consider empty models to be valid
-	          
+	          console.log('empty to setting to invalid')
+
 	          return false;
 	        }
-	        if( locations.indexOf(viewValue) == -1){
+	        var exists = _.find(locations, function(location){
+	        	return location.toLowerCase() == viewValue.toLowerCase();
+	        })
+	        if( !exists){
 	        	ctrl.$setValidity('valid',true);
+	        	console.log('setting valid')
+	        	console.log(ctrl)
 	        	return true;
 	        }
 	        else{
-		        ctrl.$setValidity('invalid',false);
+		        ctrl.$setValidity('valid',false);
+		        console.log('setting invalid')
 		        return false;	
 	    	}
 

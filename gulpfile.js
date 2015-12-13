@@ -5,7 +5,7 @@ var es                 = require('event-stream');
 var del                = require('del');
 var historyApiFallback = require('connect-history-api-fallback');
 
-var vendor             = require('./vendor/manifest');
+var vendor             = require('./manifest');
 
 var paths = {
   appJavascript:    ['app/js/app.js', 'app/js/**/*.js'],

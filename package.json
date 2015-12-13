@@ -49,5 +49,8 @@
   "_shasum": "d7fe991dd3e9184825dd2b4c3f9e8b63397c3114",
   "_resolved": "git://github.com/Foxandxss/fox-angular-gulp-workflow#8c96519dde8eeffaeaa207da9b984e0eb09505b2",
   "_from": "git://github.com/Foxandxss/fox-angular-gulp-workflow",
-  "_fromGithub": true
+  "_fromGithub": true,
+  "dependencies": {
+    "angular-ui-bootstrap": "^0.14.3"
+  }
 }

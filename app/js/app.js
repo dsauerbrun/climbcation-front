@@ -1,4 +1,4 @@
-var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb']);
+var home = angular.module('app', ['filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap']);
 home.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 	.when('/home', {

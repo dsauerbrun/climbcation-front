@@ -15,12 +15,14 @@ exports.javascript = [
   'vendor/lodash/dist/lodash.js',
   'vendor/gmapsjs/gmaps.js',
   'vendor/highcharts/highcharts.js',
+	'node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.min.js',
 	'vendor/angular-easyfb/src/angular-easyfb.js'
 
 ];
 
 exports.css = [
 	'vendor/bootstrap/dist/css/bootstrap.min.css',
+	'node_modules/angular-ui-bootstrap/ui-bootstrap-csp.css',
 	'vendor/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css'
 
 ];
