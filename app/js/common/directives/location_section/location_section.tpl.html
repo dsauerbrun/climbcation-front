@@ -2,8 +2,8 @@
 	<div class="row" >
 		<div class="col-md-12">
 			<h3><u>{{ section.title }}</u> <a class="pull-right" ng-click="previewSection(section)">Edit section</a></h3>
-			<p class="lead">
-				{{ section.body }}
+			<p class="lead" ng-bind-html="section.body | parseUrlFilter:'_blank'">
+				
 			</p>
 		</div>
 	</div>
@@ -13,7 +13,7 @@
 			<div class="col-md-6">
 				<h5> {{subsectionData.title}}</h5>
 				<ul class="list-group">
-					<li ng-repeat='information in subsectionData.subsectionDescriptions' class="list-group-item" ng-if="information.desc != '' && information.desc != null">{{information.desc}}</li>	
+					<li ng-repeat='information in subsectionData.subsectionDescriptions' class="list-group-item" ng-if="information.desc != '' && information.desc != null" ng-bind-html="information.desc | parseUrlFilter:'_blank'"></li>	
 				</ul>
 			</div>
 		</div>
