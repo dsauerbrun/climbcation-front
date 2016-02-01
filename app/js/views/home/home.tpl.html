@@ -1,30 +1,19 @@
 <section ng-controller='LocationsController'>
+<div class="map-hero">
+	<div id='mapFilter' ng-controller='MapFilterController' class="row">
+	</div>
+	<div class="map-overlay">
+		<div class="map-overlay-title">
+			<h1>Find Your Next Climbing Destination</h1>
+		</div>
+		<img class="pull-left" src="/images/hero-image-left.png" />
+		<img class="pull-right" src="/images/hero-image-right.png" />
+	</div>
+</div>
 <filter></filter>
 <div class="row">
-	<div class="col-md-9 locations-window" data-spy="scroll" >
-		<location ng-repeat="locationData in locationData"></location>
-		<nav class="text-center">
-			<ul class="pagination">
-			    <li>
-			      <a ng-click="LocationsGetter.pageChange(LocationsGetter.page_num - 1)" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <li ng-class="(1 === LocationsGetter.page_num)?'active':''"><a ng-click="LocationsGetter.pageChange(1)">1</a></li>
-			    <li ng-class="(2 === LocationsGetter.page_num)?'active':''"><a ng-click="LocationsGetter.pageChange(2)">2</a></li>
-			    <li ng-class="(3 === LocationsGetter.page_num)?'active':''"><a ng-click="LocationsGetter.pageChange(3)">3</a></li>
-			    <li ng-class="(4 === LocationsGetter.page_num)?'active':''"><a ng-click="LocationsGetter.pageChange(4)">4</a></li>
-			    <li ng-class="(5 === LocationsGetter.page_num)?'active':''"><a ng-click="LocationsGetter.pageChange(5)">5</a></li>
-			    <li>
-			      <a ng-click="LocationsGetter.pageChange(LocationsGetter.page_num + 1)" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<div id='mapFilter' ng-controller='MapFilterController' class="col-md-3">
-		
+	<div class="col-md-12 locations-window" data-spy="scroll" >
+		<location class="col-md-6" ng-repeat="locationData in locationData"></location>
 	</div>
 </div>
 </section>

@@ -2,13 +2,62 @@
 	height: 32px;
 	width: 32px;
 }
+
+.map-hero {
+	position: relative;
+	.map-overlay{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		pointer-events: none;
+		.map-overlay-title {
+			position: relative;
+			h1 {
+				position: absolute;
+				left: 50%;
+				-webkit-transform: translateX(-50%);
+				transform: translateX(-50%);
+				color: #fff;
+				-webkit-text-stroke-width: 1px;
+   				-webkit-text-stroke-color: rgb(60,126,145);
+			}
+		}
+		img {
+			height: 100%;
+		}
+	}
+}
+
 .icon.button{
-	height:20px;
+	height: 17px;
+	width: 25px;
 }
 .icon-row{
 	margin: 1em 0;
 }
-.filter-button{
+.filter{
+	position:relative;
+	margin: 2em 2em;
+	padding: 1em 3em;
+	border-color: rgb(13,33,42);
+	border-style: solid;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-width: 2px 0 2px 0;
+	h4:first-child {
+		margin-top: 0;
+	}
+	.loading-overlay {
+		width: 100%;
+		height: 100%;
+		background: rgba(255,255,255,.8);
+		position: absolute;
+		top: 0;
+		.loading-text {
+			padding: 6em 0;
+		}
+	}
 }
 .location-row:nth-of-type(odd){
 	background-color: #f9f9f9;
@@ -16,19 +65,82 @@
 .location-row{
 	padding: 1em 0;
 }
-.jumbotron.homepage{
-	margin-bottom: 0px;
-	padding: .5em 0;
-}
 .navbar.home {
-	margin-bottom: 0;	
+	padding: 1em 0px;
+	margin-bottom: 0;
+	background-color: rgb(13,33,42);
+	.nav-link {
+		a {
+			color: rgb(230,230,230);
+		}
+		text-align: center;
+	}
+	.nav-link.text {
+		padding-top: 1em;
+	}
+	.navbar-logo {
+		display: inline;
+		img {
+			height: 50px;
+		}
+	}
 }
 #mapFilter{
-	height:25em;
-
+	height:15em;
 }
 .locations-window{
 	position: relative;
-	height: 50em;
-	overflow: auto;
+	/*height: 50em;
+	overflow: auto;*/
+}
+
+.location-card {
+	border-color: rgb(214,214,214);
+	border-style: solid;
+	border-width: 2px;
+	margin-bottom: 1em;
+	.icon {
+		height: auto;
+		width: 25px;
+		padding-right: 5px;
+	}
+	.location-card-info{
+		position:relative;
+		border-color: rgb(214,214,214);
+		border-style: solid;
+		border-width: 0px 0px 2px 0px;
+		.location-card-attributes {
+			position: relative;
+			height: 100%;
+			
+		}
+		.location-list-thumb-container{
+			position: relative;
+			.location-list-thumb {
+				width: 100%;
+				height: 17em;
+			}
+			.location-list-thumb-title {
+				position: absolute;
+				width: 80%;
+				bottom: 2em;
+				padding-left: 1em;
+				background-image: linear-gradient(to right, rgb(188,188,188), rgba(255,255,255,0));
+			}
+		}
+		.location-card-cost {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+		}	
+	}
+	.location-airfare {
+		width: 100%;
+		h4 {
+			display:inline;
+		}
+		h5 {
+			display:inline;
+		}
+	}
 }

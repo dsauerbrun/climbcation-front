@@ -101,6 +101,33 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 	$scope.$watch('LocationsGetter.flightQuotesPromise', function(){
 		LocationsGetter.flightQuotesPromise.then(
 			function(promiseQuotes){
+				//set the lowest price and date for location
+				_.forEach(promiseQuotes, function(quote, key) {
+					var splitKey = key.split('-');
+					var locationId = splitKey[splitKey.length - 1];
+					console.log(locationId);
+					console.log($scope.locationData)
+					var location = _.find($scope.locationData, function(locationIter) {
+						return locationIter.location.id == locationId;
+					});
+
+					var lowestPrice = 9999999;
+					var lowestPriceDate = '';
+					console.log(quote)
+					_.forEach(quote, function(monthArray, month) {
+						_.forEach(monthArray, function(cost, day) {
+							if (lowestPrice > cost) {
+								lowestPrice = cost;
+								lowestPriceDate = month + '/' + day;
+							}
+						});
+
+					});
+					location.lowestPrice = {};
+					location.lowestPrice.date = lowestPriceDate;
+					location.lowestPrice.cost = lowestPrice;
+					
+				});
 				$timeout(function(){
 					setHighcharts(promiseQuotes,$scope.origin_airport);
 				});
@@ -137,7 +164,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 });
 
 home.controller('MapFilterController',function($scope,LocationsGetter){
-	$scope.filterMap = createMap('mapFilter',0,0,1);
+	$scope.filterMap = createMap('mapFilter',40.3427932,-105.6858329,3);
 	LocationsGetter.markerMap = {};
 	$scope.filterMap.addListener('dragend', function() {
 		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
@@ -177,7 +204,7 @@ home.controller('MapFilterController',function($scope,LocationsGetter){
 
 });
 
-home.factory("LocationsGetter",function($q,$http){
+home.factory("LocationsGetter",function($q,$http, $timeout){
 	var LocationsGetter = {};
 	var filter = {};
 	LocationsGetter.mapFilter = {};
@@ -194,6 +221,7 @@ home.factory("LocationsGetter",function($q,$http){
 	LocationsGetter.mapFilter['southwest'] = {};
 	LocationsGetter.mapFilter['southwest']['longitude'] = null;
 	LocationsGetter.mapFilter['southwest']['latitude'] = null;
+	LocationsGetter.loading = false;
 
 	var sort = {};
 	sort['price'] = [];
@@ -244,8 +272,12 @@ home.factory("LocationsGetter",function($q,$http){
 	}
 	LocationsGetter.getLocations = function(){
 		var deferred = $q.defer();
+		LocationsGetter.loading = true;
 		$http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.page_num}).success(function(data){
 			deferred.resolve(data);
+			$timeout(function() {
+				LocationsGetter.loading = false;
+			}, 1000)
 		});
 		LocationsGetter.locationsPromise = deferred.promise;
 		return deferred.promise;
@@ -365,8 +397,66 @@ function setHighcharts(locationQuoteData, origin_airport){
 		});
 		$('#highchart'+slug).highcharts({
 	        chart: {
-	            type: 'column',
-	            height: '200'
+	            type: 'line',
+	            height: '100'
+	        },
+	        title: {
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '(source: Skyscanner)',
+	            floating: true
+	        },
+	        xAxis: {
+	        	visible: false,
+	            type: 'category',
+	            title: {
+	            	text: 'Date'
+	            },
+	            labels: {
+	                rotation: -45,
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	            
+	        },
+	        yAxis: {
+	        	visible: false,
+	            min: 0,
+	            title: {
+	                text: 'Price(USD)'
+	            },
+	            tickInterval: 50,
+	            max: maxPrice
+
+	        },
+	        legend: {
+	            enabled: false
+	        },
+	        tooltip: {
+	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
+	        },
+	        series: [{
+	            name: 'Price',
+	            data: quote_array,
+	            dataLabels: {
+	                enabled: false,
+	                rotation: -90,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                format: '{point.y:.1f}', // one decimal
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        }]
+	    });
+		/*$('#highchart'+slug).highcharts({
+	        chart: {
+	            type: 'line',
+	            height: '100',
+	            showAxes: false
 	        },
 	        title: {
 	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport
@@ -417,6 +507,6 @@ function setHighcharts(locationQuoteData, origin_airport){
 	                }
 	            }
 	        }]
-	    });
+	    });*/
 	});
 }

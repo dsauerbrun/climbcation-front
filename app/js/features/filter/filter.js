@@ -6,9 +6,9 @@ filterDir.directive('filter', function(){
 		templateUrl: 'features/filter/filter.tpl.html',
 		controller: ['$http',function($http){
 			var filter = this;
-			this.fixVar = 'this is not a test'
+			this.fixVar = 'this is not a test';
+			this.loading = true;
 			this.filterClick = function(element){
-				console.log(element);
 				//toggle active state
 				if(element.hasClass('all')){
 					resetButtonGroup(element.parent());
@@ -85,7 +85,9 @@ function filterLocations(){
 		url: '/filter_locations',
 		data: {filters: filterMap, sort: $('.sort-button.active').attr('data')}
 	}).done(function(data){
+		console.log('filtering')
 		console.log(data);
+
 		$('.list').html(buildLocations(data));
 	});	
 

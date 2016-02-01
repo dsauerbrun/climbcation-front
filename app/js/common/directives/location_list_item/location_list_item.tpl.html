@@ -1,3 +1,53 @@
+<section class="location-card">
+	<div class="location-card-info">
+		<div class="row">
+			<div class="col-md-8 location-list-thumb-container">
+				<a ng-href="/#location/{{ locationData['slug'] }}">
+					<img class="location-list-thumb" ng-src="{{ locationData['home_thumb'] }}">	
+					<div class="location-list-thumb-title">
+						<h3>{{ locationData['name'] }}</h3>
+						<h5>{{ locationData['country'] }}</h5>
+					</div>
+				</a>
+
+			</div>
+			<div class="col-md-4 location-card-attributes">
+				<div>
+					<h5>Lodging Options</h5>
+					<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" class='icon' title="{{ accommodation['name'] }}">	
+				</div>
+				<div>
+					<h5>Climbing Types</h5>
+					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">
+				</div>
+				<div>
+					<h5>Best Seasons</h5>
+					{{ locationData['date_range']}}	
+				</div>
+				<div>
+					<h5>Climbing Difficulty</h5>
+					{{ locationData['grade'] }} or harder
+				</div>
+
+			</div>
+		</div>
+		<div class="location-card-cost">
+			<h5>${{ locationData['price_range_floor_cents']}}  - ${{ locationData['price_range_ceiling_cents'] }} / day</h5>
+		</div>
+	</div>
+	<div class="location-airfare">
+		<div id="highchart{{locationData['airport_code']+'-'+locationData['slug']+'-'+locationData['location']['id']}}" style="margin: 0 auto"></div>
+		<div class="row">
+		<span class="col-md-6">
+			<h5>Airline Prices(hover to see prices)</h5>
+		</span>
+		<span class="col-md-6 text-right">
+			<h4>Low of ${{locationData.lowestPrice.cost}} on {{locationData.lowestPrice.date}}</h4>
+		</span>
+	</div>
+	</div>
+</section>
+<!--
 <div class="row location-row">
 	<div class="col-md-2">
 		<a ng-href="/#location/{{ locationData['slug'] }}">
@@ -34,4 +84,4 @@
 		</div>
 	</div>
 </div>
-
+-->

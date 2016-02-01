@@ -8,37 +8,20 @@
 </head>
 <body>
   <nav class="navbar home navbar-inverse">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#home">Find Your Next Climbcation</a>
-
+    <div class="container">
+      <div class="col-md-4 nav-link text">
+        <a href="#home">Find a climbing destination</a>
+      </div>
+      <div class="col-md-4 nav-link">
+        <a class="navbar-logo" href="#home">
+          <img src="/images/climbcation-header-logo.png">
+        </a>
+      </div>
+      <div class="col-md-4 nav-link text">
+        <a href="#new-location">Submit a New Location</a>
+      </div>
     </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="#new-location">Submit a New Location</a></li>
-      </ul>
-    </div>
-    <!--
-    <div id="navbar" class="navbar-collapse collapse">
-      <form class="navbar-form navbar-right">
-        
-        <div class="form-group">
-          <input type="text" placeholder="Email" class="form-control">
-        </div>
-        <div class="form-group">
-          <input type="password" placeholder="Password" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-success">Sign in</button>
-      </form>
-    </div>
-  </div>-->
-</nav>
+  </nav>
 	<ng-view></ng-view>
   <script type="text/javascript" src="<%= js %>"></script>
 <script>
