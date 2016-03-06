@@ -10,7 +10,7 @@ sectionForm.directive('sectionform', function(){
 
 
 sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location){
-	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[]};
+	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '2-5 miles'};
 	var emptySection = {'previewOff':true, 'title':'','body':'','subsections':[{'title':'','subsectionDescriptions':[{'desc':''}]}]}
 	
 	$scope.accommodations = [];
@@ -18,7 +18,105 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.months =[];
 	$scope.grades = [];
 	$scope.existingLocations = [];
-	
+	$scope.currentPage = 3;
+	$scope.progressBar;
+
+	$scope.stopPropagation = function($event) {
+		$event.stopPropagation();
+	};
+
+	$scope.selectAccommodation = function(accommodation) {
+		var accommodationExists = $scope.locationObj.accommodations[accommodation.id];
+
+		if (accommodationExists) {
+			console.log('in exists')
+			//remove it from list of accommodations
+			$scope.locationObj.accommodations[accommodationExists.id] = null;
+		} else {
+			//mark the id and create a cost range field
+			$scope.locationObj.accommodations[accommodation.id] = {id: accommodation.id, cost: ''};
+		}
+	};
+
+	$scope.setAccommodationCost = function (accommodation, range) {
+		var accommodationExists = _.find($scope.locationObj.accommodations, function(accommodationObj) {
+			return accommodation.id == accommodationObj.id;
+		});
+		if (accommodationExists) {
+			accommodationExists.cost = range;
+		}
+	};
+
+	$scope.selectBestTransportation = function(id) {
+		// set the best transportation
+		$scope.locationObj.bestTransportationId = id;
+		$scope.locationObj.bestTransportationCost = null;
+		//set ranges
+		var bestTransportation = _.find($scope.transportations, function(transportation) {
+			return transportation.id == id;
+		})
+		$scope.bestTransportationName = bestTransportation.name;
+
+		$scope.bestTransportationCostOptions = [];
+		_.forEach(bestTransportation.ranges, function(range) {
+			var rangeObj = {
+				cost: range,
+				active: false
+			}
+			$scope.bestTransportationCostOptions.push(rangeObj);
+		})
+	}
+
+	$scope.selectBestTransportationCost = function(cost) {
+		// reset active
+		_.forEach($scope.bestTransportationCostOptions, function(costOption) {
+			costOption.active = false;
+		})
+		cost.active = true;
+		$scope.locationObj.bestTransportationCost = cost.cost
+	}
+
+	$scope.nextPage = function() {
+		if ($scope.currentPage < 6) {
+			$scope.currentPage++;
+			$scope.updateProgressBar();
+
+		}
+		
+	}
+	$scope.prevPage = function() {
+		if ($scope.currentPage > 1) {
+			$scope.currentPage--;
+			$scope.updateProgressBar();
+		}
+	}
+
+	$scope.updateProgressBar = function() {
+		switch($scope.currentPage) {
+			case 1:
+				$scope.progressBar = 8.7;
+				break;
+			case 2:
+				$scope.progressBar = 25.4;
+				break;
+			case 3:
+				$scope.progressBar = 42;
+				break;
+			case 4:
+				$scope.progressBar = 58.6;
+				break;
+			case 5:
+				$scope.progressBar = 75.4;
+				break;
+			case 6:
+				$scope.progressBar = 92;
+				break;
+
+		}
+	}
+		$scope.updateProgressBar();
+
+
 	$scope.$watch('locationForm.$valid', function(){
 		console.log('locationform validation changed')
 		console.log($scope.locationForm.$valid)
@@ -32,9 +130,11 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$http.get('api/get_attribute_options').then(function(data){
 		var respData = data.data
 		$scope.accommodations = respData['accommodations'];
-			$scope.climbingTypes = respData['climbing_types'];
-			$scope.months = respData['months'];
-			$scope.grades = respData['grades'];
+		$scope.climbingTypes = respData['climbing_types'];
+		$scope.months = respData['months'];
+		$scope.grades = respData['grades'];
+		$scope.foodOptions = respData['food_options'];
+		$scope.transportations = respData['transportations'];
 	});
 
 	

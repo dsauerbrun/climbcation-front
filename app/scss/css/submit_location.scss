@@ -1,0 +1,179 @@
+#submit-form {
+	input.form-control,
+	select.form-control {
+		height: 25px;
+		font-size: 12px;
+	}
+	textarea.form-control {
+		resize: none;
+	}
+	label {
+		font-size: 12px;
+		.gray {
+			color: rgb(123,123,123);
+			font-weight: normal;
+		}
+	}
+	.small-label {
+		font-size: 12px;
+		color: #000;
+		font-weight: 700;
+	}
+
+	.inline {
+		display: inline;
+	}
+
+	.short-input {
+		width: 78%;
+	}
+
+	.small-gray {
+		text-align: center;
+		padding: 10px 0;
+		font-weight: normal;
+	}
+	.well {
+		padding-top: 12px;
+		padding-bottom: 10px;
+		margin-bottom: 0;
+	}
+	.well-footer {
+		background-color: rgb(224,224,224);
+		padding: 20px 0;
+	}
+	/* header start */
+	.progress-container {
+		position:relative;
+		padding: 10px 0;
+	}
+	.progress-icon-container {
+		position: absolute;
+		display:flex;
+		width: 100%;
+		justify-content: space-around;
+		text-align: center;
+		top: 0px;
+		span {
+			width: 16%;
+		}
+	}
+	.progress-bar-wrapper {
+		border-width: 3px 0 3px 0;
+		border-color: $dark-blue;
+		border-style:solid;
+		width: 100%;
+		margin: 10px 0;
+	}
+	.progress-bar {
+		padding: 10px 0;
+		float: none;
+		background-color: $dark-blue;
+		width: 1%;
+		
+	}
+	.titles {
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		text-align: center;
+		span {
+			width: 16%;
+		}
+	}
+	/* header end */
+
+	/* drop image start */
+	.drop-box {
+		border-style: dashed;
+		border-width: 3px;
+		border-color: $dark-blue;
+		border-radius: 10px;
+		width: 192px;
+		height: 192px;
+		display: flex;
+		align-items: center;
+		span {
+			margin: 0 auto;
+		}
+		img {
+			max-width: 176px;
+			max-height: 176px;
+			margin: 0 auto;
+		}
+	}
+	/* drop image end */
+
+	/* general start */
+	.border-left {
+		border-style: solid;
+		border-width: 0 0 0 1px;
+		border-color: $light-gray;
+	}
+
+	.month-button {
+		margin-bottom: 5px;
+		padding-right: 5px;
+		padding-left: 5px;
+		.btn-climbcation {
+			width: 90%;
+			background-color: #fff;
+			color: $dark-blue;
+			font-weight: 700;
+			border-color: $dark-blue;
+			border-style: solid;
+			border-width: 2px;
+			border-radius: 3px;
+			padding: 0;
+			
+		}
+		.btn-climbcation:active,
+		.btn-climbcation.active {
+			background-color: $dark-blue;
+			color: #fff;
+			border-color: transparent;
+			border-style: solid;
+			border-width: 2px;
+			border-radius: 3px;
+			box-shadow: none;
+		}
+	}
+
+	/* general end */
+
+	/* accommodation start */
+	.accommodation-options {
+		display:flex;
+		justify-content: space-around;
+		padding: 10px 200px;
+	}
+	.accommodation-button-wrapper {
+		display: inline-block;
+		.accommodation-button {
+			position: relative;
+			height: 100px;
+			img {
+				width: 100px;
+			}
+			.accommodation-cost-container {
+				z-index: 10;
+				text-align: left;
+				position: absolute;
+				left: -1px;
+				bottom: -1px;
+				width: 102%;
+			}
+		}
+		.accommodation-button.active,
+		.accommodation-button:active {
+			width: 126px;
+			background-color: rgb(215,238,240);
+			img {
+				width: 80px;
+			}
+		}
+	}
+	/*accommodation end */
+
+
+}

@@ -1,0 +1,138 @@
+.small-gray {
+	color: rgb(220,220,220);
+	font-size: 10px;
+}
+
+.dark-blue {
+	color: $dark-blue;
+}
+
+.light-blue {
+	color: $light-blue;
+}
+.no-padding {
+	padding: 0;
+}
+
+/* buttons start */
+
+.btn-climbcation {
+	background-color: $dark-blue;
+	color: $light-gray;
+}
+
+.btn-climbcation:hover {
+	background-color: lighten($dark-blue, 20%);
+	color: $light-gray;
+}
+
+.btn-climbcation:active,
+.btn-climbcation.active {
+	background-color: $dark-blue;
+	color: #fff;
+}
+
+/* buttons end */
+
+/* custom checkbox/radio button start */
+
+.control {
+	font-size: 18px;
+	position: relative;
+	display: block;
+	padding-left: 20px;
+	cursor: pointer;
+	margin-bottom: 0px;
+}
+
+.control input {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+
+.control__indicator {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	width: 15px;
+	height: 15px;
+	background: #fff;
+	border-color: $dark-blue;
+	border-style: solid;
+	border-width: 2px;
+	border-radius: 3px;
+}
+
+.control--radio .control__indicator {
+	border-radius: 50%;
+}
+
+/* Hover and focus states */
+.control:hover input ~ .control__indicator,
+.control input:focus ~ .control__indicator {
+	background: #fff;
+}
+
+/* Checked state */
+.control input:checked ~ .control__indicator {
+	background: #fff;
+}
+
+/* Hover state whilst checked */
+.control:hover input:not([disabled]):checked ~ .control__indicator,
+.control input:checked:focus ~ .control__indicator {
+	background: #fff;
+}
+
+/* Disabled state */
+.control input:disabled ~ .control__indicator {
+	pointer-events: none;
+	opacity: .6;
+	background: #e6e6e6;
+}
+
+/* Check mark */
+.control__indicator:after {
+	position: absolute;
+	display: none;
+	content: '';
+}
+
+/* Show check mark */
+.control input:checked ~ .control__indicator:after {
+	display: block;
+}
+
+/* Checkbox tick */
+.control--checkbox .control__indicator:after {
+	top: -6px;
+	left: 4px;
+	width: 7px;
+	height: 17px;
+	transform: rotate(45deg);
+	border: solid $dark-blue;
+	border-width: 0 2px 2px 0;
+}
+
+/* Disabled tick colour */
+.control--checkbox input:disabled ~ .control__indicator:after {
+	border-color: #7b7b7b;
+}
+
+/* Radio button inner circle */
+.control--radio .control__indicator:after {
+	top: 7px;
+	left: 7px;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #fff;
+}
+
+/* Disabled circle colour */
+.control--radio input:disabled ~ .control__indicator:after {
+	background: #7b7b7b;
+}
+
+/* custom checkbox/radio button end */
