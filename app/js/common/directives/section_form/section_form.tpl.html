@@ -18,16 +18,16 @@
 
 	<!-- header start -->
 	<div class="text-center">
-		<h2>Climbcation Location Creation</h2>
+		<h3>Climbcation Location Creation</h3>
 	</div>
 	<div class="well climbcation-well no-padding progress-container">
 		<div class="progress-icon-container">
-				<span><img ng-show="currentPage > 0" src="/images/ice-icon.png" width=32 height=32/></span>
-				<span><img ng-show="currentPage > 1" src="/images/ice-icon.png" width=32 height=32/></span>
-				<span><img ng-show="currentPage > 2" src="/images/ice-icon.png" width=32 height=32/></span>
-				<span><img ng-show="currentPage > 3" src="/images/ice-icon.png" width=32 height=32/></span>
-				<span><img ng-show="currentPage > 4" src="/images/ice-icon.png" width=32 height=32/></span>
-				<span><img ng-show="currentPage > 5" src="/images/ice-icon.png" width=32 height=32/></span>
+				<span><img ng-show="currentPage > 0" ng-src="{{getIconUrl(1)}}" /></span>
+				<span><img ng-show="currentPage > 1" ng-src="{{getIconUrl(2)}}" /></span>
+				<span><img ng-show="currentPage > 2" ng-src="{{getIconUrl(3)}}" /></span>
+				<span><img ng-show="currentPage > 3" ng-src="{{getIconUrl(4)}}" /></span>
+				<span><img ng-show="currentPage > 4" ng-src="{{getIconUrl(5)}}" /></span>
+				<span><img ng-show="currentPage > 5" ng-src="{{getIconUrl(6)}}" /></span>
 		</div>
 		<div class="progress-bar-wrapper">
 			<div class="progress-bar" style="width: {{progressBar}}%">
@@ -49,181 +49,244 @@
 		<div class="container">
 			{{ locationObj |json }} 
 			<div class="row">
-				<h4 class="col-md-offset-1 col-md-10">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
-				<div class="col-md-offset-1 col-md-10 well climbcation-well">
-					<div class="row" ng-if="currentPage == 1">
-						<div class="col-md-3 " >
-								<div class="drop-box" ngf-drop ng-model="image" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true" ngf-accept="'image/*,application/pdf'"><span ng-if="!image[0]">Drop Image here</span> <img ng-if="image[0]" ngf-src="image[0]" ngf-default-src="" ngf-accept="'image/*'"></div>
-						</div>
-						<div class="col-md-9 border-left">
-							<div class="row"> 
-								<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
-									<label>Location Name</label>
-									<input name="name" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" ng-required="true" class="form-control"  popover-placement="bottom" uib-popover="This location already exists. If you would like to edit it, please find it on the home page and edit it there" popover-trigger="{none: ''}" popover-is-open="!locationForm.name.$valid && locationForm.name.$viewValue != ''" />
-								</span>
-								
-								<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >
-									<label>Country</label>
-									<input name="country" ng-model="locationObj.country" placeholder="ex. United States" class="form-control" required/> 
-								</span>
-							</div>
-							<div class="row">
-								<span class="form-group col-md-2" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
-									<label>Nearest Airport</label>
-									<input name="airport" ng-model="locationObj.airport" placeholder="ex. LAX" class="form-control" ng-trim="true" ng-minlength="3" ng-maxlength="3" required/>
-								</span>
-								<div class="form-group col-md-10">
-									<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger">*</span></label>
-									<div class="row">
-										<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }" class="col-md-5"  >
-											<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control short-input inline" /> <span class="small-label">USD ($)</span>
-										</span> 
-										<span class="col-md-1 text-center small-gray">
-											to
+				<div class="row">
+					<h4 class="col-md-offset-1 col-md-10">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
+				</div>
+				<div class="row">
+					<div class="col-md-offset-1 col-md-10 well climbcation-well forms-container">
+						<div class="well-content">
+							<div class="row" ng-if="currentPage == 1">
+								<div class="col-md-3 " >
+										<div class="drop-box" ngf-drop ng-model="image" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true" ngf-accept="'image/*,application/pdf'"><span ng-if="!image[0]">Drop Image here</span> <img ng-if="image[0]" ngf-src="image[0]" ngf-default-src="" ngf-accept="'image/*'"></div>
+								</div>
+								<div class="col-md-9 border-left">
+									<div class="row"> 
+										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
+											<label>Location Name</label>
+											<input name="name" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" ng-required="true" class="form-control"  popover-placement="bottom" uib-popover="This location already exists. If you would like to edit it, please find it on the home page and edit it there" popover-trigger="{none: ''}" popover-is-open="!locationForm.name.$valid && locationForm.name.$viewValue != ''" />
 										</span>
-										<span ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }" class="col-md-5">
-											<input name="price_ceiling" class="form-control short-input inline" ng-model="locationObj.price_ceiling" integer/> <span class="small-label">USD ($)</span>
+										
+										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >
+											<label>Country</label>
+											<input name="country" ng-model="locationObj.country" placeholder="ex. United States" class="form-control" required/> 
 										</span>
 									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-4">
-									<label>The best routes are<span class="text-danger">*</span></label>
-									<select name="grade" ng-model="locationObj.grade" class="form-control" ng-required="true">
-										<option ng-repeat="grade in grades" ng-value="grade.id">{{ grade.grade }} and above</option>
-									</select>
-								</div>
-								<div class="col-md-4">
-									<label>What should I climb?</label>
-									<div ng-repeat="climbing_type in climbingTypes">
-										<label class="control control--checkbox" for="{{ climbing_type['name'] }}" ng-class="{'active': locationForm[climbing_type.name].$viewValue == true}">
-											<input name={{climbing_type['name']}} type="checkbox" id="{{ climbing_type['name'] }}" ng-model="locationObj.climbingTypes[climbing_type.id]">
-											<div class="control__indicator"></div>
-											<span class="gray">{{climbing_type.name}}</span>
-										</label>
-									</div>	
-								</div>
-								<div class="col-md-4">
-									<label>When Should I go?</label>
 									<div class="row">
-										<div ng-repeat="month in months" class="col-md-4 text-center month-button">
-											<label for="{{ month['name'] }}" class="btn btn-climbcation" ng-class="{'active': locationForm[month.name].$viewValue == true}">
-												<input class="hide" name="{{month['name']}}" type="checkbox" id="{{ month['name'] }}" ng-model="locationObj.months[month.id]"/>
-												{{ month['name'] | limitTo:3 }}
-											</label>
+										<span class="form-group col-md-2" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
+											<label>Nearest Airport</label>
+											<input name="airport" ng-model="locationObj.airport" placeholder="ex. LAX" class="form-control" ng-trim="true" ng-minlength="3" ng-maxlength="3" required/>
+										</span>
+										<div class="form-group col-md-10">
+											<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger">*</span></label>
+											<div class="row">
+												<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }" class="col-md-5"  >
+													<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control short-input inline" /> <span class="small-label">USD ($)</span>
+												</span> 
+												<span class="col-md-1 text-center small-gray">
+													to
+												</span>
+												<span ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }" class="col-md-5">
+													<input name="price_ceiling" class="form-control short-input inline" ng-model="locationObj.price_ceiling" integer/> <span class="small-label">USD ($)</span>
+												</span>
+											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" ng-if="currentPage == 2">
-						<div class="row">
-							<div class="col-md-6">
-								<label>Select all available options for getting to {{locationObj.name}}</label>
-								<div ng-repeat="transportation in transportations">
-									<label class="control control--checkbox" for="{{ transportation['name'] }}" ng-class="{'active': locationForm[transportation.name].$viewValue == true}">
-										<input name="{{transportation.name}}" type="checkbox" id="{{ transportation.name }}" ng-model="locationObj.transportations[transportation.id]">
-										<div class="control__indicator"></div>
-										<span class="gray">{{transportation.name}}</span>
-									</label>
-								</div>	
-							</div>
-							<div class="col-md-6">
-								<div class="row" ng-if="locationObj.transportations">
-									<label>What is the best option for getting to {{locationObj.name}}</label>
-									<div class="btn-group btn-group-sm center-block">
-										<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.bestTransportationId == bestTransOption.id}"
-											ng-repeat="bestTransOption in transportations | bestTransportationOptions:locationObj.transportations"
-											ng-click="selectBestTransportation(bestTransOption.id)">
-												{{bestTransOption.name}}
-										</button>
-									</div>
-								</div>
-								<div class="row" ng-if="bestTransportationCostOptions">
-									<label>How much does {{bestTransportationName}} cost?</label>
-									<div class="btn-group btn-group-sm center-block">
-										<button class="btn btn-sm btn-default" ng-class="{'active': costRange.active}"
-											ng-repeat="costRange in bestTransportationCostOptions"
-											ng-click="selectBestTransportationCost(costRange)">
-												{{costRange.cost}}
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<label>Any Additional Tips for getting to and around {{locationObj.name}}?</label>
-								<div class="form-group">
-								<textarea placeholder="ex. Need to take flight to kos, then take a ferry from kos to kalymnos, once you're there you can hitchhike to get groceries easily or you can rent a scooter for $5 a day" class="form-control" rows="6" ng-model="locationObj.gettingInNotes"></textarea>
-							</div>
-							</div>
-							<div class="col-md-6">
-								<label>Are crags and other destinations(food, camping, etc...) within walking distance?</label>
-								<div class="btn-group btn-group-sm center-block">
-										<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.walkingDistance}"
-											ng-click="locationObj.walkingDistance = true">
-												Yes
-										</button>
-										<button class="btn btn-sm btn-default" ng-class="{'active': !locationObj.walkingDistance}"
-											ng-click="locationObj.walkingDistance = false">
-												No
-										</button>
-									</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" ng-if="currentPage == 3">
-						<div class="row">
-							<div class="col-md-12">
-								<label class="center-block">Select all available options for accommodation in {{locationObj.name}}</label>
-								<div class="accommodation-options">
-								<div class="accommodation-button-wrapper" ng-repeat="accommodation in accommodations" ng-click="selectAccommodation(accommodation)">
-									{{ }}
-									<div class="btn btn-default accommodation-button {{(locationObj.accommodations | accommodationChosen:accommodation)?'active':'' }}">
-										<img ng-src="{{accommodation.url}}" />
-										<div class="accommodation-cost-container" ng-if="locationObj.accommodations | accommodationChosen:accommodation">
-											<label class="light-blue">Cost</label>
-											<select ng-model="locationObj.accommodations[accommodation.id].cost" class="form-control" ng-click="stopPropagation($event);">
-												<option ng-repeat="range in accommodation.ranges" value="{{range}}">{{range}}</option>
+									<div class="row">
+										<div class="col-md-4">
+											<label>The best routes are<span class="text-danger">*</span></label>
+											<select name="grade" ng-model="locationObj.grade" class="form-control" ng-required="true">
+												<option ng-repeat="grade in grades" ng-value="grade.id">{{ grade.grade }} and above</option>
 											</select>
 										</div>
+										<div class="col-md-3">
+											<label>What should I climb?</label>
+											<div ng-repeat="climbing_type in climbingTypes">
+												<label class="control control--checkbox" for="{{ climbing_type['name'] }}" ng-class="{'active': locationForm[climbing_type.name].$viewValue == true}">
+													<input name={{climbing_type['name']}} type="checkbox" id="{{ climbing_type['name'] }}" ng-model="locationObj.climbingTypes[climbing_type.id]">
+													<div class="control__indicator"></div>
+													<span class="gray">{{climbing_type.name}}</span>
+												</label>
+											</div>	
+										</div>
+										<div class="col-md-4">
+											<label>When Should I go?</label>
+											<div class="row">
+												<div ng-repeat="month in months" class="col-md-4 text-center month-button">
+													<label for="{{ month['name'] }}" class="btn btn-climbcation" ng-class="{'active': locationForm[month.name].$viewValue == true}">
+														<input class="hide" name="{{month['name']}}" type="checkbox" id="{{ month['name'] }}" ng-model="locationObj.months[month.id]"/>
+														{{ month['name'] | limitTo:3 }}
+													</label>
+												</div>
+											</div>
+										</div>
 									</div>
-								</div>	
+								</div>
 							</div>
+							<div class="row" ng-if="currentPage == 2">
+								<div class="col-md-12 row">
+									<div class="col-md-6">
+										<label>Select all available options for getting to {{locationObj.name}}</label>
+										<div ng-repeat="transportation in transportations">
+											<label class="control control--checkbox" for="{{ transportation['name'] }}" ng-class="{'active': locationForm[transportation.name].$viewValue == true}">
+												<input name="{{transportation.name}}" type="checkbox" id="{{ transportation.name }}" ng-model="locationObj.transportations[transportation.id]">
+												<div class="control__indicator"></div>
+												<span class="gray">{{transportation.name}}</span>
+											</label>
+										</div>	
+									</div>
+									<div class="col-md-6">
+										<div class="row" ng-if="locationObj.transportations">
+											<label>What is the best option for getting to {{locationObj.name}}</label>
+											<div class="btn-group btn-group-sm center-block">
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.bestTransportationId == bestTransOption.id}"
+													ng-repeat="bestTransOption in transportations | bestTransportationOptions:locationObj.transportations"
+													ng-click="selectBestTransportation(bestTransOption.id)">
+														{{bestTransOption.name}}
+												</button>
+											</div>
+										</div>
+										<div class="row" ng-if="bestTransportationCostOptions">
+											<label>How much does {{bestTransportationName}} cost?</label>
+											<div class="btn-group btn-group-sm center-block">
+												<button class="btn btn-sm btn-default" ng-class="{'active': costRange.active}"
+													ng-repeat="costRange in bestTransportationCostOptions"
+													ng-click="selectBestTransportationCost(costRange)">
+														{{costRange.cost}}
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-6">
+										<label>Any Additional Tips for getting to and around {{locationObj.name}}?</label>
+										<div class="form-group">
+										<textarea placeholder="ex. Need to take flight to kos, then take a ferry from kos to kalymnos, once you're there you can hitchhike to get groceries easily or you can rent a scooter for $5 a day" class="form-control" rows="6" ng-model="locationObj.gettingInNotes"></textarea>
+									</div>
+									</div>
+									<div class="col-md-6">
+										<label>Are crags and other destinations(food, camping, etc...) within walking distance?</label>
+										<div class="btn-group btn-group-sm center-block">
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.walkingDistance}"
+													ng-click="locationObj.walkingDistance = true">
+														Yes
+												</button>
+												<button class="btn btn-sm btn-default" ng-class="{'active': !locationObj.walkingDistance}"
+													ng-click="locationObj.walkingDistance = false">
+														No
+												</button>
+											</div>
+									</div>
+								</div>
+							</div>
+							<div class="row" ng-if="currentPage == 3">
+								<div class="col-md-12 row">
+									<div class="col-md-12">
+										<label class="center-block">Select all available options for accommodation in {{locationObj.name}}</label>
+										<div class="accommodation-options border-bottom">
+											<div class="accommodation-button-wrapper" ng-repeat="accommodation in accommodations" ng-click="selectAccommodation(accommodation)">
+												<div class="btn btn-default accommodation-button {{(locationObj.accommodations | accommodationChosen:accommodation)?'active':'' }}">
+													<img ng-src="{{accommodation.url}}" />
+													<div class="accommodation-cost-container" ng-if="locationObj.accommodations | accommodationChosen:accommodation">
+														<label class="light-blue">Cost</label>
+														<select ng-model="locationObj.accommodations[accommodation.id].cost" class="form-control" ng-click="stopPropagation($event);">
+															<option ng-repeat="range in accommodation.ranges" value="{{range}}">{{range}}</option>
+														</select>
+													</div>
+												</div>
+											</div>	
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-6">
+										<label>Any Additional Tips on staying in {{locationObj.name}}?</label>
+										<div class="form-group">
+										<textarea placeholder="ex. campground doesnt have water, bring your own. The most fun place to stay is JOSITO! campground has a communal kitchenand communal fridge" class="form-control" rows="6" ng-model="locationObj.accommodationNotes"></textarea>
+									</div>
+									</div>
+									<div class="col-md-6">
+										<label>How close is the closest accommodation to the crag(s)?</label>
+										<select name="closestAccommodation" ng-model="locationObj.closestAccommodation" class="form-control">
+											<option ng-value="'<1 mile'">&lt;1 mile</option>
+											<option ng-value="'1-2 miles'">1-2 miles</option>
+											<option ng-value="'2-5 miles'">2-5 miles</option>
+											<option ng-value="'5+ miles'">5+ miles</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row" ng-if="currentPage == 4">
+								<div class="col-md-12 row">
+									<div class="col-md-6">
+										<label>What food options are available in {{locationObj.name}}?</label>
+										<div ng-repeat="food in foodOptions">
+											<label class="control control--checkbox" for="{{ food['name'] }}" ng-class="{'active': locationForm[food.name].$viewValue == true}">
+												<input name="{{food.name}}" type="checkbox" id="{{ food.name }}" ng-model="locationObj.foodOptions[food.id]">
+												<div class="control__indicator"></div>
+												<span class="gray">{{food.name}}</span>
+											</label>
+										</div>	
+									</div>
+									<div class="col-md-6">
+										<div class="row" ng-if="locationObj.foodOptions">
+											<label>Cost for a single meal?</label>
+											<div class="row">
+												<div class="col-md-6" ng-repeat="foodOption in foodOptions | selectedFoodOptions:locationObj.foodOptions">
+													<label class="center-block gray">{{foodOption.name}}</label>
+													<div class="btn-group btn-group-sm">
+														
+														<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.foodOptionDetails[foodOption.id].range == range}"
+															ng-repeat="range in foodOption.ranges"
+															ng-click="selectFoodOptionDetail(foodOption.id, range)">
+																{{range}}
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-6">
+										<label>Any other common expenses in {{locationObj.name}}?</label>
+										<div class="form-group">
+											<textarea placeholder="ex. red rock requires entrance fee" class="form-control" rows="6" ng-model="locationObj.commonExpensesNotes"></textarea>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label>Any tips on saving money in {{locationObj.name}}?</label>
+										<div class="form-group">
+											<textarea placeholder="ex. Mama's chicken is a great restaurant that is very cheap, and trader joes is a cheap but healthy grocery store... you should also hitchhike a bunch since it's easy here" class="form-control" rows="6" ng-model="locationObj.savingMoneyTips"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row" ng-if="currentPage == 5">
+								<locationothersection class="col-md-6" section="section" sections-length="locationObj.sections.length" ng-repeat="section in locationObj.sections track by $index" index-iterator="$index" save-section="saveSection()" remove-section="removeSection(section)"></locationothersection>
+							</div>
+							<div class="row" ng-if="currentPage == 6">
+								<div class="text-center">
+									<h3>Congrats!</h3>
+									<h4>You've added all the necessary content.</h4>
+									<h4>You should see your location available in a day after an admin reviews the content</h4>
+									<img ng-src="/images/success-icon.png" />
+								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<label>Any Additional Tips on staying in {{locationObj.name}}?</label>
-								<div class="form-group">
-								<textarea placeholder="ex. campground doesnt have water, bring your own. The most fun place to stay is JOSITO! campground has a communal kitchenand communal fridge" class="form-control" rows="6" ng-model="locationObj.accommodationNotes"></textarea>
-							</div>
-							</div>
-							<div class="col-md-6">
-								<label>How close is the closest accommodation to the crag(s)?</label>
-								<select name="closestAccommodation" ng-model="locationObj.closestAccommodation" class="form-control">
-									<option ng-value="'<1 mile'">&lt;1 mile</option>
-									<option ng-value="'1-2 miles'">1-2 miles</option>
-									<option ng-value="'2-5 miles'">2-5 miles</option>
-									<option ng-value="'5+ miles'">5+ miles</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
 
-				<div class=" col-md-offset-1 col-md-10 well-footer">
-					<div class="row">
-						<div class="col-md-offset-7 col-md-2" ng-click="prevPage()">
-							Back
-						</div>
-						<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()">
-							<div class=" ">Next</div>
+						<div class="col-md-12 well-footer">
+							<div class="row">
+								<div class="col-md-offset-7 col-md-2" ng-click="prevPage()">
+									Back
+								</div>
+								<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 6">
+									<div class=" ">{{currentPage == 5?'Publish':'Next' }}</div>
+								</div>
+							</div>
 						</div>
 					</div>
+					
 				</div>
 			</div>
 
@@ -250,11 +313,6 @@
 				</ul>
 			</div>
 
-			<!-- section start -->
-			
-				
-			<locationsection section="section" sections-length="locationObj.sections.length" ng-repeat="section in locationObj.sections track by $index" index-iterator="$index" save-section="saveSection()" remove-section="removeSection(section)"></locationsection>
-			<!-- section end -->
 			<button class="btn" ng-disabled="locationForm.$invalid" ng-click="submitLocation()"> submit this new location</button>
 		</div>
 

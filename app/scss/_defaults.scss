@@ -10,8 +10,15 @@
 .light-blue {
 	color: $light-blue;
 }
+
 .no-padding {
 	padding: 0;
+}
+
+.border-bottom {
+	border-style: solid;
+	border-width: 0 0 1px 0;
+	border-color: $light-gray;
 }
 
 /* buttons start */
@@ -29,6 +36,22 @@
 .btn-climbcation:active,
 .btn-climbcation.active {
 	background-color: $dark-blue;
+	color: #fff;
+}
+
+.btn-climbcation-negative {
+	background-color: $light-gray;
+	color: $dark-blue;
+}
+
+.btn-climbcation-negative:hover {
+	background-color: lighten($light-gray, 10%);
+	color: $dark-blue;
+}
+
+.btn-climbcation-negative:active,
+.btn-climbcation-negative.active {
+	background-color: $light-gray;
 	color: #fff;
 }
 

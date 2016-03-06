@@ -23,6 +23,22 @@ filters.filter('bestTransportationOptions', function() {
   };
 });
 
+filters.filter('selectedFoodOptions', function() {
+  return function(foodOptions, selectedFoodOptions) {
+  	var selectedArray = [];
+  	_.forEach(selectedFoodOptions, function(selected, key) {
+  		if (selected) {
+  			selectedArray.push(key)
+  		}
+  	});
+
+  	var retTrans = _.filter(foodOptions, function(foodOption) {
+  		return selectedArray.indexOf(foodOption.id.toString()) > -1;
+  	});
+  	return retTrans;
+  };
+});
+
 filters.filter('accommodationChosen', function() {
   return function(accommodations, accommodation) {
   	var found = _.find(accommodations, function(accommodationObj) {

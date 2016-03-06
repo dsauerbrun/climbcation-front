@@ -1,0 +1,25 @@
+<div ng-if="section.previewOff">
+	<span >
+		<div class="row">
+			<div class="col-md-offset-1 col-md-11">
+				<div class="form-group input-group-lg">
+					<label>Section Title</label>
+					<input type="text" placeholder="Section Title" class="form-control" ng-model="section.title"/>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="row col-md-11 col-md-offset-1">
+				<div class="form-group">
+					<label>Section Description</label>
+					<textarea placeholder="{{sectionDescriptionPlaceholder(section)}}" class="form-control" rows="6" ng-model="section.body"></textarea>
+				</div>
+				<div class="btn btn-default btn-climbcation" ng-class="{'disabled': section.isSaving }" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
+				<div class="btn btn-default btn-climbcation-negative" ng-if="sectionsLength != -2 && (indexIterator != sectionsLength-1)" ng-click="removeSection(section)">remove section</div>
+			</div>
+			
+		</div>
+		
+	</span>
+
+</div>

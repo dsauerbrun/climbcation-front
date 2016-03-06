@@ -1,4 +1,4 @@
-var sectionForm = angular.module('section-form-directive', ['ngFileUpload','location-section-directives']);
+var sectionForm = angular.module('section-form-directive', ['ngFileUpload','location-other-section-directives']);
 
 sectionForm.directive('sectionform', function(){
 	return {
@@ -11,15 +11,74 @@ sectionForm.directive('sectionform', function(){
 
 sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '2-5 miles'};
-	var emptySection = {'previewOff':true, 'title':'','body':'','subsections':[{'title':'','subsectionDescriptions':[{'desc':''}]}]}
+	var emptySection = {'previewOff':true, 'title':'','body':''}
 	
 	$scope.accommodations = [];
 	$scope.climbingTypes = [];
 	$scope.months =[];
 	$scope.grades = [];
 	$scope.existingLocations = [];
-	$scope.currentPage = 3;
+	$scope.currentPage = 6;
 	$scope.progressBar;
+	$scope.locationObj.foodOptionDetails = {};
+
+	$scope.getIconUrl = function(page) {
+		var url;
+		if (page == $scope.currentPage) {
+			return '/images/location-icon.png';
+		} else if (page > $scope.currentPage) {
+			return '';
+		} else if (page < $scope.currentPage) {
+			switch(page) {
+				case 1:
+					url = $scope.generalComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					break;
+				case 2:
+					url = $scope.gettingInComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					break;
+				case 3:
+					url = $scope.accommodationComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					break;
+				case 4:
+					url = $scope.costComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					break;
+				case 5:
+					url = '/images/check-icon.png';
+					break;
+				case 6:
+					url = '/images/check-icon.png';
+					break;
+			}
+			return url;
+		}
+	}
+
+	$scope.generalComplete = function() {
+		var name = $scope.locationObj.name != '';
+		var country = $scope.locationObj.country != '';
+		var priceFloor = $scope.locationObj.price_floor != '';
+		var priceCeiling = $scope.locationObj.price_ceiling != '';
+		var grade = $scope.locationObj.grade != '';
+		var types = _.size($scope.locationObj.climbingTypes) > 0;
+		var months = _.size($scope.locationObj.months) > 0;
+		if(name && country && priceFloor && priceCeiling && grade && types && months) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	$scope.gettingInComplete = function() {
+		return Boolean($scope.locationObj.bestTransportationCost);
+	};
+
+	$scope.accommodationComplete = function() {
+		return _.size($scope.locationObj.accommodations) > 0;
+	};
+
+	$scope.costComplete = function() {
+		return _.size($scope.locationObj.foodOptionDetails) > 0;
+	}
 
 	$scope.stopPropagation = function($event) {
 		$event.stopPropagation();
@@ -46,6 +105,12 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 			accommodationExists.cost = range;
 		}
 	};
+
+	$scope.selectFoodOptionDetail = function(id, range) {
+		$scope.locationObj.foodOptionDetails[id] = {};
+		$scope.locationObj.foodOptionDetails[id].id = id;
+		$scope.locationObj.foodOptionDetails[id].range = range;
+	}
 
 	$scope.selectBestTransportation = function(id) {
 		// set the best transportation
@@ -182,27 +247,6 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 			});
 
 	}
-
-	
-
-	$scope.addDefaultSections = function(){
-		var defaultSectionAdd = emptySection.clone();
-		defaultSectionAdd.title = "Getting in"
-		$scope.saveSection(defaultSectionAdd);
-
-		var defaultSectionAdd = emptySection.clone();
-		defaultSectionAdd.title = "Accommodation"
-		$scope.saveSection(defaultSectionAdd);
-
-		var defaultSectionAdd = emptySection.clone();
-		defaultSectionAdd.title = "Cost"
-		$scope.saveSection(defaultSectionAdd);
-
-		var defaultSectionAdd = emptySection.clone();
-		defaultSectionAdd.title = "Transportation"
-		$scope.saveSection(defaultSectionAdd);
-	}
-	$scope.addDefaultSections();
 
 });
 
