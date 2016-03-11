@@ -47,7 +47,7 @@
 
 	<form name="locationForm">
 		<div class="container">
-			<!-- {{ locationObj |json }} -->
+			{{ locationObj |json }} 
 			<div class="row">
 				<div class="row">
 					<h4 class="col-md-offset-1 col-md-10">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
@@ -220,7 +220,7 @@
 								<div class="col-md-12 row">
 									<div class="col-md-6">
 										<label>What food options are available in {{locationObj.name}}?</label>
-										<div ng-repeat="food in foodOptions">
+										<div ng-repeat="food in foodOptions" ng-click="cleanFoodOptionDetails()">
 											<label class="control control--checkbox" for="{{ food['name'] }}" ng-class="{'active': locationForm[food.name].$viewValue == true}">
 												<input name="{{food.name}}" type="checkbox" id="{{ food.name }}" ng-model="locationObj.foodOptions[food.id]">
 												<div class="control__indicator"></div>
@@ -236,7 +236,7 @@
 													<label class="center-block gray">{{foodOption.name}}</label>
 													<div class="btn-group btn-group-sm">
 														
-														<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.foodOptionDetails[foodOption.id].range == range}"
+														<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.foodOptionDetails[foodOption.id].cost == range}"
 															ng-repeat="range in foodOption.ranges"
 															ng-click="selectFoodOptionDetail(foodOption.id, range)">
 																{{range}}

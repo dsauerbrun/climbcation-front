@@ -112,6 +112,16 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 		$scope.locationObj.foodOptionDetails[id].cost = range;
 	}
 
+	$scope.cleanFoodOptionDetails = function() {
+		_.forEach($scope.locationObj.foodOptions, function(foodOption, key) {
+			console.log(foodOption)
+			console.log(key)
+			if (!foodOption) {
+				$scope.locationObj.foodOptionDetails[key] = null;
+			}
+		});
+	}
+
 	$scope.selectBestTransportation = function(id) {
 		// set the best transportation
 		$scope.locationObj.bestTransportationId = id;
