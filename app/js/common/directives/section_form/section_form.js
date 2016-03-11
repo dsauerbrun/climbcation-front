@@ -18,7 +18,7 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.months =[];
 	$scope.grades = [];
 	$scope.existingLocations = [];
-	$scope.currentPage = 6;
+	$scope.currentPage = 1;
 	$scope.progressBar;
 	$scope.locationObj.foodOptionDetails = {};
 
@@ -109,7 +109,7 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.selectFoodOptionDetail = function(id, range) {
 		$scope.locationObj.foodOptionDetails[id] = {};
 		$scope.locationObj.foodOptionDetails[id].id = id;
-		$scope.locationObj.foodOptionDetails[id].range = range;
+		$scope.locationObj.foodOptionDetails[id].cost = range;
 	}
 
 	$scope.selectBestTransportation = function(id) {
