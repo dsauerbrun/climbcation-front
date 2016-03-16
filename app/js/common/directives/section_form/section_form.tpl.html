@@ -15,6 +15,22 @@
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+	<div id="errorModal" class="modal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Woops!</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>Looks like you forgot to fill something out in the general section. We're gonna need you to fill out all the starred fields in order to accept this location.</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 	<!-- header start -->
 	<div class="text-center">
@@ -47,10 +63,17 @@
 
 	<form name="locationForm">
 		<div class="container">
-			{{ locationObj |json }} 
+			<!-- {{ locationObj |json }}  -->
 			<div class="row">
 				<div class="row">
-					<h4 class="col-md-offset-1 col-md-10">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
+					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 1">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
+					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 2">2. Getting In <span class="small-gray">(How do you get to the crag?)</span></h4>
+					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 3">3. Accommodation <span class="small-gray">(Where will you stay when you get there?)</span></h4>
+					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 4">4. Cost <span class="small-gray">(How much should you expect to spend on this trip?)</span></h4>
+					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 5">5. Other <span class="small-gray">(Anything else you know about {{ locationObj.name}}?)</span></h4>
+					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 6">6. Done</h4>
+
+
 				</div>
 				<div class="row">
 					<div class="col-md-offset-1 col-md-10 well climbcation-well forms-container">
@@ -62,7 +85,7 @@
 								<div class="col-md-9 border-left">
 									<div class="row"> 
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
-											<label>Location Name</label>
+											<label>Location Name<span class="text-danger">*</span></label>
 											<input name="name" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" ng-required="true" class="form-control"  popover-placement="bottom" uib-popover="This location already exists. If you would like to edit it, please find it on the home page and edit it there" popover-trigger="{none: ''}" popover-is-open="!locationForm.name.$valid && locationForm.name.$viewValue != ''" />
 										</span>
 										
@@ -99,7 +122,7 @@
 											</select>
 										</div>
 										<div class="col-md-3">
-											<label>What should I climb?</label>
+											<label>What should I climb?<span class="text-danger">*</span></label>
 											<div ng-repeat="climbing_type in climbingTypes">
 												<label class="control control--checkbox" for="{{ climbing_type['name'] }}" ng-class="{'active': locationForm[climbing_type.name].$viewValue == true}">
 													<input name={{climbing_type['name']}} type="checkbox" id="{{ climbing_type['name'] }}" ng-model="locationObj.climbingTypes[climbing_type.id]">
@@ -109,7 +132,7 @@
 											</div>	
 										</div>
 										<div class="col-md-4">
-											<label>When Should I go?</label>
+											<label>When Should I go?<span class="text-danger">*</span></label>
 											<div class="row">
 												<div ng-repeat="month in months" class="col-md-4 text-center month-button">
 													<label for="{{ month['name'] }}" class="btn btn-climbcation" ng-class="{'active': locationForm[month.name].$viewValue == true}">
@@ -264,6 +287,16 @@
 							</div>
 							<div class="row" ng-if="currentPage == 5">
 								<locationothersection class="col-md-6" section="section" sections-length="locationObj.sections.length" ng-repeat="section in locationObj.sections track by $index" index-iterator="$index" save-section="saveSection()" remove-section="removeSection(section)"></locationothersection>
+								<div class="col-md-6">
+									<h4>Suggestions</h4>
+									<ul>
+										<li>Connectivity(wifi/cell reception)</li>
+										<li>Rest Day Activities</li>
+										<li>Rock Type</li>
+										<li>Social Scene(bars, where to find partners, etc...)</li>
+										<li>Safety(eg. watch out for theft/scams)</li>
+									</ul>
+								</div>
 							</div>
 							<div class="row" ng-if="currentPage == 6">
 								<div class="text-center">
@@ -277,11 +310,14 @@
 
 						<div class="col-md-12 well-footer">
 							<div class="row">
-								<div class="col-md-offset-7 col-md-2" ng-click="prevPage()">
-									Back
+								<div class="col-md-offset-8 col-md-1" ng-click="prevPage()">
+									<span class="back-button" ng-if="currentPage != 1 && currentPage != 6">Back</span>
 								</div>
-								<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 6">
-									<div class=" ">{{currentPage == 5?'Publish':'Next' }}</div>
+								<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 5">
+									<div class=" ">Next</div>
+								</div>
+								<div class="col-md-2 btn btn-climbcation" ng-click="submitLocation()" ng-if="currentPage == 5">
+									<div class=" ">Publish</div>
 								</div>
 							</div>
 						</div>
@@ -290,30 +326,19 @@
 				</div>
 			</div>
 
-			<button class="btn" ng-disabled="locationForm.$invalid" ng-click="submitLocation()"> submit this new location</button>
-
-			<div class="panel panel-warning">
-				<div class="panel-heading">
-					Please Read Before Submitting
+			<div class="row">
+				<div class="row">
+					<div class="col-md-offset-1 col-md-10 well climbcation-well tips-container">
+						<h4>Tips for adding locations</h4>
+						<ul>
+							<li>Focus on world class crags, Climbcation is primarily for finding climbing vacation destinations. Do you really want all of us crowding your local crag?</li>
+							<li>Sections with an asterisk (*) are required, but the more info you provide the better!</li>
+							<li>Excellent location examples with multiple categories: <a href="#/location/bishop" target="_blank">Bishop</a>, <a href="#/location/baile-herculane" target="_blank">Baile Herculane</a></li>
+						</ul>
+					</div>
 				</div>
-				<ul class="list-group">
-					<li class="list-group-item">
-						This application is primarily used for people looking for climbing vacation destinations, please do not attempt to list local crags(unless they are world/country class) as they will not be approved
-					</li>
-					
-					<li class="list-group-item">
-						Your submission will not appear automatically. An administrator will review the details and approve your submission(will verify airport code, size of crag, etc...)
-					</li>
-					<li class="list-group-item">
-						There are required sections to make this application useful. You will need to provide a "Getting in" section(explaining different ways to get to the crag, whether it be by car, train, or flight), an "Accommodation" section(explaining different accomodation options with approximate pricing), a "Cost" section(explaining what to expect for daily costs), and a "Transportation" section(explaining whether or not you need a car to get around this crag, if you can hitchhike, or if walking is an acceptable option)
-					</li>
-					<li class="list-group-item">
-						If you would like a prime example of a location to build your location off of, please refer to <a href="#/location/bishop" target="_blank">Bishop</a>
-					</li>
-				</ul>
 			</div>
 
-			<button class="btn" ng-disabled="locationForm.$invalid" ng-click="submitLocation()"> submit this new location</button>
 		</div>
 
 	</form>

@@ -9,8 +9,8 @@ sectionForm.directive('sectionform', function(){
 });
 
 
-sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location){
-	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '2-5 miles'};
+sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location, helperService){
+	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '<1 mile'};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	
 	$scope.accommodations = [];
@@ -54,14 +54,15 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	}
 
 	$scope.generalComplete = function() {
+		var cleanTypes = helperService.cleanFalses($scope.locationObj.climbingTypes);
+		var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 		var name = $scope.locationObj.name != '';
-		var country = $scope.locationObj.country != '';
 		var priceFloor = $scope.locationObj.price_floor != '';
 		var priceCeiling = $scope.locationObj.price_ceiling != '';
 		var grade = $scope.locationObj.grade != '';
-		var types = _.size($scope.locationObj.climbingTypes) > 0;
-		var months = _.size($scope.locationObj.months) > 0;
-		if(name && country && priceFloor && priceCeiling && grade && types && months) {
+		var types = _.size(cleanTypes) > 0;
+		var months = _.size(cleanMonths) > 0;
+		if(name && priceFloor && priceCeiling && grade && types && months) {
 			return true;
 		} else {
 			return false;
@@ -155,7 +156,6 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 		if ($scope.currentPage < 6) {
 			$scope.currentPage++;
 			$scope.updateProgressBar();
-
 		}
 		
 	}
@@ -169,22 +169,22 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.updateProgressBar = function() {
 		switch($scope.currentPage) {
 			case 1:
-				$scope.progressBar = 8.7;
+				$scope.progressBar = 8.35;
 				break;
 			case 2:
-				$scope.progressBar = 25.4;
+				$scope.progressBar = 25;
 				break;
 			case 3:
-				$scope.progressBar = 42;
+				$scope.progressBar = 41.7;
 				break;
 			case 4:
-				$scope.progressBar = 58.6;
+				$scope.progressBar = 58.35;
 				break;
 			case 5:
-				$scope.progressBar = 75.4;
+				$scope.progressBar = 75;
 				break;
 			case 6:
-				$scope.progressBar = 92;
+				$scope.progressBar = 100;
 				break;
 
 		}
@@ -242,19 +242,23 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	
 
 	$scope.submitLocation = function(){
-		//run validation method, 
-		//upload
-		Upload.upload({
-			url:'api/submit_new_location',
-			fields: {location: $scope.locationObj},
-			file: $scope.image}).
-			success(function(data, status, headers, config){
-				$('#successModal').modal()
-				console.log(data);
-			}).
-			error(function(data, status, headers, config){
-				console.log('error submitting locationSection')
-			});
+		//run validation method
+		if(!$scope.generalComplete()){
+			// show an error modal
+			$('#errorModal').modal();
+		} else {
+			//upload
+			Upload.upload({
+				url:'api/submit_new_location',
+				fields: {location: $scope.locationObj},
+				file: $scope.image}).
+				success(function(data, status, headers, config){
+					$scope.nextPage();
+				}).
+				error(function(data, status, headers, config){
+					console.log('error submitting locationSection')
+				});
+		}
 
 	}
 
@@ -296,8 +300,6 @@ sectionForm.directive('locationExists', function ($http){
           ctrl.$validators.locationExists = function(modelValue, viewValue){
           	if (ctrl.$isEmpty(modelValue)) {
 	          // consider empty models to be valid
-	          console.log('empty to setting to invalid')
-
 	          return false;
 	        }
 	        var exists = _.find(locations, function(location){
@@ -305,13 +307,10 @@ sectionForm.directive('locationExists', function ($http){
 	        })
 	        if( !exists){
 	        	ctrl.$setValidity('valid',true);
-	        	console.log('setting valid')
-	        	console.log(ctrl)
 	        	return true;
 	        }
 	        else{
 		        ctrl.$setValidity('valid',false);
-		        console.log('setting invalid')
 		        return false;	
 	    	}
 
