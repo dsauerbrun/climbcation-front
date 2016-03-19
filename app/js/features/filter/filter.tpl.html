@@ -19,44 +19,44 @@
 			<div class="col-md-4">
 				<h5>Time</h5>
 				<span class="dropdown">
-				  <button class="btn btn-default dropdown-toggle" type="button" id="dateFrom" ng-model="dateFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				    January
+				  <button class="btn btn-default dropdown-toggle" type="button" id="startMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				    {{startMonthName}}
 				    <span class="caret"></span>
 				  </button>
-				  <ul class="dropdown-menu" aria-labelledby="dateFrom">
-				    <li><a href="#">January</a></li>
-				    <li><a href="#">February</a></li>
-				    <li><a href="#">March</a></li>
-				    <li><a href="#">April</a></li>
-				    <li><a href="#">May</a></li>
-				    <li><a href="#">June</a></li>
-				    <li><a href="#">July</a></li>
-				    <li><a href="#">August</a></li>
-				    <li><a href="#">September</a></li>
-				    <li><a href="#">October</a></li>
-				    <li><a href="#">November</a></li>
-				    <li><a href="#">December</a></li>
+				  <ul class="dropdown-menu" aria-labelledby="startMonth">
+				    <li><a ng-click="startMonth = 1; startMonthName = 'January'">January</a></li>
+				    <li><a ng-click="startMonth = 2; startMonthName = 'February'">February</a></li>
+				    <li><a ng-click="startMonth = 3; startMonthName = 'March'">March</a></li>
+				    <li><a ng-click="startMonth = 4; startMonthName = 'April'">April</a></li>
+				    <li><a ng-click="startMonth = 5; startMonthName = 'May'">May</a></li>
+				    <li><a ng-click="startMonth = 6; startMonthName = 'June'">June</a></li>
+				    <li><a ng-click="startMonth = 7; startMonthName = 'July'">July</a></li>
+				    <li><a ng-click="startMonth = 8; startMonthName = 'August'">August</a></li>
+				    <li><a ng-click="startMonth = 9; startMonthName = 'September'">September</a></li>
+				    <li><a ng-click="startMonth = 10; startMonthName = 'October'">October</a></li>
+				    <li><a ng-click="startMonth = 11; startMonthName = 'November'">November</a></li>
+				    <li><a ng-click="startMonth = 12; startMonthName = 'December'">December</a></li>
 				  </ul>
 				</span>
-				To
+				To {{ endMonth }}
 				<span class="dropdown">
-				  <button class="btn btn-default dropdown-toggle" type="button" id="dateTo" ng-model="dateTo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				    December
+				  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+				    {{endMonthName}}
 				    <span class="caret"></span>
 				  </button>
-				  <ul class="dropdown-menu" aria-labelledby="dateTo">
-				    <li><a href="#">January</a></li>
-				    <li><a href="#">February</a></li>
-				    <li><a href="#">March</a></li>
-				    <li><a href="#">April</a></li>
-				    <li><a href="#">May</a></li>
-				    <li><a href="#">June</a></li>
-				    <li><a href="#">July</a></li>
-				    <li><a href="#">August</a></li>
-				    <li><a href="#">September</a></li>
-				    <li><a href="#">October</a></li>
-				    <li><a href="#">November</a></li>
-				    <li><a href="#">December</a></li>
+				  <ul class="dropdown-menu" aria-labelledby="endMonth">
+				    <li><a ng-click="endMonth = 1; endMonthName = 'January'">January</a></li>
+				    <li><a ng-click="endMonth = 2; endMonthName = 'February'">February</a></li>
+				    <li><a ng-click="endMonth = 3; endMonthName = 'March'">March</a></li>
+				    <li><a ng-click="endMonth = 4; endMonthName = 'April'">April</a></li>
+				    <li><a ng-click="endMonth = 5; endMonthName = 'May'">May</a></li>
+				    <li><a ng-click="endMonth = 6; endMonthName = 'June'">June</a></li>
+				    <li><a ng-click="endMonth = 7; endMonthName = 'July'">July</a></li>
+				    <li><a ng-click="endMonth = 8; endMonthName = 'August'">August</a></li>
+				    <li><a ng-click="endMonth = 9; endMonthName = 'September'">September</a></li>
+				    <li><a ng-click="endMonth = 10; endMonthName = 'October'">October</a></li>
+				    <li><a ng-click="endMonth = 11; endMonthName = 'November'">November</a></li>
+				    <li><a ng-click="endMonth = 12; endMonthName = 'December'">December</a></li>
 				  </ul>
 				</span>
 			</div>

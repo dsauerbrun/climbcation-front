@@ -125,6 +125,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 						});
 
 					});
+
 					location.lowestPrice = {};
 					location.lowestPrice.date = lowestPriceDate;
 					location.lowestPrice.cost = lowestPrice;
@@ -219,6 +220,8 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	filter['price_max'] = [];
 	filter['sort'] = [];
 	filter['search'] = '';
+	filter['start_month'] = 1;
+	filter['end_month'] = 12;
 	LocationsGetter.mapFilter['northeast'] = {};
 	LocationsGetter.mapFilter['northeast']['longitude'] = null;
 	LocationsGetter.mapFilter['northeast']['latitude'] = null;
@@ -261,6 +264,13 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 			LocationsGetter.page_num = 1;
 		LocationsGetter.getLocations();
 	}
+
+	LocationsGetter.filterByMonth = function(startMonth, endMonth) {
+		filter['start_month'] = startMonth;
+		filter['end_month'] = endMonth;
+		LocationsGetter.getLocations();
+	}
+
 	LocationsGetter.filterByQuery = function(eventItem){
 		filter['search'] = eventItem;
 		LocationsGetter.page_num = 1;

@@ -4,7 +4,18 @@ filterDir.directive('filter', function(){
 	return {	
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
-		controller: ['$http',function($http){
+		controller: function($http, $scope, LocationsGetter){
+			$scope.endMonth = 12;
+			$scope.startMonth = 1;
+			$scope.endMonthName = 'December';
+			$scope.startMonthName = 'January';
+
+			$scope.$watch('endMonth', function() {
+				LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
+			});
+			$scope.$watch('startMonth', function() {
+				LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
+			});
 			var filter = this;
 			this.fixVar = 'this is not a test';
 			this.loading = true;
@@ -30,7 +41,7 @@ filterDir.directive('filter', function(){
 				filter.continents = data['continents'];
 				filter.climbTypes = data['climbTypes']
 			});
-		}],
+		},
 		controllerAs: 'filter'
 	};
 });
@@ -79,6 +90,8 @@ function filterLocations(){
 				filterMap[currentGroup].push($(this).attr('data'));
 		});
 	});
+	// handle months
+	console.log(filterMap)
 	//send ajax request
 	$.ajax({
 		type: 'GET',
