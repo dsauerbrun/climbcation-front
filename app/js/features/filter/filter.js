@@ -39,7 +39,8 @@ filterDir.directive('filter', function(){
 			$http.get('/api/filters').success(function(data){
 				filter.fixVar = data;
 				filter.continents = data['continents'];
-				filter.climbTypes = data['climbTypes']
+				filter.climbTypes = data['climbTypes'];
+				filter.accommodations = data.accommodations;
 			});
 		},
 		controllerAs: 'filter'

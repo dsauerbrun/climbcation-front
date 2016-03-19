@@ -38,7 +38,7 @@
 				    <li><a ng-click="startMonth = 12; startMonthName = 'December'">December</a></li>
 				  </ul>
 				</span>
-				To {{ endMonth }}
+				To 
 				<span class="dropdown">
 				  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
 				    {{endMonthName}}
@@ -66,16 +66,14 @@
 				<h5>Climbing Type</h5>
 				<div class="btn-group btn-group-sm btn-group-filter" data="climbing_types" role="group">
 					<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types','All' )" type="button" class="filter-button btn btn-lg btn-default active all">All</button>
-					<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}"><img ng-src="{{ climbType }}" class ='icon button'></button>
+					<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<h5>Lodging Type</h5>
 				<div class="btn-group btn-group-sm btn-group-filter" data="Lodging" role="group">
-					<button ng-click="" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
-					<button ng-click="" type="button" class="filter-button btn btn-lg btn-default">Camping</button>
-					<button ng-click="" type="button" class="filter-button btn btn-lg btn-default">Hostel</button>
-					<button ng-click="" type="button" class="filter-button btn btn-lg btn-default">Hotel</button>
+					<button ng-click="LocationsGetter.toggleFilterButton($event,'accommodations','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
+					<button ng-click="LocationsGetter.toggleFilterButton($event,'accommodations',id )" ng-repeat="(name,id) in filter.accommodations" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
 				</div>
 			</div>
 			<div class="col-md-4">

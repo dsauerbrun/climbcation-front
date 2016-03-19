@@ -216,6 +216,8 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.markerMap = {};
 	LocationsGetter.page_num = 1
 	filter['climbing_types'] = [];
+	filter['accommodations'] = [];
+
 	filter['continents'] = [];
 	filter['price_max'] = [];
 	filter['sort'] = [];
