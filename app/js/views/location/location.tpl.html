@@ -97,7 +97,7 @@
 				</div>
 			</div>
 			<!-- flight costs -->
-			<div class="col-md-6">
+			<div class="col-md-6" ng-if="false">
 				<div class="well climbcation-well">
 					<h3>One way flight cost(BER to {{locationData.airport_code}})</h3>
 				</div>
@@ -152,41 +152,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<div class="container">
-		<locationsection section="section" sections-length="-2" ng-repeat="(sectionId, section) in sections" save-section="updateSection(sectionId, section)" ></locationsection>
-
-		<div id="nearby" class="info-section">
-			<div class="row" >
-				<div class="col-md-12">
-					<h3><u>Nearby Destinations</u></h3>
-					<p class="lead">
-						Don't end your trip in {{locationData.name}}. There's plenty to see nearby
-					</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="row col-md-12">
-					<div class="col-md-12">
-						<h5>Destinations within 200 miles of {{ locationData['name'] }} </h5>
-						<ul class="list-group">
-							<a ng-repeat="nearLocation in nearby"ng-href="/#location/{{ nearLocation.slug }}">
-								<li class="list-group-item">
-									{{nearLocation.name}}, {{nearLocation.country}} ----------- {{nearLocation.distance}} miles
-								</li>	
-							</a>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- adding new section inline -->
-		<locationsection section="emptySection" sections-length="-2" save-section="saveSection(locationData.location.id, emptySection)" ></locationsection>
-
-		<div id="comments" onrender="rendered()" class="fb-comments info-section" data-width="100%" ng-attr-data-href="http://www.climbcation.com/{{ locationData['name'] }}" data-numposts="5"></div>
-
 	</div>
 
 </section>
