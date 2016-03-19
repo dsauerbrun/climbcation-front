@@ -63,7 +63,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			addCloseLocations($scope.gmap,success['nearby']);
 			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 
-			console.log([$scope.locationData.slug])
 			$scope.$watch('origin_airport', function() {
 				LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
 					$timeout(function(){
@@ -78,7 +77,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	$scope.updateSection = function(sectionId, section){
 		section.isSaving = true;
 		$http.post('/api/infosection/'+sectionId,{section: section}).then(function(response){
-			console.log(response);
 			section.isSaving = false;
 			$('#saveSuccessModal').modal()
 		})
@@ -87,7 +85,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	$scope.saveSection = function(locationId, section){
 		section.isSaving = true;
 		$http.post('/api/infosection/',{locationId: locationId, section: section}).then(function(response){
-			console.log(response);
 			section.isSaving = false;
 			$('#saveSuccessModal').modal()
 			$scope.emptySection = emptySectionTemplate.clone();
@@ -113,15 +110,12 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 				_.forEach(promiseQuotes, function(quote, key) {
 					var splitKey = key.split('-');
 					var locationId = splitKey[splitKey.length - 1];
-					console.log(locationId);
-					console.log($scope.locationData)
 					var location = _.find($scope.locationData, function(locationIter) {
 						return locationIter.location.id == locationId;
 					});
 
 					var lowestPrice = 9999999;
 					var lowestPriceDate = '';
-					console.log(quote)
 					_.forEach(quote, function(monthArray, month) {
 						_.forEach(monthArray, function(cost, day) {
 							if (lowestPrice > cost) {
@@ -333,8 +327,19 @@ function createMap(mapId,latitude,longitude,zoom){
 		div: '#'+mapId,
 		lat: latitude,
 		lng: longitude,
-		zoom: zoom
+		zoom: zoom,
+		scrollwheel: false
 	});
+	$('body').on('click', function(element) {
+		map.setOptions({scrollwheel:false});
+	});
+
+	$('#'+mapId).on('click', function (e) {
+		e.stopPropagation();
+		map.setOptions({scrollwheel:true});
+		return;
+	});
+
 	return map;
 }
 
@@ -405,7 +410,6 @@ function setHighcharts(locationQuoteData, origin_airport){
 			})
 
 		});
-		console.log(slug)
 		$('#highchart'+slug).highcharts({
 	        chart: {
 	            type: 'line',
