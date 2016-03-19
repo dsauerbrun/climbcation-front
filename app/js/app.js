@@ -64,11 +64,14 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 
 			console.log([$scope.locationData.slug])
-			LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
-				$timeout(function(){
-					setLocationHighchart(promiseQuotes,$scope.origin_airport);
+			$scope.$watch('origin_airport', function() {
+				LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
+					$timeout(function(){
+						setLocationHighchart(promiseQuotes,$scope.origin_airport);
+					});
 				});
 			})
+			
 		}
 	);
 
@@ -532,7 +535,6 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 			})
 
 		});
-		console.log(slug)
 		$('#highchart'+slug).highcharts({
 	        chart: {
 	            type: 'line',
