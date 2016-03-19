@@ -43,37 +43,31 @@
 	.well.forms-container {
 		.well-content {
 			min-height: 340px;
-			padding: 12px;
-			padding-bottom: 0;
 		}
-		box-shadow: 0px 4px 15px -5px;
 	}
 
 	.tips-container {
 		padding: 10px;
 		margin-top: 20px;
+		margin-bottom: 20px;
 		box-shadow: 0px 4px 15px -5px;
 
 	}
-	.well-footer {
-		background-color: rgb(224,224,224);
-		padding: 20px 0;
-		.back-button {
-			color: $gray;
-			border-color: $gray;
-			border-width: 0 0 1px 0;
-			border-style: solid;
-			cursor: pointer;
-			vertical-align: -webkit-baseline-middle;
-			vertical-align: -moz-middle-with-baseline;
-		}
+	.well-footer >	.back-button {
+		color: $gray;
+		border-color: $gray;
+		border-width: 0 0 1px 0;
+		border-style: solid;
+		cursor: pointer;
+		vertical-align: -webkit-baseline-middle;
+		vertical-align: -moz-middle-with-baseline;
 	}
 	/* header start */
 	.progress-container {
 		position:relative;
 		padding: 10px 0;
 		box-shadow: 0px 4px 15px -5px;
-
+		margin-bottom: 20px;
 	}
 	.progress-icon-container {
 		position: absolute;

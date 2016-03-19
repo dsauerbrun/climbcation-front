@@ -58,16 +58,13 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			$scope.tableOfContents = processTableContents($scope.sections);
 			$scope.locationData = success['location']
 			$scope.nearby = success['nearby'];
-			$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,8);
+			$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,6);
 			addCloseLocations($scope.gmap,success['nearby']);
 			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 		}
 	);
 
 	$scope.updateSection = function(sectionId, section){
-		console.log(section)
-		console.log(sectionId)
-		console.log('stuff')
 		section.isSaving = true;
 		$http.post('/api/infosection/'+sectionId,{section: section}).then(function(response){
 			console.log(response);
@@ -77,9 +74,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	};
 
 	$scope.saveSection = function(locationId, section){
-		console.log(section)
-		console.log(locationId)
-		console.log('stuffing')
 		section.isSaving = true;
 		$http.post('/api/infosection/',{locationId: locationId, section: section}).then(function(response){
 			console.log(response);

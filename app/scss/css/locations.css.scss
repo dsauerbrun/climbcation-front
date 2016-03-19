@@ -1,23 +1,60 @@
 // Place all the styles related to the locations controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-.info-section:nth-of-type(odd){
-	background-color: #f9f9f9;
-}
-.info-section{
-	padding: 1em 0;
-}
-#map-canvas{
-	height: 25em;
-}
-.table-contents-list{
-	display: inline-block;
-}
 
 .location-info-container {
 	padding-bottom: 5em;
+
+	.main-header {
+		display: flex;
+		align-items: center;
+		> div {
+			width: 33%;
+		}
+		.location-photo {
+			padding: 0;
+			border-width: 2px;
+			img {
+				width: 100%;
+			}
+		}
+		#map-canvas{
+			height: 15em;
+		}
+		.overview-container {
+			div > div > label {
+				display: block;
+			}
+		}
+	}
+
+	.climbcation-well > h3 {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+	.accommodation-info-section {
+		img {
+			width: 50%;
+			margin-left: 25%;
+		}
+	}
+
+	.footer-link {
+		font-size: .8em;
+	}
+
+	.info-section:nth-of-type(odd){
+		background-color: #f9f9f9;
+	}
+	.info-section{
+		padding: 1em 0;
+	}
+	
+	.table-contents-list{
+		display: inline-block;
+	}
+
 }
 
-.footer-link {
-	font-size: .8em;
-}
+

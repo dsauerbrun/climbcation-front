@@ -11,6 +11,10 @@
 	color: $light-blue;
 }
 
+.text-gray {
+	color: $text-gray;
+}
+
 .no-padding {
 	padding: 0;
 }
@@ -20,6 +24,56 @@
 	border-width: 0 0 1px 0;
 	border-color: $light-gray;
 }
+
+/* wells */
+
+.well-footer {
+	background-color: rgb(224,224,224);
+	padding: 20px 0;
+}
+.well.has-header {
+	padding-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
+.well.has-footer {
+	padding-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
+.well-header {
+	background-color: rgb(224,224,224);
+	padding: 20px;
+}
+.well-content {
+	padding: 20px;
+	padding-bottom: 0;
+}
+/* wells end */
+
+/* info container */
+
+.info-container {
+	background-color: $light-gray;
+	border-color: $gray;
+	border-style: solid;
+	border-width: 1px;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	> div {
+		text-align: left;
+		width: 100%;
+		padding-left: 5px;
+	}
+	> div:not(:first-child) {
+		border-width: 0 0 0 1px;
+		border-color: $gray;
+		border-style: solid;
+	}
+}
+
+/* info container end */
 
 /* buttons start */
 
