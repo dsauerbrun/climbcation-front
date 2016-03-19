@@ -84,7 +84,7 @@
 			<div class="col-md-6">
 				<div class="well climbcation-well">
 					<h3>Accommodation</h3>
-					<span class="text-gray">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.
+					<span class="text-gray">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</span>
 					<div class="info-container">
 						<div class="accommodation-info-section" ng-repeat="accommodation in locationData.accommodations">
 							<h3 class="text-gray text-center">{{accommodation.name}}</h3>
@@ -97,9 +97,11 @@
 				</div>
 			</div>
 			<!-- flight costs -->
-			<div class="col-md-6" ng-if="false">
+			<div class="col-md-6">
 				<div class="well climbcation-well">
-					<h3>One way flight cost(BER to {{locationData.airport_code}})</h3>
+					<h3>One way flight cost({{origin_airport}} to {{locationData.airport_code}})</h3>
+					<div id="highchart{{locationData.airport_code + '-' + locationData.slug + '-' + locationData.id}}">
+					</div>
 				</div>
 			</div>
 			<!-- cost -->

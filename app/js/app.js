@@ -30,10 +30,11 @@ home.filter('removeSpaces', function () {
 		return str;
 	};
 });
-home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$routeParams,$location,$anchorScroll,$timeout){
+home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
 	slug = $routeParams.slug;
 	$scope.name = 'hello';
 	$scope.gmap;
+	$scope.origin_airport = 'BER';
 	var deferred = $q.defer();
 	var emptySectionTemplate = {previewOff: false, newSection: true, title:'', body: '', subsections: [{title:'', subsectionDescriptions:[{desc:''}]}]}
 	emptySectionTemplate.clone = function(){
@@ -61,6 +62,13 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,6);
 			addCloseLocations($scope.gmap,success['nearby']);
 			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
+
+			console.log([$scope.locationData.slug])
+			LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
+				$timeout(function(){
+					setLocationHighchart(promiseQuotes,$scope.origin_airport);
+				});
+			})
 		}
 	);
 
@@ -82,6 +90,9 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			$scope.emptySection = emptySectionTemplate.clone();
 		})
 	};
+
+	
+
 });
 
 home.controller('LocationsController',function($scope, $timeout,LocationsGetter){
@@ -129,11 +140,13 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 		);
 
 	});
+
 	$scope.$watch('origin_airport', function(){
 		if($scope.origin_airport != null){
 			LocationsGetter.getFlightQuotes($scope.slugArray,$scope.origin_airport);
 		}
 	});
+
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
 		LocationsGetter.locationsPromise.then(
 			function(promiseLocations){
@@ -389,6 +402,7 @@ function setHighcharts(locationQuoteData, origin_airport){
 			})
 
 		});
+		console.log(slug)
 		$('#highchart'+slug).highcharts({
 	        chart: {
 	            type: 'line',
@@ -415,6 +429,136 @@ function setHighcharts(locationQuoteData, origin_airport){
 	        },
 	        yAxis: {
 	        	visible: false,
+	            min: 0,
+	            title: {
+	                text: 'Price(USD)'
+	            },
+	            tickInterval: 50,
+	            max: maxPrice
+
+	        },
+	        legend: {
+	            enabled: false
+	        },
+	        tooltip: {
+	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
+	        },
+	        series: [{
+	            name: 'Price',
+	            data: quote_array,
+	            dataLabels: {
+	                enabled: false,
+	                rotation: -90,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                format: '{point.y:.1f}', // one decimal
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        }]
+	    });
+		/*$('#highchart'+slug).highcharts({
+	        chart: {
+	            type: 'line',
+	            height: '100',
+	            showAxes: false
+	        },
+	        title: {
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport
+	        },
+	        subtitle: {
+	            text: 'Source: Skyscanner.com(prices subject to change)'
+	        },
+	        xAxis: {
+	            type: 'category',
+	            title: {
+	            	text: 'Date'
+	            },
+	            labels: {
+	                rotation: -45,
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Price(USD)'
+	            },
+	            tickInterval: 50,
+	            max: maxPrice
+	        },
+	        legend: {
+	            enabled: false
+	        },
+	        tooltip: {
+	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
+	        },
+	        series: [{
+	            name: 'Price',
+	            data: quote_array,
+	            dataLabels: {
+	                enabled: false,
+	                rotation: -90,
+	                color: '#FFFFFF',
+	                align: 'right',
+	                format: '{point.y:.1f}', // one decimal
+	                y: 10, // 10 pixels down from the top
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	        }]
+	    });*/
+	});
+}
+
+function setLocationHighchart(locationQuoteData, origin_airport){
+	$.each(locationQuoteData,function(slug,months){
+		destinationAirport = slug.split("-")[0]
+		quote_array = [];
+		var maxPrice = 0;
+		$.each(this,function(monthKey,value){
+			$.each(value, function(dayKey,cost){
+				quote_array.push([monthKey+'/'+dayKey,cost])
+				if(cost > maxPrice)
+					maxPrice = cost;
+			})
+
+		});
+		console.log(slug)
+		$('#highchart'+slug).highcharts({
+	        chart: {
+	            type: 'line',
+	            height: '200'
+	        },
+	        title: {
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '(source: Skyscanner)',
+	            floating: true
+	        },
+	        xAxis: {
+	        	visible: true,
+	            type: 'category',
+	            title: {
+	            	text: 'Date'
+	            },
+	            labels: {
+	                rotation: -45,
+	                style: {
+	                    fontSize: '13px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+	            
+	        },
+	        yAxis: {
+	        	visible: true,
 	            min: 0,
 	            title: {
 	                text: 'Price(USD)'
