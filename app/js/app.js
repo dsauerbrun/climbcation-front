@@ -102,6 +102,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 	$scope.origin_airport = "BER";
 	$scope.slugArray = [];
 	
+	LocationsGetter.clearFilters();
 
 	$scope.$watch('LocationsGetter.flightQuotesPromise', function(){
 		LocationsGetter.flightQuotesPromise.then(
@@ -235,6 +236,32 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	var sort = {};
 	sort['price'] = [];
 	sort['grade'] = [];
+
+	LocationsGetter.clearFilters = function() {
+		this.mapFilter = {};
+		this.markerMap = {};
+		this.page_num = 1
+		filter['climbing_types'] = [];
+		filter['accommodations'] = [];
+
+		filter['continents'] = [];
+		filter['price_max'] = [];
+		filter['sort'] = [];
+		filter['search'] = '';
+		filter['start_month'] = 1;
+		filter['end_month'] = 12;
+		this.mapFilter['northeast'] = {};
+		this.mapFilter['northeast']['longitude'] = null;
+		this.mapFilter['northeast']['latitude'] = null;
+		this.mapFilter['southwest'] = {};
+		this.mapFilter['southwest']['longitude'] = null;
+		this.mapFilter['southwest']['latitude'] = null;
+		this.loading = false;
+
+		sort['price'] = [];
+		sort['grade'] = [];
+	};
+
 	LocationsGetter.toggleFilterButton = function(eventItem,filterArray,filterValue){
 		toggleButtonActive(angular.element(eventItem.currentTarget));
 		angular.element(eventItem.currentTarget).blur();
