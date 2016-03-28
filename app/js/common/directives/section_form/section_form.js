@@ -165,6 +165,10 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 			$scope.updateProgressBar();
 		}
 	}
+	$scope.changePage = function(pageNum) {
+		$scope.currentPage = pageNum;
+		$scope.updateProgressBar();
+	}
 
 	$scope.updateProgressBar = function() {
 		switch($scope.currentPage) {
