@@ -22,8 +22,20 @@
 			<div class="col-md-12">
 				<h1 class="text-center"> {{ locationData['name'] }}, {{ locationData['country'] }}</h1>
 				<div class="main-header">
-					<div id="map-canvas" class="well climbcation-well">
-
+					<div class="well climbcation-well location-map">
+						<div class="nearby-locations" ng-class="{'expanded': nearbyShow}">
+							
+							<div ng-if="nearbyShow">
+								<div ng-repeat="nearbyLoc in nearby | limitTo:5">
+									<a href="#/location/{{nearbyLoc.slug}}">{{ nearbyLoc.name }}</a> <span class="text-gray bold">({{nearbyLoc.distance}} mi away)</span> 
+									<img ng-repeat="type in nearbyLoc.climbing_types" ng-src="{{type.url}}"/>
+								</div>
+							</div>
+							<a class="toggle" ng-click="toggleNearby()">{{ nearbyShow? 'Hide Nearby Locations':'Show Nearby Locations' }}</a>
+						</div>
+						<div id="map-canvas" class="">
+							
+						</div>
 					</div>
 					<div class="location-photo well climbcation-well">
 						<img ng-src="{{ locationData['home_thumb'] }}"  />

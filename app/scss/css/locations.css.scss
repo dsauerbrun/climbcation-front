@@ -18,8 +18,39 @@
 				width: 100%;
 			}
 		}
+		.location-map {
+			padding: 0px;
+			position: relative;
+			.nearby-locations {
+				a {
+					font-weight: bold;
+					cursor: pointer;
+				}
+				img {
+					margin-left: 10px;
+				}
+				position:absolute;
+				background-color: rgba(230,230,230,.8);
+				z-index: 10;
+				width: 100%;
+				padding: 10px;
+				bottom: 0px;
+				text-align: right;
+				.toggle {
+					
+				}
+			}
+			.nearby-locations.expanded {
+				max-height: 80%;
+				text-align: right;
+				> div {
+					text-align: left;
+				}
+			}
+		}
 		#map-canvas{
 			height: 15em;
+			z-index: 1;
 		}
 		.overview-container {
 			div > div > label {

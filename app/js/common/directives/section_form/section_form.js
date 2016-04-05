@@ -298,8 +298,6 @@ sectionForm.directive('locationExists', function ($http){
    return {
       require: 'ngModel',
       link: function(scope, elem, attr, ctrl) {
-
-          
           
           ctrl.$validators.locationExists = function(modelValue, viewValue){
           	if (ctrl.$isEmpty(modelValue)) {

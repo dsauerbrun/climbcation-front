@@ -174,39 +174,5 @@
 
 	/* general end */
 
-	/* accommodation start */
-	.accommodation-options {
-		display:flex;
-		justify-content: space-around;
-		padding: 10px 200px;
-	}
-	.accommodation-button-wrapper {
-		display: inline-block;
-		.accommodation-button {
-			position: relative;
-			height: 100px;
-			img {
-				width: 100px;
-			}
-			.accommodation-cost-container {
-				z-index: 10;
-				text-align: left;
-				position: absolute;
-				left: -1px;
-				bottom: -1px;
-				width: 102%;
-			}
-		}
-		.accommodation-button.active,
-		.accommodation-button:active {
-			width: 126px;
-			background-color: rgb(215,238,240);
-			img {
-				width: 80px;
-			}
-		}
-	}
-	/*accommodation end */
-
 
 }

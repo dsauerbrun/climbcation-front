@@ -35,6 +35,8 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	$scope.name = 'hello';
 	$scope.gmap;
 	$scope.origin_airport = 'BER';
+	$scope.locationObj = {};
+	$scope.nearbyShow = false;
 	var deferred = $q.defer();
 	var emptySectionTemplate = {previewOff: false, newSection: true, title:'', body: '', subsections: [{title:'', subsectionDescriptions:[{desc:''}]}]}
 	emptySectionTemplate.clone = function(){
@@ -90,6 +92,20 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			$scope.emptySection = emptySectionTemplate.clone();
 		})
 	};
+
+	$scope.toggleNearby = function() {
+		$scope.nearbyShow = !$scope.nearbyShow;
+	}
+
+	$http.get('api/get_attribute_options').then(function(data){
+		var respData = data.data
+		$scope.accommodations = respData['accommodations'];
+		$scope.climbingTypes = respData['climbing_types'];
+		$scope.months = respData['months'];
+		$scope.grades = respData['grades'];
+		$scope.foodOptions = respData['food_options'];
+		$scope.transportations = respData['transportations'];
+	});
 
 	
 
