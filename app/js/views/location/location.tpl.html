@@ -28,7 +28,7 @@
 							<div ng-if="nearbyShow">
 								<div ng-repeat="nearbyLoc in nearby | limitTo:5">
 									<a href="#/location/{{nearbyLoc.slug}}">{{ nearbyLoc.name }}</a> <span class="text-gray bold">({{nearbyLoc.distance}} mi away)</span> 
-									<img ng-repeat="type in nearbyLoc.climbing_types" ng-src="{{type.url}}"/>
+									<img ng-repeat="nearbyType in nearbyLoc.climbing_types" ng-src="{{nearbyType.url}}"/>
 								</div>
 							</div>
 							<a class="toggle" ng-click="toggleNearby()">{{ nearbyShow? 'Hide Nearby Locations':'Show Nearby Locations' }}</a>
@@ -94,6 +94,7 @@
 			</div>
 			<!-- accommodation -->
 			<div class="col-md-6">
+				
 				<div class="well climbcation-well">
 					<h3>Accommodation</h3>
 					<span class="text-gray">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</span>
