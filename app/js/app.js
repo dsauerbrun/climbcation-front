@@ -1,4 +1,4 @@
-var home = angular.module('app', ['helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','customFilters']);
+var home = angular.module('app', ['helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 home.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 	.when('/home', {
@@ -56,7 +56,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 		function(success){
 			$scope.longitude = success['location']['longitude'];
 			$scope.latitude = success['location']['latitude'];
-			//processSectionsByPair(success['sections']);
 			$scope.sections = success['sections'];
 			$scope.tableOfContents = processTableContents($scope.sections);
 			$scope.locationData = success['location']
@@ -111,7 +110,7 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 
 });
 
-home.controller('LocationsController',function($scope, $timeout,LocationsGetter){
+home.controller('LocationsController',function($scope, $timeout,LocationsGetter, $location, $document){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
@@ -181,12 +180,15 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter)
 		);
 
 	});
-
+	$scope.goToFilter = function() {
+		var filter = angular.element(document.getElementById('filter'));
+		$document.scrollToElement(filter, 0, 500);
+	}
 
 });
 
 home.controller('MapFilterController',function($scope,LocationsGetter){
-	$scope.filterMap = createMap('mapFilter',40.3427932,-105.6858329,3);
+	$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
 	LocationsGetter.markerMap = {};
 	$scope.filterMap.addListener('dragend', function() {
 		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();

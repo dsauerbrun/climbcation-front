@@ -16,8 +16,8 @@ exports.javascript = [
   'vendor/gmapsjs/gmaps.js',
   'vendor/highcharts/highcharts.js',
 	'node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.min.js',
-	'vendor/angular-easyfb/src/angular-easyfb.js'
-
+	'vendor/angular-easyfb/src/angular-easyfb.js',
+	'node_modules/angular-scroll/angular-scroll.js'
 ];
 
 exports.css = [

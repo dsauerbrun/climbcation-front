@@ -1,16 +1,15 @@
 <section ng-controller='LocationsController'>
-<div class="map-hero">
-	<div id='mapFilter' ng-controller='MapFilterController' class="row">
-	</div>
-	<div class="map-overlay">
-		<div class="map-overlay-title">
-			<h1>Find Your Next Climbing Destination</h1>
+<div class="home-hero">
+	<div class="home-hero-overlay">
+		<div class="home-hero-overlay-title">
+			<h2>Ever heard of Rodellar? It offers some of the best sport climbing in Europe</h2>
+			<div class="btn btn-climbcation" ng-click="goToFilter()">Find more awesome places you've never heard of below</div>
 		</div>
 		<img class="pull-left" src="/images/hero-image-left.png" />
 		<img class="pull-right" src="/images/hero-image-right.png" />
 	</div>
 </div>
-<filter></filter>
+<filter id="filter"></filter>
 <div class="row">
 	<div class="col-md-12 locations-window" data-spy="scroll" >
 		<location class="col-md-6" ng-repeat="locationData in locationData"></location>
