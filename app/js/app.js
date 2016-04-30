@@ -1,5 +1,5 @@
 var home = angular.module('app', ['helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
-home.config(['$routeProvider', function($routeProvider) {
+home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
 	.when('/home', {
 		templateUrl: 'views/home/home.tpl.html',
@@ -15,7 +15,9 @@ home.config(['$routeProvider', function($routeProvider) {
 		redirectTo: '/home'
 	});
 
-}]);
+	$locationProvider.html5Mode(true);
+
+});
 
 home.config(function(ezfbProvider){
 	ezfbProvider.setInitParams({
@@ -391,7 +393,7 @@ home.controller('MapFilterController',function($scope,LocationsGetter){
 				$scope.filterMap.removeMarkers();
 				LocationsGetter.markerMap = {};
 				$.each(promiseLocations,function(){
-					LocationsGetter.markerMap[this['slug']] = addMarker($scope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/#location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+					LocationsGetter.markerMap[this['slug']] = addMarker($scope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
 					LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
 				});
 			},
@@ -580,7 +582,7 @@ function createMap(mapId,latitude,longitude,zoom){
 
 function addCloseLocations(map,locationMap){
 	$.each(locationMap,function(){
-		addMarker(map,this['lat'],this['lng'],this['name'],'<p><a href="/#location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+		addMarker(map,this['lat'],this['lng'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
 	});
 }
 

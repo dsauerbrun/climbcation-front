@@ -2,7 +2,7 @@
 	<div class="location-card-info">
 		<div class="row">
 			<div class="col-md-8 location-list-thumb-container">
-				<a ng-href="/#location/{{ locationData['slug'] }}">
+				<a ng-href="/location/{{ locationData['slug'] }}">
 					<img class="location-list-thumb" ng-src="{{ locationData['home_thumb'] }}">	
 					<div class="location-list-thumb-title">
 						<h3>{{ locationData['name'] }}</h3>
@@ -50,13 +50,13 @@
 <!--
 <div class="row location-row">
 	<div class="col-md-2">
-		<a ng-href="/#location/{{ locationData['slug'] }}">
+		<a ng-href="/location/{{ locationData['slug'] }}">
 			<img ng-src="{{ locationData['home_thumb'] }}" class ='img-circle' height='192' width='192'>	
 		</a>
 	</div>
 	<div class="col-md-10">
 		<div class="row">
-		<h3 class="col-md-8 col-md-offset-1"><a ng-href="/#location/{{ locationData['slug'] }}">{{ locationData['name'] }}, {{ locationData['country'] }}</a> <small>${{ locationData['price_range_floor_cents']}}  - ${{ locationData['price_range_ceiling_cents'] }} / day</small></h3>
+		<h3 class="col-md-8 col-md-offset-1"><a ng-href="/location/{{ locationData['slug'] }}">{{ locationData['name'] }}, {{ locationData['country'] }}</a> <small>${{ locationData['price_range_floor_cents']}}  - ${{ locationData['price_range_ceiling_cents'] }} / day</small></h3>
 	</div>
 		<div class="icon-row row">
 
