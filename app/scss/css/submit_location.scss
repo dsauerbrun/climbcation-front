@@ -7,25 +7,6 @@
 	textarea.form-control {
 		resize: none;
 	}
-	label {
-		font-size: 12px;
-		.gray {
-			color: rgb(123,123,123);
-			font-weight: normal;
-		}
-	}
-	label.gray {
-		color: rgb(123,123,123);
-	}
-	.small-label {
-		font-size: 12px;
-		color: #000;
-		font-weight: 700;
-	}
-
-	.inline {
-		display: inline;
-	}
 
 	.short-input {
 		width: 78%;
@@ -52,15 +33,6 @@
 		margin-bottom: 20px;
 		box-shadow: 0px 4px 15px -5px;
 
-	}
-	.well-footer >	.back-button {
-		color: $gray;
-		border-color: $gray;
-		border-width: 0 0 1px 0;
-		border-style: solid;
-		cursor: pointer;
-		vertical-align: -webkit-baseline-middle;
-		vertical-align: -moz-middle-with-baseline;
 	}
 	/* header start */
 	.progress-container {

@@ -5,6 +5,13 @@
 .location-info-container {
 	padding-bottom: 5em;
 
+	.add-section{
+		padding: 40px 0;
+		h3 {
+			padding-bottom: 20px;
+		}
+	}
+
 	.main-header {
 		display: flex;
 		align-items: center;
@@ -25,9 +32,6 @@
 				a {
 					font-weight: bold;
 					cursor: pointer;
-				}
-				img {
-					margin-left: 10px;
 				}
 				position:absolute;
 				background-color: rgba(230,230,230,.8);
@@ -59,7 +63,14 @@
 		}
 	}
 	.misc-section {
-		height: 100px;
+		.text-button {
+			margin-left: 10px;
+			margin-right: 10px;
+			vertical-align: middle;
+		}
+		.pad-top{
+			padding-top: 10px;
+		}
 	}
 	.climbcation-well > h3 {
 		padding-top: 0px;

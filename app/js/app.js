@@ -35,9 +35,21 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	$scope.name = 'hello';
 	$scope.gmap;
 	$scope.origin_airport = 'BER';
-	$scope.locationObj = {};
 	$scope.nearbyShow = false;
-	var deferred = $q.defer();
+	$scope.editingAccommodation = false;
+	$scope.editingGettingIn = false;
+	$scope.editingFoodOptions = true;
+
+	$scope.toggleEditAccommodation = function() {
+		$scope.editingAccommodation = !$scope.editingAccommodation;
+	}
+	$scope.toggleEditGettingIn = function() {
+		$scope.editingGettingIn = !$scope.editingGettingIn;
+	}
+	$scope.toggleEditFoodOptions = function() {
+		$scope.editingFoodOptions = !$scope.editingFoodOptions;
+	}
+
 	var emptySectionTemplate = {previewOff: false, newSection: true, title:'', body: '', subsections: [{title:'', subsectionDescriptions:[{desc:''}]}]}
 	emptySectionTemplate.clone = function(){
 		return jQuery.extend(true, {}, this);
@@ -49,29 +61,30 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 			scrollTop: $('#'+id.replace(/\s+/g, '')).offset().top
 		}, 1000);
 	};
-	$http.get('api/location/'+slug).success(function(data){
-		deferred.resolve(data);
-	});
-	deferred.promise.then(
+	$http.get('api/location/'+slug).then(
 		function(success){
-			$scope.longitude = success['location']['longitude'];
-			$scope.latitude = success['location']['latitude'];
-			$scope.sections = success['sections'];
-			$scope.tableOfContents = processTableContents($scope.sections);
-			$scope.locationData = success['location']
-			$scope.nearby = success['nearby'];
-			$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,6);
-			addCloseLocations($scope.gmap,success['nearby']);
-			addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
+			if (success.status == 200) {
+				success = success.data;
+				$scope.longitude = success['location']['longitude'];
+				$scope.latitude = success['location']['latitude'];
+				$scope.sections = success['sections'];
+				$scope.tableOfContents = processTableContents($scope.sections);
+				$scope.locationData = success['location']
+				$scope.nearby = success['nearby'];
+				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,6);
+				addCloseLocations($scope.gmap,success['nearby']);
+				addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 
-			$scope.$watch('origin_airport', function() {
-				LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
-					$timeout(function(){
-						setLocationHighchart(promiseQuotes,$scope.origin_airport);
+				$scope.$watch('origin_airport', function() {
+					LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
+						$timeout(function(){
+							setLocationHighchart(promiseQuotes,$scope.origin_airport);
+						});
 					});
 				});
-			})
-			
+
+				populateEditables($scope.locationData);
+			}
 		}
 	);
 
@@ -96,17 +109,182 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 		$scope.nearbyShow = !$scope.nearbyShow;
 	}
 
-	$http.get('api/get_attribute_options').then(function(data){
-		var respData = data.data
-		$scope.accommodations = respData['accommodations'];
-		$scope.climbingTypes = respData['climbing_types'];
-		$scope.months = respData['months'];
-		$scope.grades = respData['grades'];
-		$scope.foodOptions = respData['food_options'];
-		$scope.transportations = respData['transportations'];
-	});
+	// EDITING FUNCTIONALITY BELOW
 
+	$scope.locationObj = {
+		submitter_email: '',
+		name: '',
+		country: '',
+		continent: '',
+		airport: '',
+		price_floor: '',
+		price_ceiling: '',
+		months: {},
+		accommodations: {},
+		climbingTypes: {},
+		grade: '',
+		sections: [],
+		closestAccommodation: '<1 mile',
+		foodOptions: {},
+		transportations: {},
+		foodOptionDetails: {}
+	};
+
+	$scope.submitAccommodationChanges = function() {
+		$http.post('api/locations/' + $scope.locationData.id +'/accommodations',
+			{location: $scope.locationObj}
+		).then(function(response) {
+			if (response.status == 200) {
+				$http.get('api/location/'+slug).then(function(response) {
+					$scope.locationData.accommodations = response.data.location.accommodations;
+					$scope.locationData.accommodation_notes = response.data.location.accommodation_notes;
+					$scope.locationData.closest_accommodation = response.data.location.closest_accommodation;
+					$scope.toggleEditAccommodation();
+				});
+			}
+		});
+	}
+
+	$scope.selectAccommodation = function(accommodation) {
+		var accommodationExists = $scope.locationObj.accommodations[accommodation.id];
+
+		if (accommodationExists) {
+			//remove it from list of accommodations
+			$scope.locationObj.accommodations[accommodationExists.id] = null;
+		} else {
+			//mark the id and create a cost range field
+			$scope.locationObj.accommodations[accommodation.id] = {id: accommodation.id, cost: ''};
+		}
+	};
+
+	$scope.submitGettingInChanges = function() {
+		$http.post('api/locations/' + $scope.locationData.id +'/gettingin',
+			{location: $scope.locationObj}
+		).then(function(response) {
+			if (response.status == 200) {
+				$http.get('api/location/'+slug).then(function(response) {
+					$scope.locationData.transportations = response.data.location.transportations;
+					$scope.locationData.getting_in_notes = response.data.location.getting_in_notes;
+					$scope.locationData.best_transportation = response.data.location.best_transportation;
+					$scope.locationData.walking_distance = response.data.location.walking_distance;
+					$scope.toggleEditGettingIn();
+
+				});
+			}
+		});
+	}
+
+	$scope.selectBestTransportation = function(id) {
+		// set the best transportation
+		$scope.locationObj.bestTransportationId = id;
+		$scope.locationObj.bestTransportationCost = null;
+		//set ranges
+		
+		var bestTransportation = _.find($scope.transportations, function(transportation) {
+			return transportation.id == id;
+		})
+		$scope.bestTransportationName = bestTransportation.name;
+		$scope.bestTransportationCostOptions = [];
+		_.forEach(bestTransportation.ranges, function(range) {
+			var rangeObj = {
+				cost: range,
+				active: false
+			}
+			$scope.bestTransportationCostOptions.push(rangeObj);
+		});
+	}
+
+	$scope.selectBestTransportationCost = function(cost) {
+		// reset active
+		console.log('best trans', $scope.bestTransportationCostOptions, cost)
+		_.forEach($scope.bestTransportationCostOptions, function(costOption) {
+			costOption.active = false;
+			if ( costOption.cost == cost || costOption.cost == cost.cost) {
+				costOption.active = true;
+				$scope.locationObj.bestTransportationCost = cost.cost || cost;
+			}
+		});		
+	}
+
+	$scope.submitFoodOptionsChanges = function() {
+		$http.post('api/locations/' + $scope.locationData.id +'/foodoptions',
+			{location: $scope.locationObj}
+		).then(function(response) {
+			if (response.status == 200) {
+				$http.get('api/location/'+slug).then(function(response) {
+					$scope.locationData.food_options = response.data.location.food_options;
+					$scope.locationData.common_expenses_notes = response.data.location.common_expenses_notes;
+					$scope.locationData.saving_money_tip = response.data.location.saving_money_tip;
+					$scope.toggleEditFoodOptions();
+
+				});
+			}
+		});
+	}
+
+	$scope.selectFoodOptionDetail = function(id, range) {
+		$scope.locationObj.foodOptionDetails[id] = {};
+		$scope.locationObj.foodOptionDetails[id].id = id;
+		$scope.locationObj.foodOptionDetails[id].cost = range;
+	}
+
+	$scope.cleanFoodOptionDetails = function() {
+		_.forEach($scope.locationObj.foodOptions, function(foodOption, key) {
+			if (!foodOption) {
+				$scope.locationObj.foodOptionDetails[key] = null;
+			} else if (!$scope.locationObj.foodOptionDetails[key]) {
+				$scope.locationObj.foodOptionDetails[key] = {};
+				$scope.locationObj.foodOptionDetails[key].id = key;
+				$scope.locationObj.foodOptionDetails[key].cost = null;
+			}
+		});
+	}
+
+	$scope.addSection = function() {
+		$scope.sections.new = {title: '', body: '', previewOff: true};
+	}
 	
+	function populateEditables(location) {
+		$http.get('api/get_attribute_options').then(function(data){
+			var respData = data.data
+			$scope.accommodations = respData['accommodations'];
+			$scope.climbingTypes = respData['climbing_types'];
+			$scope.months = respData['months'];
+			$scope.grades = respData['grades'];
+			$scope.foodOptions = respData['food_options'];
+			$scope.transportations = respData['transportations'];
+		}).then(function() {
+			_.forEach(location.accommodations, function(accommodation) {
+				$scope.locationObj.accommodations[accommodation.id] = { id: accommodation.id, cost: accommodation.cost};
+			})
+			$scope.locationObj.accommodationNotes = location.accommodation_notes;
+			$scope.locationObj.closestAccommodation = location.closest_accommodation;
+
+			_.forEach(location.transportations, function(transportation) {
+				$scope.locationObj.transportations[transportation.id] = true;
+			});
+			location.best_transportation.id && $scope.selectBestTransportation(location.best_transportation.id);
+			location.best_transportation.cost && $scope.selectBestTransportationCost(location.best_transportation.cost)
+			$scope.locationObj.gettingInNotes = location.getting_in_notes;
+			$scope.locationObj.walkingDistance = location.walking_distance;
+
+			_.forEach(location.food_options, function(foodOption) {
+				$scope.locationObj.foodOptions[foodOption.id] = true;
+				foodOption.cost && $scope.selectFoodOptionDetail(foodOption.id, foodOption.cost);
+			});
+			$scope.locationObj.commonExpensesNotes = location.common_expenses_notes
+			$scope.locationObj.savingMoneyTips = location.saving_money_tip;
+
+			console.log(location);
+			console.log($scope.locationObj)
+		})
+		
+		
+	}
+
+	$scope.stopPropagation = function($event) {
+		$event.stopPropagation();
+	};
 
 });
 

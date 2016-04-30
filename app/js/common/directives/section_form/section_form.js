@@ -89,22 +89,13 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 		var accommodationExists = $scope.locationObj.accommodations[accommodation.id];
 
 		if (accommodationExists) {
-			console.log('in exists')
 			//remove it from list of accommodations
 			$scope.locationObj.accommodations[accommodationExists.id] = null;
 		} else {
 			//mark the id and create a cost range field
 			$scope.locationObj.accommodations[accommodation.id] = {id: accommodation.id, cost: ''};
 		}
-	};
-
-	$scope.setAccommodationCost = function (accommodation, range) {
-		var accommodationExists = _.find($scope.locationObj.accommodations, function(accommodationObj) {
-			return accommodation.id == accommodationObj.id;
-		});
-		if (accommodationExists) {
-			accommodationExists.cost = range;
-		}
+		console.log($scope.locationObj)
 	};
 
 	$scope.selectFoodOptionDetail = function(id, range) {
@@ -115,10 +106,13 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 
 	$scope.cleanFoodOptionDetails = function() {
 		_.forEach($scope.locationObj.foodOptions, function(foodOption, key) {
-			console.log(foodOption)
-			console.log(key)
+			console.log(key, foodOption)
 			if (!foodOption) {
 				$scope.locationObj.foodOptionDetails[key] = null;
+			} else if (!$scope.locationObj.foodOptionDetails[key]) {
+				$scope.locationObj.foodOptionDetails[key] = {};
+				$scope.locationObj.foodOptionDetails[key].id = key;
+				$scope.locationObj.foodOptionDetails[key].cost = null;
 			}
 		});
 	}

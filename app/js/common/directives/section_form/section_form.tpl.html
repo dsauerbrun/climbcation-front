@@ -32,6 +32,7 @@
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
+	{{locationObj}}
 	<!-- header start -->
 	<div class="text-center">
 		<h3>Climbcation Location Creation</h3>
@@ -169,7 +170,7 @@
 											</div>
 										</div>
 										<div class="row" ng-if="bestTransportationCostOptions">
-											<label>How much does {{bestTransportationName}} cost?</label>
+											<label>How much does a {{bestTransportationName}} cost?</label>
 											<div class="btn-group btn-group-sm center-block">
 												<button class="btn btn-sm btn-default" ng-class="{'active': costRange.active}"
 													ng-repeat="costRange in bestTransportationCostOptions"
@@ -206,7 +207,7 @@
 								<div class="col-md-12 row">
 									<div class="col-md-12">
 										<label class="center-block">Select all available options for accommodation in {{locationObj.name}}</label>
-										<div class="accommodation-options border-bottom">
+										<div class="accommodation-options side-pad border-bottom">
 											<div class="accommodation-button-wrapper" ng-repeat="accommodation in accommodations" ng-click="selectAccommodation(accommodation)">
 												<div class="btn btn-default accommodation-button {{(locationObj.accommodations | accommodationChosen:accommodation)?'active':'' }}">
 													<img ng-src="{{accommodation.url}}" />
@@ -311,7 +312,7 @@
 						<div class="col-md-12 well-footer">
 							<div class="row">
 								<div class="col-md-offset-8 col-md-1" ng-click="prevPage()">
-									<span class="back-button" ng-if="currentPage != 1 && currentPage != 6">Back</span>
+									<span class="text-button" ng-if="currentPage != 1 && currentPage != 6">Back</span>
 								</div>
 								<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 5">
 									<div class=" ">Next</div>
