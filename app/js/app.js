@@ -40,7 +40,7 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 	$scope.nearbyShow = false;
 	$scope.editingAccommodation = false;
 	$scope.editingGettingIn = false;
-	$scope.editingFoodOptions = true;
+	$scope.editingFoodOptions = false;
 
 	$scope.toggleEditAccommodation = function() {
 		$scope.editingAccommodation = !$scope.editingAccommodation;

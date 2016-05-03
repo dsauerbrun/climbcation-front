@@ -1,8 +1,8 @@
 label {
 	&.control {
-		font-size: 14px;
+		font-size: 12px;
 	}
-	font-size: 14px;
+	font-size: 12px;
 	.gray {
 		color: rgb(123,123,123);
 		font-weight: normal;
@@ -112,8 +112,7 @@ label {
 	border-width: 0 0 1px 0;
 	border-style: solid;
 	cursor: pointer;
-	vertical-align: -webkit-baseline-middle;
-	vertical-align: -moz-middle-with-baseline;
+	vertical-align: middle;
 }
 
 .btn-climbcation {

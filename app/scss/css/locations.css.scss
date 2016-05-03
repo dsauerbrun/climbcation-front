@@ -5,6 +5,16 @@
 .location-info-container {
 	padding-bottom: 5em;
 
+	h5 {
+		padding-top: 0px;
+		margin-top: 0px;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+	}
+	.container-fluid {
+		padding-left: 100px;
+		padding-right: 100px;
+	}
 	.add-section{
 		padding: 40px 0;
 		h3 {
@@ -50,33 +60,55 @@
 				> div {
 					text-align: left;
 				}
+				.nearby-location {
+					padding-bottom: 5px;
+				}
 			}
+
 		}
 		#map-canvas{
-			height: 15em;
+			height: 16em;
 			z-index: 1;
 		}
 		.overview-container {
+			> div {
+				padding-top: 20px;
+			}
 			div > div > label {
 				display: block;
 			}
 		}
 	}
+
+	.text-button {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
 	.misc-section {
-		.text-button {
-			margin-left: 10px;
-			margin-right: 10px;
-			vertical-align: middle;
-		}
 		.pad-top{
 			padding-top: 10px;
 		}
 	}
-	.climbcation-well > h3 {
-		padding-top: 0px;
-		margin-top: 0px;
-		> input {
-			width: 50px;
+
+	
+
+	.climbcation-well {
+		.section-title {
+			padding-bottom: 15px;
+		}
+		> div {
+			padding-bottom: 20px;
+		}
+		> label {
+			padding-top: 20px;
+		}
+		> h3 {
+			padding-top: 0px;
+			margin-top: 0px;
+			> input {
+				width: 50px;
+			}
 		}
 	}
 

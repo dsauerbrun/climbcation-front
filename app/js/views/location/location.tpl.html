@@ -20,13 +20,13 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h1 class="text-center"> {{ locationData['name'] }}, {{ locationData['country'] }}</h1>
+				<h2 class="text-center"> {{ locationData['name'] }}, {{ locationData['country'] }}</h2>
 				<div class="main-header">
 					<div class="well climbcation-well location-map">
 						<div class="nearby-locations" ng-class="{'expanded': nearbyShow}">
 							
 							<div ng-if="nearbyShow">
-								<div ng-repeat="nearbyLoc in nearby | limitTo:5">
+								<div class="nearby-location" ng-repeat="nearbyLoc in nearby | limitTo:5">
 									<a href="/location/{{nearbyLoc.slug}}">{{ nearbyLoc.name }}</a> <span class="text-gray bold">({{nearbyLoc.distance}} mi away)</span>
 									<img ng-repeat="nearbyType in nearbyLoc.climbing_types" ng-src="{{nearbyType.url}}" class="icon"/>
 								</div>
@@ -59,7 +59,7 @@
 							</div>
 							<div class="col-md-6">
 								<label>Most Classics</label>
-								{{ locationData['grade'] }} and above
+								{{ locationData['grade'] }} and harder
 							</div>
 						</div>
 					</div>
@@ -73,33 +73,31 @@
 			<!-- Getting in -->
 			<div class="col-md-6">
 				<div class="well climbcation-well" ng-if="!editingGettingIn">
-					<div class="row">
-						<h3 class="col-md-8">Getting In</h3>
-						<div class="col-md-4">
-							<span class="text-button" ng-click="toggleEditGettingIn()">Edit Category</span>
-						</div>
+					<div class="row col-md-12 section-title">
+						<h3 class="inline">Getting In</h3>
+						<span class="text-button" ng-click="toggleEditGettingIn()">Edit Category</span>
 					</div>
-					<span class="text-gray">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> withing walking distance.</span>
+					<div class="text-gray">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> within walking distance.</div>
 					<div class="info-container">
 						<div>
 							<label class="text-center">Available Options</label>
 							<ul>
-								<li class="text-gray" ng-repeat="transport in locationData.transportations"><h4>{{ transport.name }}</h4></li>
+								<li class="text-gray" ng-repeat="transport in locationData.transportations"><h5>{{ transport.name }}</h5></li>
 							</ul>
 						</div>
 						<div>
 							<label class="text-center">Best Transportation Option</label>
-							<h3 class="text-center text-gray">{{locationData.best_transportation.name}}</h3>
-							<h4 class="text-center text-gray">{{locationData.best_transportation.cost}}</h4>
+							<h4 class="text-center text-gray">{{locationData.best_transportation.name}}</h4>
+							<h5 class="text-center text-gray">{{locationData.best_transportation.cost}}</h5>
 						</div>
 					</div>
 					<label>Any additional tips about getting around {{locationData.name}}?</label>
 					<h4 class="text-gray">{{locationData.getting_in_notes || 'No Details Available' }}</h4>
 				</div>
 				<div class="well climbcation-well" ng-if="editingGettingIn">
-					<div class="row">
-						<h3 class="col-md-8">Getting In</h3>
-						<div class="col-md-4">
+					<div class="row section-title">
+						<h3 class="col-md-7">Getting In</h3>
+						<div class="col-md-5">
 							<span class="text-button" ng-click="toggleEditGettingIn()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitGettingInChanges()">Submit Changes</span>
 						</div>
@@ -169,27 +167,25 @@
 			<!-- accommodation -->
 			<div class="col-md-6">
 				<div class="well climbcation-well" ng-if="!editingAccommodation">
-					<div class="row">
-						<h3 class="col-md-8">Accommodation</h3>
-						<div class="col-md-4">
-							<span class="text-button" ng-click="toggleEditAccommodation()">Edit Category</span>
-						</div>
+					<div class="col-md-12 row section-title">
+						<h3 class="inline">Accommodation</h3>
+						<span class="text-button" ng-click="toggleEditAccommodation()">Edit Category</span>
 					</div>
-					<span class="text-gray">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</span>
+					<div class="text-gray">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</div>
 					<div class="info-container">
 						<div class="accommodation-info-section" ng-repeat="accommodation in locationData.accommodations">
-							<h3 class="text-gray text-center">{{accommodation.name}}</h3>
+							<h4 class="text-gray text-center">{{accommodation.name}}</h4>
 							<img ng-src="{{accommodation.url}}" />
-							<h4 class="text-gray text-center">{{accommodation.cost}}</h4>
+							<h5 class="text-gray text-center">{{accommodation.cost}}</h5>
 						</div>
 					</div>
 					<label>Any additional tips for staying in {{locationData.name}}?</label>
-					<h4 class="text-gray">{{locationData.accommodation_notes || 'No Details Available' }}</h4>
+					<h5 class="text-gray">{{locationData.accommodation_notes || 'No Details Available' }}</h5>
 				</div>
 				<div class="well climbcation-well" ng-if="editingAccommodation">
-					<div class="row">
-						<h3 class="col-md-8">Accommodation</h3>
-						<div class="col-md-4">
+					<div class="row section-title">
+						<h3 class="col-md-7">Accommodation</h3>
+						<div class="col-md-5">
 							<span class="text-button" ng-click="toggleEditAccommodation()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitAccommodationChanges()">Submit Changes</span>
 						</div>
@@ -250,11 +246,9 @@
 			<!-- cost -->
 			<div class="col-md-6">
 				<div class="well climbcation-well" ng-if="!editingFoodOptions">
-					<div class="row">
-						<h3 class="col-md-8">Food Options</h3>
-						<div class="col-md-4">
-							<span class="text-button" ng-click="toggleEditFoodOptions()">Edit Category</span>
-						</div>
+					<div class="col-md-12 row section-title">
+						<h3 class="inline">Food Options</h3>
+						<span class="text-button" ng-click="toggleEditFoodOptions()">Edit Category</span>
 					</div>
 					<label>Food options (cost per meal)</label>
 					<div class="info-container">
@@ -269,9 +263,9 @@
 					<h4 class="text-gray">{{locationData.saving_money_tip || 'No Details Available' }}</h4>
 				</div>
 				<div class="well climbcation-well" ng-if="editingFoodOptions">
-					<div class="row">
-						<h3 class="col-md-8">Food Options</h3>
-						<div class="col-md-4">
+					<div class="row section-title">
+						<h3 class="col-md-7">Food Options</h3>
+						<div class="col-md-5">
 							<span class="text-button" ng-click="toggleEditFoodOptions()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitFoodOptionsChanges()">Submit Changes</span>
 						</div>

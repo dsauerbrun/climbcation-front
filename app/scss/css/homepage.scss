@@ -8,7 +8,7 @@
 	height: 20em;
 	background: linear-gradient(rgba(60, 126, 145, .5), rgba(60, 126, 145, .5)), url('../images/rodellarpano.jpg');
 	background-size: cover;
-	background-position-y: -100px;
+	background-repeat: no-repeat;
 	.home-hero-overlay{
 		position: absolute;
 		width: 100%;
