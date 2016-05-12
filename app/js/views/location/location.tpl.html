@@ -325,8 +325,8 @@
 				<h3>{{locationData.name}} Miscellaneous</h3>
 			</div>
 			<div class="well-content">
-				<div class="row">
-					<locationothersection class="col-md-6 misc-section" location-id="locationData.id" section="section" sections-length="locationObj.sections.length" ng-repeat="section in sections track by $index" index-iterator="$index" save-section="saveSection()" remove-section="removeSection(section)" editable="true"></locationothersection>
+				<div class="misc-container">
+					<locationothersection class="misc-section" location-id="locationData.id" section="section" sections-length="locationObj.sections.length" ng-repeat="section in sections track by $index" index-iterator="$index" save-section="saveSection()" remove-section="removeSection(section)" editable="true"></locationothersection>
 				</div>
 			</div>
 		</div>
