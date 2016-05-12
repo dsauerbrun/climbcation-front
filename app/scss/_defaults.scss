@@ -9,6 +9,10 @@ label {
 	}
 }
 
+.info-text {
+	font-size: 16px;
+}
+
 .text-center {
 	text-align: center !important;
 }
@@ -332,6 +336,11 @@ select.form-control {
 textarea.form-control {
 	resize: none;
 }
+
+.short-input {
+	width: 15%;
+}
+
 /* forms end */
 
 

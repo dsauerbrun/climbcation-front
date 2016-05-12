@@ -96,8 +96,8 @@
 }
 .locations-window{
 	position: relative;
-	/*height: 50em;
-	overflow: auto;*/
+	width: 90%;
+	margin: 0 auto;
 }
 
 .location-card {
@@ -131,13 +131,14 @@
 				width: 80%;
 				bottom: 2em;
 				padding-left: 1em;
+				padding-top: 10px;
 				background-image: linear-gradient(to right, rgb(188,188,188), rgba(255,255,255,0));
 			}
 		}
 		.location-card-cost {
 			position: absolute;
 			bottom: 0;
-			right: 0;
+			right: 10px;
 		}	
 	}
 	.location-airfare {

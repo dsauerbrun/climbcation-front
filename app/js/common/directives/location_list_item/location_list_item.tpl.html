@@ -5,44 +5,44 @@
 				<a ng-href="/location/{{ locationData['slug'] }}">
 					<img class="location-list-thumb" ng-src="{{ locationData['home_thumb'] }}">	
 					<div class="location-list-thumb-title">
-						<h3>{{ locationData['name'] }}</h3>
-						<h5>{{ locationData['country'] }}</h5>
+						<h3 class="text-gray">{{ locationData['name'] }}</h3>
+						<h5><strong>{{ locationData['country'] }}</strong></h5>
 					</div>
 				</a>
 
 			</div>
 			<div class="col-md-4 location-card-attributes">
 				<div>
-					<h5>Lodging Options</h5>
+					<label>Lodging Options</label>
 					<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" class='icon' title="{{ accommodation['name'] }}">	
 				</div>
 				<div>
-					<h5>Climbing Types</h5>
+					<label>Climbing Types</label>
 					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">
 				</div>
 				<div>
-					<h5>Best Seasons</h5>
-					{{ locationData['date_range']}}	
+					<label>Best Seasons</label>
+					<p class="text-gray info-text">{{ locationData['date_range']}}</p>
 				</div>
 				<div>
-					<h5>Climbing Difficulty</h5>
-					{{ locationData['grade'] }} or harder
+					<label>Climbing Difficulty</label>
+					<p class="text-gray info-text">{{ locationData['grade'] }} or harder</p>
 				</div>
 
 			</div>
 		</div>
 		<div class="location-card-cost">
-			<h5>${{ locationData['price_range_floor_cents']}}  - ${{ locationData['price_range_ceiling_cents'] }} / day</h5>
+			<label>${{ locationData['price_range_floor_cents']}}  - ${{ locationData['price_range_ceiling_cents'] }} / day</label>
 		</div>
 	</div>
 	<div class="location-airfare">
 		<div id="highchart{{locationData['airport_code']+'-'+locationData['slug']+'-'+locationData['location']['id']}}" style="margin: 0 auto"></div>
 		<div class="row">
 		<span class="col-md-6">
-			<h5>Airline Prices(hover to see prices)</h5>
+			<label>Airline Prices(hover to see prices)</label>
 		</span>
 		<span class="col-md-6 text-right">
-			<h4>Low of ${{locationData.lowestPrice.cost}} on {{locationData.lowestPrice.date}}</h4>
+			<h4 class="text-gray">Low of ${{locationData.lowestPrice.cost}} on {{locationData.lowestPrice.date}}</h4>
 		</span>
 	</div>
 	</div>
