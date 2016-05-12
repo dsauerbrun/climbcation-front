@@ -49,17 +49,17 @@
 							</div>
 							<div class="col-md-6">
 								<label>When Should I go?</label>
-								{{ locationData['date_range'] }}
+								<p class="text-gray info-text">{{ locationData['date_range'] }}</p>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<label>Daily Expenses<br />(excluding accommodation)</label>
-								${{ locationData.price_range_floor_cents}} - ${{ locationData.price_range_ceiling_cents}}
+								<p class="text-gray info-text">${{ locationData.price_range_floor_cents}} - ${{ locationData.price_range_ceiling_cents}}</p>
 							</div>
 							<div class="col-md-6">
-								<label>Most Classics</label>
-								{{ locationData['grade'] }} and harder
+								<label>Climbing Difficulty<br />(Most classics are)</label>
+								<p class="text-gray info-text">{{ locationData['grade'] }} and harder</p>
 							</div>
 						</div>
 					</div>
@@ -77,7 +77,7 @@
 						<h3 class="inline">Getting In</h3>
 						<span class="text-button" ng-click="toggleEditGettingIn()">Edit Category</span>
 					</div>
-					<div class="text-gray">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> within walking distance.</div>
+					<p class="text-gray info-text">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> within walking distance.</p>
 					<div class="info-container">
 						<div>
 							<label class="text-center">Available Options</label>
@@ -92,7 +92,7 @@
 						</div>
 					</div>
 					<label>Any additional tips about getting around {{locationData.name}}?</label>
-					<h4 class="text-gray">{{locationData.getting_in_notes || 'No Details Available' }}</h4>
+					<p class="text-gray info-text">{{locationData.getting_in_notes || 'No Details Available' }}</p>
 				</div>
 				<div class="well climbcation-well" ng-if="editingGettingIn">
 					<div class="row section-title">
@@ -171,7 +171,7 @@
 						<h3 class="inline">Accommodation</h3>
 						<span class="text-button" ng-click="toggleEditAccommodation()">Edit Category</span>
 					</div>
-					<div class="text-gray">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</div>
+					<p class="text-gray info-text">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</p>
 					<div class="info-container">
 						<div class="accommodation-info-section" ng-repeat="accommodation in locationData.accommodations">
 							<h4 class="text-gray text-center">{{accommodation.name}}</h4>
@@ -180,7 +180,7 @@
 						</div>
 					</div>
 					<label>Any additional tips for staying in {{locationData.name}}?</label>
-					<h5 class="text-gray">{{locationData.accommodation_notes || 'No Details Available' }}</h5>
+					<p class="text-gray info-text">{{locationData.accommodation_notes || 'No Details Available' }}</p>
 				</div>
 				<div class="well climbcation-well" ng-if="editingAccommodation">
 					<div class="row section-title">
@@ -247,7 +247,7 @@
 			<div class="col-md-6">
 				<div class="well climbcation-well" ng-if="!editingFoodOptions">
 					<div class="col-md-12 row section-title">
-						<h3 class="inline">Food Options</h3>
+						<h3 class="inline">Cost</h3>
 						<span class="text-button" ng-click="toggleEditFoodOptions()">Edit Category</span>
 					</div>
 					<label>Food options (cost per meal)</label>
@@ -257,14 +257,14 @@
 							<h4 class="text-gray text-center">{{food_option.cost}}</h4>
 						</div>
 					</div>
-					<label>Any any other common expenses in {{locationData.name}}?</label>
-					<h4 class="text-gray">{{locationData.common_expenses_notes || 'No Details Available'}}</h4>
+					<label>Any other common expenses in {{locationData.name}}?</label>
+					<p class="text-gray info-text">{{locationData.common_expenses_notes || 'No Details Available'}}</p>
 					<label>Any tips on saving money around {{locationData.name}}?</label>
-					<h4 class="text-gray">{{locationData.saving_money_tip || 'No Details Available' }}</h4>
+					<p class="text-gray info-text">{{locationData.saving_money_tip || 'No Details Available' }}</p>
 				</div>
 				<div class="well climbcation-well" ng-if="editingFoodOptions">
 					<div class="row section-title">
-						<h3 class="col-md-7">Food Options</h3>
+						<h3 class="col-md-7">Cost</h3>
 						<div class="col-md-5">
 							<span class="text-button" ng-click="toggleEditFoodOptions()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitFoodOptionsChanges()">Submit Changes</span>

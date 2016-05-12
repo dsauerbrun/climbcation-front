@@ -5,7 +5,7 @@
 <div ng-if="section.previewOff">
 		<div class="row">
 			<div class="col-md-11" ng-class="{'col-md-offset-1': !editable}">
-				<div class="form-group input-group-lg">
+				<div class="form-group">
 					<label>Section Title</label>
 					<input type="text" placeholder="ex. Social Scene" class="form-control" ng-model="section.title"/>
 				</div>
@@ -17,8 +17,8 @@
 					<label ng-if="!editable">Section Description</label>
 					<textarea  placeholder="The best place to meet climbers is at the Fatolitis snack bar, this is a great bar for a post climbing spray session as well" class="form-control" rows="{{editable?3:6}}" ng-model="section.body"></textarea>
 				</div>
-				<div ng-if="!editable" class="btn btn-default btn-climbcation" ng-class="{'disabled': section.isSaving }" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
-				<div ng-if="!editable" class="btn btn-default btn-climbcation-negative" ng-if="sectionsLength != -2 && (indexIterator != sectionsLength-1)" ng-click="removeSection(section)">remove section</div>
+				<div ng-if="!editable" class="btn btn-default btn-climbcation right-margin" ng-class="{'disabled': section.isSaving }" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
+				<div ng-if="!editable" class="text-button pad-top" ng-if="sectionsLength != -2 && (indexIterator != sectionsLength-1)" ng-click="removeSection(section)">remove section</div>
 
 				<div ng-if="editable" class="btn btn-default btn-climbcation pull-right" ng-click="saveChanges()">
 					Save Changes
@@ -34,5 +34,5 @@
 
 <div ng-if="!section.previewOff">
 	<h3 class="inline">{{oldTitle}}</h3> <span class="text-button" ng-click="togglePreview(section)">Edit</span>
-	<h4 class="text-gray">{{oldBody}}</h4>
+	<p class="text-gray info-text">{{oldBody}}</p>
 </div>

@@ -34,7 +34,7 @@
 
 	<!-- header start -->
 	<div class="text-center">
-		<h3>Climbcation Location Creation</h3>
+		<h3 class="title-header">Climbcation Location Creation</h3>
 	</div>
 	<div class="well climbcation-well no-padding progress-container">
 		<div class="progress-icon-container">
@@ -65,24 +65,24 @@
 		<div class="container">
 			<!-- {{ locationObj |json }}  -->
 			<div class="row">
-				<div class="row">
-					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 1">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
-					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 2">2. Getting In <span class="small-gray">(How do you get to the crag?)</span></h4>
-					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 3">3. Accommodation <span class="small-gray">(Where will you stay when you get there?)</span></h4>
-					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 4">4. Cost <span class="small-gray">(How much should you expect to spend on this trip?)</span></h4>
-					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 5">5. Other <span class="small-gray">(Anything else you know about {{ locationObj.name}}?)</span></h4>
-					<h4 class="col-md-offset-1 col-md-10" ng-if="currentPage == 6">6. Done</h4>
+				<div class="row bottom-padding">
+					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 1">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
+					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 2">2. Getting In <span class="small-gray">(How do you get to the crag?)</span></h4>
+					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 3">3. Accommodation <span class="small-gray">(Where will you stay when you get there?)</span></h4>
+					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 4">4. Cost <span class="small-gray">(How much should you expect to spend on this trip?)</span></h4>
+					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 5">5. Other <span class="small-gray">(Anything else you know about {{ locationObj.name}}?)</span></h4>
+					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 6">6. Done</h4>
 
 
 				</div>
 				<div class="row">
-					<div class="col-md-offset-1 col-md-10 well climbcation-well forms-container">
+					<div class="col-md-offset-2 col-md-8 well climbcation-well forms-container">
 						<div class="well-content">
 							<div class="row" ng-if="currentPage == 1">
-								<div class="col-md-3 " >
+								<div class="col-md-3 hide" >
 										<div class="drop-box" ngf-drop ng-model="image" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true" ngf-accept="'image/*,application/pdf'"><span ng-if="!image[0]">Drop Image here</span> <img ng-if="image[0]" ngf-src="image[0]" ngf-default-src="" ngf-accept="'image/*'"></div>
 								</div>
-								<div class="col-md-9 border-left">
+								<div class="col-md-12 <!--border-left-->">
 									<div class="row"> 
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
 											<label>Location Name<span class="text-danger">*</span></label>
@@ -101,14 +101,14 @@
 										</span>
 										<div class="form-group col-md-10">
 											<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger">*</span></label>
-											<div class="row">
-												<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }" class="col-md-5"  >
+											<div class="row col-md-10">
+												<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }">
 													<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control short-input inline" /> <span class="small-label">USD ($)</span>
 												</span> 
-												<span class="col-md-1 text-center small-gray">
+												<span class="text-center small-gray">
 													to
 												</span>
-												<span ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }" class="col-md-5">
+												<span ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }">
 													<input name="price_ceiling" class="form-control short-input inline" ng-model="locationObj.price_ceiling" integer/> <span class="small-label">USD ($)</span>
 												</span>
 											</div>
@@ -146,7 +146,7 @@
 								</div>
 							</div>
 							<div class="row" ng-if="currentPage == 2">
-								<div class="col-md-12 row">
+								<div class="col-md-12 bottom-padding border-bottom bottom-margin">
 									<div class="col-md-6">
 										<label>Select all available options for getting to {{locationObj.name}}</label>
 										<div ng-repeat="transportation in transportations">
@@ -206,7 +206,7 @@
 								<div class="col-md-12 row">
 									<div class="col-md-12">
 										<label class="center-block">Select all available options for accommodation in {{locationObj.name}}</label>
-										<div class="accommodation-options side-pad border-bottom">
+										<div class="accommodation-options side-pad border-bottom bottom-margin">
 											<div class="accommodation-button-wrapper" ng-repeat="accommodation in accommodations" ng-click="selectAccommodation(accommodation)">
 												<div class="btn btn-default accommodation-button {{(locationObj.accommodations | accommodationChosen:accommodation)?'active':'' }}">
 													<img ng-src="{{accommodation.url}}" />
@@ -240,7 +240,7 @@
 								</div>
 							</div>
 							<div class="row" ng-if="currentPage == 4">
-								<div class="col-md-12 row">
+								<div class="col-md-12 border-bottom bottom-padding bottom-margin">
 									<div class="col-md-6">
 										<label>What food options are available in {{locationObj.name}}?</label>
 										<div ng-repeat="food in foodOptions" ng-click="cleanFoodOptionDetails()">

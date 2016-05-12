@@ -14,3 +14,12 @@ h3, h4 {
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 }
+
+.btn-default {
+	background: $input-background-gray;
+	color: $input-text-gray;
+	&.active {
+		background: $input-active-background-gray;
+		color: $input-active-text-gray;
+	}
+}
