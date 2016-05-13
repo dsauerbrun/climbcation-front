@@ -95,11 +95,15 @@
 										</span>
 									</div>
 									<div class="row">
-										<span class="form-group col-md-2" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
+										<span class="form-group col-md-5" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
 											<label>Nearest Airport</label>
-											<input name="airport" ng-model="locationObj.airport" placeholder="ex. LAX" class="form-control" ng-trim="true" ng-minlength="3" ng-maxlength="3" required/>
+											<input name="airport" ng-model="locationObj.airportName" placeholder="ex. Los Angeles International Airport" class="form-control" required typeahead-min-length="3" 
+											typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+											typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
+											typeahead-on-select="getAirport($item, $model, $label, $event)"/>
+											<input ng-model="locationObj.airport" class="hide"/>
 										</span>
-										<div class="form-group col-md-10">
+										<div class="form-group col-md-7">
 											<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger">*</span></label>
 											<div class="row col-md-10">
 												<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }">

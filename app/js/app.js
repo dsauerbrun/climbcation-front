@@ -1,4 +1,4 @@
-var home = angular.module('app', ['helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
 	.when('/home', {
@@ -32,15 +32,27 @@ home.filter('removeSpaces', function () {
 		return str;
 	};
 });
-home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
+home.controller('LocationPageController',function($scope,$rootScope,$q,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
 	slug = $routeParams.slug;
 	$scope.name = 'hello';
 	$scope.gmap;
-	$scope.origin_airport = 'BER';
+	$scope.originAirport = 'Los Angeles International';
+	$scope.originAirportCode = 'LAX';
 	$scope.nearbyShow = false;
 	$scope.editingAccommodation = false;
 	$scope.editingGettingIn = false;
 	$scope.editingFoodOptions = false;
+	$scope.helperService = helperService;
+
+	$scope.getAirport = function(item, model, label, event) {
+		$scope.originAirportCode = item.iata;
+		$scope.originAirport = item.name;
+		LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.originAirportCode).then(function(promiseQuotes) {
+			$timeout(function(){
+				setLocationHighchart(promiseQuotes,$scope.originAirportCode);
+			});
+		});
+	}
 
 	$scope.toggleEditAccommodation = function() {
 		$scope.editingAccommodation = !$scope.editingAccommodation;
@@ -77,15 +89,13 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 				addCloseLocations($scope.gmap,success['nearby']);
 				addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 
-				$scope.$watch('origin_airport', function() {
-					LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.origin_airport).then(function(promiseQuotes) {
-						$timeout(function(){
-							setLocationHighchart(promiseQuotes,$scope.origin_airport);
-						});
+				populateEditables($scope.locationData);
+
+				LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.originAirportCode).then(function(promiseQuotes) {
+					$timeout(function(){
+						setLocationHighchart(promiseQuotes,$scope.originAirportCode);
 					});
 				});
-
-				populateEditables($scope.locationData);
 			}
 		}
 	);
@@ -290,14 +300,21 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,$http,$ro
 
 });
 
-home.controller('LocationsController',function($scope, $timeout,LocationsGetter, $location, $document){
+home.controller('LocationsController',function($scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
-	$scope.origin_airport = "BER";
+	$scope.originAirport = "Los Angeles International";
+	$scope.originAirportCode = "LAX"
 	$scope.slugArray = [];
+	$scope.helperService = helperService;
 	
 	LocationsGetter.clearFilters();
+
+	$scope.getAirportPrices = function(item, model, label, event) {
+		$scope.originAirportCode = item.iata;
+		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata);
+	}
 
 	$scope.$watch('LocationsGetter.flightQuotesPromise', function(){
 		LocationsGetter.flightQuotesPromise.then(
@@ -328,17 +345,11 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 					
 				});
 				$timeout(function(){
-					setHighcharts(promiseQuotes,$scope.origin_airport);
+					setHighcharts(promiseQuotes,$scope.originAirportCode);
 				});
 			}
 		);
 
-	});
-
-	$scope.$watch('origin_airport', function(){
-		if($scope.origin_airport != null){
-			LocationsGetter.getFlightQuotes($scope.slugArray,$scope.origin_airport);
-		}
 	});
 
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
@@ -349,7 +360,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 				$.each(promiseLocations, function(){
 					$scope.slugArray.push(this['slug'])
 				});
-				LocationsGetter.getFlightQuotes($scope.slugArray,$scope.origin_airport);
+				LocationsGetter.getFlightQuotes($scope.slugArray,$scope.originAirportCode);
 			},
 			function(failure){
 				$scope.locationData = failure;
@@ -367,7 +378,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 });
 
-home.controller('MapFilterController',function($scope,LocationsGetter){
+home.controller('MapFilterController',function($scope,LocationsGetter, $timeout){
 	$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
 	LocationsGetter.markerMap = {};
 	$scope.filterMap.addListener('dragend', function() {
@@ -375,16 +386,14 @@ home.controller('MapFilterController',function($scope,LocationsGetter){
 		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
-		LocationsGetter.page_num = 1;
-		LocationsGetter.getLocations();
+		LocationsGetter.setFilterTimer(1.5);
 	});
 	$scope.filterMap.addListener('zoom_changed', function() {
 		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
 		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
-		LocationsGetter.page_num = 1;
-		LocationsGetter.getLocations();
+		LocationsGetter.setFilterTimer(1.5);
 	});
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
 		LocationsGetter.locationsPromise.then(
@@ -411,9 +420,9 @@ home.controller('MapFilterController',function($scope,LocationsGetter){
 home.factory("LocationsGetter",function($q,$http, $timeout){
 	var LocationsGetter = {};
 	var filter = {};
+	LocationsGetter.filterTimer = null;
 	LocationsGetter.mapFilter = {};
 	LocationsGetter.markerMap = {};
-	LocationsGetter.page_num = 1
 	filter['climbing_types'] = [];
 	filter['accommodations'] = [];
 
@@ -434,6 +443,16 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	var sort = {};
 	sort['price'] = [];
 	sort['grade'] = [];
+
+	LocationsGetter.setFilterTimer = function(seconds) {
+		LocationsGetter.cancelFilterTimer();
+		LocationsGetter.filterTimer = $timeout(LocationsGetter.getLocations, seconds*1000);
+	}
+
+	LocationsGetter.cancelFilterTimer = function() {
+		console.log('canceling filter')
+		LocationsGetter.filterTimer && $timeout.cancel(LocationsGetter.filterTimer);
+	}
 
 	LocationsGetter.clearFilters = function() {
 		this.mapFilter = {};
@@ -481,27 +500,18 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 				inactivateGroupAll(angular.element(eventItem.currentTarget).parent());
 			}
 		}
-		LocationsGetter.page_num = 1;
-		LocationsGetter.getLocations();
-	
+		LocationsGetter.setFilterTimer(1);
 	};
-	LocationsGetter.pageChange = function(page){
-		LocationsGetter.page_num = page;
-		if(LocationsGetter.page_num < 1)
-			LocationsGetter.page_num = 1;
-		LocationsGetter.getLocations();
-	}
 
 	LocationsGetter.filterByMonth = function(startMonth, endMonth) {
 		filter['start_month'] = startMonth;
 		filter['end_month'] = endMonth;
-		LocationsGetter.getLocations();
+		LocationsGetter.setFilterTimer(1.5);
 	}
 
 	LocationsGetter.filterByQuery = function(eventItem){
 		filter['search'] = eventItem;
-		LocationsGetter.page_num = 1;
-		LocationsGetter.getLocations();
+		LocationsGetter.setFilterTimer(1);
 	}
 	LocationsGetter.getFlightQuotes = function(slugs,originAirportCode){
 		var deferred = $q.defer();
@@ -704,62 +714,6 @@ function setHighcharts(locationQuoteData, origin_airport){
 	            }
 	        }]
 	    });
-		/*$('#highchart'+slug).highcharts({
-	        chart: {
-	            type: 'line',
-	            height: '100',
-	            showAxes: false
-	        },
-	        title: {
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport
-	        },
-	        subtitle: {
-	            text: 'Source: Skyscanner.com(prices subject to change)'
-	        },
-	        xAxis: {
-	            type: 'category',
-	            title: {
-	            	text: 'Date'
-	            },
-	            labels: {
-	                rotation: -45,
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	        },
-	        yAxis: {
-	            min: 0,
-	            title: {
-	                text: 'Price(USD)'
-	            },
-	            tickInterval: 50,
-	            max: maxPrice
-	        },
-	        legend: {
-	            enabled: false
-	        },
-	        tooltip: {
-	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
-	        },
-	        series: [{
-	            name: 'Price',
-	            data: quote_array,
-	            dataLabels: {
-	                enabled: false,
-	                rotation: -90,
-	                color: '#FFFFFF',
-	                align: 'right',
-	                format: '{point.y:.1f}', // one decimal
-	                y: 10, // 10 pixels down from the top
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	        }]
-	    });*/
 	});
 }
 
@@ -833,61 +787,5 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 	            }
 	        }]
 	    });
-		/*$('#highchart'+slug).highcharts({
-	        chart: {
-	            type: 'line',
-	            height: '100',
-	            showAxes: false
-	        },
-	        title: {
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport
-	        },
-	        subtitle: {
-	            text: 'Source: Skyscanner.com(prices subject to change)'
-	        },
-	        xAxis: {
-	            type: 'category',
-	            title: {
-	            	text: 'Date'
-	            },
-	            labels: {
-	                rotation: -45,
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	        },
-	        yAxis: {
-	            min: 0,
-	            title: {
-	                text: 'Price(USD)'
-	            },
-	            tickInterval: 50,
-	            max: maxPrice
-	        },
-	        legend: {
-	            enabled: false
-	        },
-	        tooltip: {
-	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
-	        },
-	        series: [{
-	            name: 'Price',
-	            data: quote_array,
-	            dataLabels: {
-	                enabled: false,
-	                rotation: -90,
-	                color: '#FFFFFF',
-	                align: 'right',
-	                format: '{point.y:.1f}', // one decimal
-	                y: 10, // 10 pixels down from the top
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	        }]
-	    });*/
 	});
 }

@@ -11,7 +11,10 @@
 			<div class="row">
 				<div class="col-md-5">
 					<h5>Your Local Airport</h5>
-					<input class="form-control short-input" type="text" ng-model="origin_airport" ng-trim="true" ng-minlength="3" ng-maxlength="3"/>
+					<input class="form-control" type="text" ng-model="originAirport" ng-trim="true" typeahead-min-length="3" 
+					typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+					typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
+					typeahead-on-select="getAirportPrices($item, $model, $label, $event)"/>
 				</div>
 				<div class="col-md-4">
 					<h5>Keyword Search</h5>
@@ -41,7 +44,7 @@
 					</span>
 					To 
 					<span class="dropdown">
-					  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+					  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-click="LocationsGetter.cancelFilterTimer()">
 					    {{endMonthName}}
 					    <span class="caret"></span>
 					  </button>

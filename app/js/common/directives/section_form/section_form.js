@@ -12,6 +12,8 @@ sectionForm.directive('sectionform', function(){
 sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location, helperService){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '<1 mile'};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
+	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
+	$scope.helperService = helperService;
 	
 	$scope.accommodations = [];
 	$scope.climbingTypes = [];
@@ -21,6 +23,11 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.currentPage = 1;
 	$scope.progressBar;
 	$scope.locationObj.foodOptionDetails = {};
+
+	$scope.getAirport = function(item, model, label, event) {
+		$scope.locationObj.airportName = item.name;
+		$scope.locationObj.airport = item.iata;
+	}
 
 	$scope.getIconUrl = function(page) {
 		var url;

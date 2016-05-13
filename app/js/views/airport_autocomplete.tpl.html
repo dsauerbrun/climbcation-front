@@ -1,0 +1,9 @@
+<ul class="dropdown-menu" ng-show="isOpen() && !moveInProgress" ng-style="{top: position().top+'px', left: position().left+'px'}" role="listbox" aria-hidden="{{!isOpen()}}" ng-class="{'display-block': isOpen()}">
+    <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index, $event)" role="option" id="{{::match.id}}" data="{{match}}">
+
+    	<a href
+		   tabindex="-1"
+		   ng-bind-html="match.label | uibTypeaheadHighlight:query"
+		   ng-attr-title="{{match.label}}"></a>
+    </li>
+</ul>
