@@ -379,6 +379,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 });
 
 home.controller('MapFilterController',function($scope,LocationsGetter, $timeout){
+	$scope.mapFilterEnabled = true;
 	$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
 	LocationsGetter.markerMap = {};
 	$scope.filterMap.addListener('dragend', function() {
@@ -386,14 +387,14 @@ home.controller('MapFilterController',function($scope,LocationsGetter, $timeout)
 		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
-		LocationsGetter.setFilterTimer(1.5);
+		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
 	$scope.filterMap.addListener('zoom_changed', function() {
 		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
 		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
-		LocationsGetter.setFilterTimer(1.5);
+		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
 	$scope.$watch('LocationsGetter.locationsPromise', function(){
 		LocationsGetter.locationsPromise.then(
