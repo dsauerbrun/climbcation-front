@@ -1,6 +1,4 @@
-var home = angular.module('app', ['infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
-
-angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 2000)
+var home = angular.module('app', ['dc.endlessScroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -321,6 +319,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	$scope.originAirportCode = "LAX"
 	$scope.slugArray = [];
 	$scope.helperService = helperService;
+	LocationsGetter.locations = [];
 	
 	LocationsGetter.clearFilters();
 
@@ -328,6 +327,12 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 		$scope.originAirportCode = item.iata;
 		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata);
 	}
+
+	LocationsGetter.getNextPage();
+
+	$scope.$on('endlessScroll:next', function() {
+		LocationsGetter.getNextPage();
+	});
 
 	$scope.$watch('LocationsGetter.flightQuotes', function(){
 		//set the lowest price and date for location
