@@ -518,6 +518,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	};
 
 	LocationsGetter.getNextPage = function() {
+		console.log('calling get next page')
 		return LocationsGetter.getLocations().then(function(locations) {
 			LocationsGetter.pageNum++;
 			return locations;

@@ -13,14 +13,13 @@
 <div class="row">
 	<div class="locations-window" id="locations-window"
 		infinite-scroll="LocationsGetter.getNextPage()"
-		
-		infinite-scroll-disabled="LocationsGetter.scrollEnded"
-		infinite-scroll-immediate-check="true">
+		infinite-scroll-disabled="LocationsGetter.scrollEnded || LocationsGetter.loading"
+		infinite-scroll-immediate-check="false">
 		<location class="col-md-6" ng-repeat="locationData in locationData"></location>
-		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
-			<h4><strong>No More Crags Available :(</strong></h4>
-		</div>
+		
 	</div>
-	
+	<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
+		<h4><strong>No More Crags Available :(</strong></h4>
+	</div>
 </div>
 </section>
