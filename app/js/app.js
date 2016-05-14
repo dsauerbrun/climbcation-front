@@ -323,6 +323,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	$scope.helperService = helperService;
 	
 	LocationsGetter.clearFilters();
+	LocationsGetter.getNextPage();
 
 	$scope.getAirportPrices = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;

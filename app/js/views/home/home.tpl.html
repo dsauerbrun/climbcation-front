@@ -11,10 +11,7 @@
 </div>
 <filter id="filter"></filter>
 <div class="row">
-	<div class="locations-window" id="locations-window"
-		infinite-scroll="LocationsGetter.getNextPage()"
-		infinite-scroll-disabled="LocationsGetter.scrollEnded || LocationsGetter.loading"
-		infinite-scroll-immediate-check="false">
+	<div class="locations-window" id="locations-window">
 		<location class="col-md-6" ng-repeat="locationData in locationData"></location>
 		
 	</div>
