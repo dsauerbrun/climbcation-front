@@ -17,8 +17,7 @@ locationOtherSection.controller('locationOtherSectionController', function($scop
 			}
 		).then(function(response) {
 			if (response.status == 200) {
-					console.log(response)
-					$scope.section.id = response.data.new_id;
+					response.data.new_id && ($scope.section.id = response.data.new_id);
 					$scope.oldBody = $scope.section.body;
 					$scope.oldTitle = $scope.section.title;
 					$scope.togglePreview($scope.section);
@@ -27,7 +26,6 @@ locationOtherSection.controller('locationOtherSectionController', function($scop
 	}
 	$scope.oldBody = $scope.section.body;
 	$scope.oldTitle = $scope.section.title;
-	console.log($scope.section)
 });
 
 locationOtherSection.directive('locationothersection', function(){

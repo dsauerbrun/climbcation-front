@@ -11,8 +11,16 @@
 </div>
 <filter id="filter"></filter>
 <div class="row">
-	<div class="locations-window" data-spy="scroll" >
+	<div class="locations-window" id="locations-window"
+		infinite-scroll="LocationsGetter.getNextPage()"
+		
+		infinite-scroll-disabled="LocationsGetter.scrollEnded"
+		infinite-scroll-immediate-check="true">
 		<location class="col-md-6" ng-repeat="locationData in locationData"></location>
+		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
+			<h4><strong>No More Crags Available :(</strong></h4>
+		</div>
 	</div>
+	
 </div>
 </section>

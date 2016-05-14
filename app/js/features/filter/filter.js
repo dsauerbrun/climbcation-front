@@ -10,11 +10,15 @@ filterDir.directive('filter', function(){
 			$scope.endMonthName = 'December';
 			$scope.startMonthName = 'January';
 
-			$scope.$watch('endMonth', function() {
-				LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
+			$scope.$watch('endMonth', function(newVal, oldVal) {
+				if (newVal != oldVal) {
+					LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
+				}
 			});
-			$scope.$watch('startMonth', function() {
-				LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
+			$scope.$watch('startMonth', function(newVal, oldVal) {
+				if (newVal != oldVal) {
+					LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
+				}
 			});
 			var filter = this;
 			this.fixVar = 'this is not a test';

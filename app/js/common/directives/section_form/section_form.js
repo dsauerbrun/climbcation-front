@@ -316,21 +316,7 @@ sectionForm.directive('locationExists', function ($http){
 		        ctrl.$setValidity('valid',false);
 		        return false;	
 	    	}
-
-        	
           }
-          //For DOM -> model validation
-         /* ngModel.$parsers.unshift(function(value) {
-             var valid = locations.indexOf(value) === -1;
-             ngModel.$setValidity('locationExists', valid);
-             return valid ? value : undefined;
-          });
-
-          //For model -> DOM validation
-          ngModel.$formatters.unshift(function(value) {
-             ngModel.$setValidity('locationExists', locations.indexOf(value) === -1);
-             return value;
-          });*/
       }
    };
 });

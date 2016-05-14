@@ -1,4 +1,7 @@
-var home = angular.module('app', ['ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+
+angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 2000)
+
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
 	.when('/', {
@@ -222,7 +225,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 
 	$scope.selectBestTransportationCost = function(cost) {
 		// reset active
-		console.log('best trans', $scope.bestTransportationCostOptions, cost)
 		_.forEach($scope.bestTransportationCostOptions, function(costOption) {
 			costOption.active = false;
 			if ( costOption.cost == cost || costOption.cost == cost.cost) {
@@ -300,9 +302,6 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 			});
 			$scope.locationObj.commonExpensesNotes = location.common_expenses_notes
 			$scope.locationObj.savingMoneyTips = location.saving_money_tip;
-
-			console.log(location);
-			console.log($scope.locationObj)
 		})
 		
 		
@@ -330,61 +329,47 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata);
 	}
 
-	$scope.$watch('LocationsGetter.flightQuotesPromise', function(){
-		LocationsGetter.flightQuotesPromise.then(
-			function(promiseQuotes){
-				//set the lowest price and date for location
-				_.forEach(promiseQuotes, function(quote, key) {
-					var splitKey = key.split('-');
-					var locationId = splitKey[splitKey.length - 1];
-					var location = _.find($scope.locationData, function(locationIter) {
-						return locationIter.location.id == locationId;
-					});
+	$scope.$watch('LocationsGetter.flightQuotes', function(){
+		//set the lowest price and date for location
+		_.forEach(LocationsGetter.flightQuotes, function(quote, key) {
+			var splitKey = key.split('-');
+			var locationId = splitKey[splitKey.length - 1];
+			var location = _.find($scope.locationData, function(locationIter) {
+				return locationIter.location.id == locationId;
+			});
 
-					var lowestPrice = 9999999;
-					var lowestPriceDate = '';
-					_.forEach(quote, function(monthArray, month) {
-						_.forEach(monthArray, function(cost, day) {
-							if (lowestPrice > cost) {
-								lowestPrice = cost;
-								lowestPriceDate = month + '/' + day;
-							}
-						});
-
-					});
-
-					location.lowestPrice = {};
-					location.lowestPrice.date = lowestPriceDate;
-					location.lowestPrice.cost = lowestPrice;
-					
+			var lowestPrice = 9999999;
+			var lowestPriceDate = '';
+			_.forEach(quote, function(monthArray, month) {
+				_.forEach(monthArray, function(cost, day) {
+					if (lowestPrice > cost) {
+						lowestPrice = cost;
+						lowestPriceDate = month + '/' + day;
+					}
 				});
-				$timeout(function(){
-					setHighcharts(promiseQuotes,$scope.originAirportCode);
-				});
-			}
-		);
+
+			});
+
+			location.lowestPrice = {};
+			location.lowestPrice.date = lowestPriceDate;
+			location.lowestPrice.cost = lowestPrice;
+			
+		});
+		$timeout(function(){
+			setHighcharts(LocationsGetter.flightQuotes,$scope.originAirportCode);
+		});
 
 	});
 
-	$scope.$watch('LocationsGetter.locationsPromise', function(){
-		LocationsGetter.locationsPromise.then(
-			function(promiseLocations){
-				$scope.locationData = promiseLocations;
-				$scope.slugArray = []
-				$.each(promiseLocations, function(){
-					$scope.slugArray.push(this['slug'])
-				});
-				LocationsGetter.getFlightQuotes($scope.slugArray,$scope.originAirportCode);
-			},
-			function(failure){
-				$scope.locationData = failure;
-			},
-			function(notify){
-				$scope.locationData = notify;
-			}
-		);
+	$scope.$watch('LocationsGetter.locations.length', function() {
+		$scope.locationData = LocationsGetter.locations;
+		$scope.slugArray = [];
+		$.each($scope.locationData, function(key, promiseLocation){
+			$scope.slugArray.push(this['slug']);
+		});
+		LocationsGetter.getFlightQuotes($scope.slugArray,$scope.originAirportCode);
+	})
 
-	});
 	$scope.goToFilter = function() {
 		var filter = angular.element(document.getElementById('filter'));
 		$document.scrollToElement(filter, 0, 500);
@@ -410,31 +395,25 @@ home.controller('MapFilterController',function($scope,LocationsGetter, $timeout)
 		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
 		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
-	$scope.$watch('LocationsGetter.locationsPromise', function(){
-		LocationsGetter.locationsPromise.then(
-			function(promiseLocations){
-				//redo map points
-				$scope.filterMap.removeMarkers();
-				LocationsGetter.markerMap = {};
-				$.each(promiseLocations,function(){
-					LocationsGetter.markerMap[this['slug']] = addMarker($scope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
-					LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
-				});
-			},
-			function(failure){
-				
-			},
-			function(notify){
-				
-			}
-		);
+	$scope.$watch('LocationsGetter.locations.length', function(){
+		$scope.filterMap.removeMarkers();
+		LocationsGetter.markerMap = {};
+		//redo map points
+		
+		$.each(LocationsGetter.locations,function(){
+			LocationsGetter.markerMap[this['slug']] = addMarker($scope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+			LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
+		});
 	});
 
 });
 
 home.factory("LocationsGetter",function($q,$http, $timeout){
 	var LocationsGetter = {};
+	LocationsGetter.flightQuotes = null;
 	var filter = {};
+	LocationsGetter.locations = [];
+	LocationsGetter.pageNum = 1;
 	LocationsGetter.filterTimer = null;
 	LocationsGetter.mapFilter = {};
 	LocationsGetter.markerMap = {};
@@ -461,18 +440,21 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 
 	LocationsGetter.setFilterTimer = function(seconds) {
 		LocationsGetter.cancelFilterTimer();
-		LocationsGetter.filterTimer = $timeout(LocationsGetter.getLocations, seconds*1000);
+		LocationsGetter.filterTimer = $timeout(function() {
+			LocationsGetter.pageNum = 1;
+			LocationsGetter.locations = [];
+			LocationsGetter.getNextPage();
+		}, seconds*1000);
 	}
 
 	LocationsGetter.cancelFilterTimer = function() {
-		console.log('canceling filter')
 		LocationsGetter.filterTimer && $timeout.cancel(LocationsGetter.filterTimer);
 	}
 
 	LocationsGetter.clearFilters = function() {
 		this.mapFilter = {};
 		this.markerMap = {};
-		this.page_num = 1
+		this.pageNum = 1;
 		filter['climbing_types'] = [];
 		filter['accommodations'] = [];
 
@@ -529,27 +511,38 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		LocationsGetter.setFilterTimer(1);
 	}
 	LocationsGetter.getFlightQuotes = function(slugs,originAirportCode){
-		var deferred = $q.defer();
-		$http.post('/api/collect_locations_quotes', {slugs: slugs, origin_airport: originAirportCode}).success(function(data){
-			deferred.resolve(data);
+		return $http.post('/api/collect_locations_quotes', {slugs: slugs, origin_airport: originAirportCode}).then(function(response){
+			LocationsGetter.flightQuotes = response.data;
+			return response.data;
 		});
-		LocationsGetter.flightQuotesPromise = deferred.promise;
-		return deferred.promise;
-	}
+	};
+
+	LocationsGetter.getNextPage = function() {
+		return LocationsGetter.getLocations().then(function(locations) {
+			LocationsGetter.pageNum++;
+			return locations;
+		});
+	};
+
 	LocationsGetter.getLocations = function(){
-		var deferred = $q.defer();
 		LocationsGetter.loading = true;
-		$http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.page_num}).success(function(data){
-			deferred.resolve(data);
+		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
 			$timeout(function() {
 				LocationsGetter.loading = false;
-			}, 1000)
+			}, 500);
+			var promiseLocations = response.data
+			LocationsGetter.locations || (LocationsGetter.locations = []);
+			$.each(promiseLocations, function(key, promiseLocation){
+				LocationsGetter.locations.push(promiseLocation);
+			});
+			if (_.size(promiseLocations) == 0) {
+				LocationsGetter.scrollEnded = true;
+			} else {
+				LocationsGetter.scrollEnded = false;
+			}
+			return response.data;
 		});
-		LocationsGetter.locationsPromise = deferred.promise;
-		return deferred.promise;
 	};
-	LocationsGetter.getLocations();
-	LocationsGetter.getFlightQuotes([],null);
 	return LocationsGetter;
 
 });
