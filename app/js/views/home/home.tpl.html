@@ -10,10 +10,19 @@
 	</div>
 </div>
 <filter id="filter"></filter>
+
+<div class="row bottom-padding">
+	<div class="col-md-offset-8 col-md-4">
+		<label class="inline right-margin">Sort By:</label>
+		<div class="text-button right-margin" ng-click="LocationsGetter.setSorting('price',!LocationsGetter.filter.sort.price.asc)">Cost</div>
+		<div class="text-button right-margin" ng-click="LocationsGetter.setSorting('grade',!LocationsGetter.filter.sort.grade.asc)">Climbing Difficulty</div>
+		<div class="text-button" ng-click="LocationsGetter.setSorting('distance', true)">Distance From Me</div>
+	</div>
+</div>
+
 <div class="row">
 	<div class="locations-window" id="locations-window">
 		<location class="col-md-6" ng-repeat="locationData in locationData"></location>
-		
 	</div>
 	<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
 		<h4><strong>No More Crags Available :(</strong></h4>

@@ -418,6 +418,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.filterTimer = null;
 	LocationsGetter.mapFilter = {};
 	LocationsGetter.markerMap = {};
+	LocationsGetter.filter = filter;
 	filter['climbing_types'] = [];
 	filter['accommodations'] = [];
 
@@ -526,8 +527,33 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		});
 	};
 
+	LocationsGetter.setSorting = function(sortBy, asc) {
+		if (sortBy == 'distance') {
+			navigator.geolocation.getCurrentPosition(
+				function(position) {
+					LocationsGetter.myLat = position.coords.latitude;
+					LocationsGetter.myLong = position.coords.longitude;
+					filter.sort ={distance: {latitude: LocationsGetter.myLat, longitude: LocationsGetter.myLong}};
+					LocationsGetter.setFilterTimer(0);
+				},
+				function() {
+					console.error('error getting location(probably blocked)');
+					alert('Need location permission to sort by distance');
+				}
+			);
+		} else {
+			console.log(LocationsGetter.filter.sort.price)
+			filter.sort = {};
+			filter.sort[sortBy] = {asc: asc};
+			console.log(filter.sort)
+			LocationsGetter.setFilterTimer(0);
+		}
+		
+	}
+
 	LocationsGetter.getLocations = function(){
 		LocationsGetter.loading = true;
+		
 		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
 			$timeout(function() {
 				LocationsGetter.loading = false;
@@ -545,6 +571,8 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 			return response.data;
 		});
 	};
+
+	
 	return LocationsGetter;
 
 });

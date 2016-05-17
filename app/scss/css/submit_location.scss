@@ -18,7 +18,7 @@
 		}
 	}
 	.text-button {
-		vertial-align: -webkit-baseline-middle;
+		line-height: 2;
 	}
 
 	.tips-container {
@@ -139,6 +139,17 @@
 	}
 
 	/* general end */
+
+	.email-input {
+		width: auto;
+	}
+	.email-prompt {
+		line-height: 2.5;
+	}
+	.email-btn {
+		padding-top: 4px;
+		padding-bottom: 4px;
+	}
 
 
 }

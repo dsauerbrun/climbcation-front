@@ -303,18 +303,35 @@
 								</div>
 							</div>
 							<div class="row" ng-if="currentPage == 6">
-								<div class="text-center">
-									<h3>Congrats!</h3>
+								<div class="row text-center">
+									<h3 class="bottom-padding">Congrats!</h3>
 									<h4>You've added all the necessary content.</h4>
-									<h4>You should see your location available in a day after an admin reviews the content</h4>
+									<h4 class="bottom-padding">You should see your location available in a day after an admin reviews the content</h4>
 									<img ng-src="/images/success-icon.png" />
+								</div>
+								<div class="row bottom-padding">
+									<label class="col-md-8 email-prompt">
+										Thanks for contributing! An admin might have questions, mind lending us your email?
+									</label>
+									<input ng-if="!emailThankYou" name="submitterEmail" ng-model="locationObj.submitterEmail" placeholder="joe@example.com" class="form-control email-input col-md-3"/>
+									<div ng-if="!emailThankYou" class="col-md-1">
+										<div class="btn btn-climbcation email-btn" ng-click="submitEmail()">
+											Submit
+										</div>
+									</div>
+									<label ng-if="emailThankYou" class="col-md-4 email-prompt">
+										Thank you!
+									</label>
+								</div>
+								<div class="row bottom-padding">
+									<h4 class="col-md-12">Forget some information? Just click on the preview link and edit your location page there!</h4>
 								</div>
 							</div>
 						</div>
 
 						<div class="col-md-12 well-footer">
 							<div class="row">
-								<div class="col-md-offset-8 col-md-1" ng-click="prevPage()">
+								<div class="col-md-offset-8 col-md-1" ng-click="prevPage()" ng-if="currentPage != 6">
 									<span class="text-button" ng-if="currentPage != 1 && currentPage != 6">Back</span>
 								</div>
 								<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 5">
@@ -322,6 +339,12 @@
 								</div>
 								<div class="col-md-2 btn btn-climbcation" ng-click="submitLocation()" ng-if="currentPage == 5">
 									<div class=" ">Publish</div>
+								</div>
+								<div class="col-md-offset-7 col-md-1 right-margin" ng-if="currentPage == 6">
+									<div class="text-button"><a ng-href="/location/{{locationSlug}}" target="_blank">Preview</a></div>
+								</div>
+								<div class="col-md-3 btn btn-climbcation" ng-if="currentPage == 6" ng-click="startNewLocation()">
+									Submit Another Location
 								</div>
 							</div>
 						</div>

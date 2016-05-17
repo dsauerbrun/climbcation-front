@@ -9,7 +9,7 @@ sectionForm.directive('sectionform', function(){
 });
 
 
-sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location, helperService){
+sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location, helperService, $route, $timeout){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '<1 mile'};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
@@ -244,7 +244,13 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 		sections.splice(index,1);
 	}
 
-	
+	$scope.submitEmail = function() {
+		console.log($scope.locationObj.submitterEmail)
+		$http.post('api/locations/' + $scope.locationId + '/email', {email: $scope.locationObj.submitterEmail})
+			.then(function(response) {
+				$scope.emailThankYou = true;
+			})
+	}
 
 	$scope.submitLocation = function(){
 		//run validation method
@@ -256,15 +262,25 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 			Upload.upload({
 				url:'api/submit_new_location',
 				fields: {location: $scope.locationObj},
-				file: $scope.image}).
-				success(function(data, status, headers, config){
+				file: $scope.image})
+				.success(function(data, status, headers, config){
 					$scope.nextPage();
-				}).
-				error(function(data, status, headers, config){
+					console.log(data);
+					$scope.locationId = data.id;
+					$scope.locationSlug = data.slug;
+				})
+				.error(function(data, status, headers, config){
 					console.log('error submitting locationSection')
 				});
 		}
 
+	}
+
+	$scope.startNewLocation = function() {
+		$timeout(function() {
+			$route.reload();
+		}, 0)
+		
 	}
 
 });
