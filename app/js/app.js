@@ -538,7 +538,10 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 				},
 				function() {
 					console.error('error getting location(probably blocked)');
-					alert('Need location permission to sort by distance');
+					alert('Need location permission to sort by distance, ' +
+						'if you arent given the option to grant permission, ' +
+						'it is probably because your browser doesnt support non-ssl geolocation requests... the webmaster is a cheap bastard' +
+						'and doesnt want to spend $20/mo, go to https://climbcation.herokuapp.com and it should work just fine');
 				}
 			);
 		} else {
