@@ -19,8 +19,7 @@ exports.javascript = [
 	'node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.min.js',
 	'vendor/angular-easyfb/src/angular-easyfb.js',
 	'node_modules/angular-scroll/angular-scroll.js',
-	'vendor/angular-endless-scroll/dist/angular-endless-scroll.min.js'
-
+	'vendor/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
 ];
 
 exports.css = [

@@ -1,4 +1,4 @@
-var home = angular.module('app', ['dc.endlessScroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -330,10 +330,6 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 	LocationsGetter.getNextPage();
 
-	$scope.$on('endlessScroll:next', function() {
-		LocationsGetter.getNextPage();
-	});
-
 	$scope.$watch('LocationsGetter.flightQuotes', function(){
 		//set the lowest price and date for location
 		_.forEach(LocationsGetter.flightQuotes, function(quote, key) {
@@ -523,7 +519,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	};
 
 	LocationsGetter.getNextPage = function() {
-		console.log('calling get next page')
 		return LocationsGetter.getLocations().then(function(locations) {
 			LocationsGetter.pageNum++;
 			return locations;
@@ -535,7 +530,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
 			$timeout(function() {
 				LocationsGetter.loading = false;
-			}, 500);
+			}, 1000);
 			var promiseLocations = response.data
 			LocationsGetter.locations || (LocationsGetter.locations = []);
 			$.each(promiseLocations, function(key, promiseLocation){
@@ -552,9 +547,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	return LocationsGetter;
 
 });
-
-
-
 
 function toggleButtonActive(clickedButton){
 	if(clickedButton.hasClass('active')){
