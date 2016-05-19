@@ -98,7 +98,15 @@
 	position: relative;
 	width: 90%;
 	margin: 0 auto;
-	min-height: 1000px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.location-item {
+	flex-grow: 1;
+	display: inline-block;
+	width: 45%;
+	margin: 0 10px;
 }
 
 .location-card {
@@ -143,6 +151,7 @@
 		}	
 	}
 	.location-airfare {
+		min-height: 124px;
 		.sorry-message {
 			height: 124px;
 			padding: 20px;

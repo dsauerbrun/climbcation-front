@@ -1,7 +1,5 @@
 var home = angular.module('app', ['infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
-angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 2000)
-
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
 	.when('/', {
@@ -321,6 +319,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	$scope.originAirportCode = "LAX"
 	$scope.slugArray = [];
 	$scope.helperService = helperService;
+	LocationsGetter.locations = [];
 	
 	LocationsGetter.clearFilters();
 	LocationsGetter.getNextPage();
@@ -520,7 +519,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	};
 
 	LocationsGetter.getNextPage = function() {
-		console.log('calling get next page')
 		return LocationsGetter.getLocations().then(function(locations) {
 			LocationsGetter.pageNum++;
 			return locations;
@@ -560,7 +558,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
 			$timeout(function() {
 				LocationsGetter.loading = false;
-			}, 500);
+			}, 1000);
 			var promiseLocations = response.data
 			LocationsGetter.locations || (LocationsGetter.locations = []);
 			$.each(promiseLocations, function(key, promiseLocation){
@@ -579,9 +577,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	return LocationsGetter;
 
 });
-
-
-
 
 function toggleButtonActive(clickedButton){
 	if(clickedButton.hasClass('active')){
