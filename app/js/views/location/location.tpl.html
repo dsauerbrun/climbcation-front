@@ -43,21 +43,21 @@
 					<div class="well climbcation-well overview-container">
 						<h3 class="text-center">{{ locationData['name'] }} Overview</h3>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-6 col-xs-6">
 								<label>What should I climb?</label>
 								<img ng-repeat="climbing_type in locationData['climbing_types']" ng-src="{{ climbing_type['url'] }}" title="{{ climbing_type['name'] }}" class="icon"/>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-6 col-xs-6">
 								<label>When Should I go?</label>
 								<p class="text-gray info-text">{{ locationData['date_range'] }}</p>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-6 col-xs-6">
 								<label>Daily Expenses<br />(excluding accommodation)</label>
 								<p class="text-gray info-text">${{ locationData.price_range_floor_cents}} - ${{ locationData.price_range_ceiling_cents}}</p>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-6 col-xs-6">
 								<label>Climbing Difficulty<br />(Most classics are)</label>
 								<p class="text-gray info-text">{{ locationData['grade'] }} and harder</p>
 							</div>
@@ -96,8 +96,8 @@
 				</div>
 				<div class="well climbcation-well" ng-if="editingGettingIn">
 					<div class="row section-title">
-						<h3 class="col-md-7">Getting In</h3>
-						<div class="col-md-5">
+						<h3 class="col-md-7 col-xs-5">Getting In</h3>
+						<div class="col-md-5 col-xs-7">
 							<span class="text-button" ng-click="toggleEditGettingIn()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitGettingInChanges()">Submit Changes</span>
 						</div>
@@ -184,8 +184,8 @@
 				</div>
 				<div class="well climbcation-well" ng-if="editingAccommodation">
 					<div class="row section-title">
-						<h3 class="col-md-7">Accommodation</h3>
-						<div class="col-md-5">
+						<h3 class="col-md-7 col-xs-5">Accommodation</h3>
+						<div class="col-md-5 col-xs-7">
 							<span class="text-button" ng-click="toggleEditAccommodation()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitAccommodationChanges()">Submit Changes</span>
 						</div>
@@ -269,8 +269,8 @@
 				</div>
 				<div class="well climbcation-well" ng-if="editingFoodOptions">
 					<div class="row section-title">
-						<h3 class="col-md-7">Cost</h3>
-						<div class="col-md-5">
+						<h3 class="col-md-7 col-xs-5">Cost</h3>
+						<div class="col-md-5 col-xs-7">
 							<span class="text-button" ng-click="toggleEditFoodOptions()">Cancel</span>
 							<span class="btn btn-sm btn-climbcation" ng-click="submitFoodOptionsChanges()">Submit Changes</span>
 						</div>

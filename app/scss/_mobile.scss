@@ -1,0 +1,65 @@
+@media (max-width: 768px) {
+	/* HOME PAGE START */
+
+	.home-hero .home-hero-overlay .home-hero-overlay-title > div {
+		font-size: 14px;
+	} 
+
+	.home-hero .home-hero-overlay .home-hero-overlay-title h2 {
+		font-size: 24px;
+		width: 90%;
+	}
+
+	.location-item {
+		max-width: 100%;
+	}
+
+	.location-card .location-card-info .location-card-cost {
+		bottom: -9px;
+	}
+
+	.location-card .location-airfare h4 {
+		font-size: 14px;
+	}
+	/* HOME PAGE END */
+
+	/* LOCATION PAGE START */
+	.location-info-container .container-fluid {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.location-info-container .main-header > div {
+		width: 100%;
+	}
+
+	.location-info-container .main-header {
+		flex-wrap: wrap;
+	}
+
+	.location-info-container .misc-container > .misc-section {
+		width: 100%;
+		padding-right: 0px;
+	}
+	/* LOCATION PAGE END */
+
+
+	/* SUBMIT PAGE START */
+	.control {
+		margin-bottom: 10px;
+	}
+
+	.accommodation-button-wrapper .accommodation-button {
+		height: 80px;
+	}
+	.accommodation-button-wrapper {
+		padding-right: 5px;
+	}
+	.accommodation-button-wrapper .accommodation-button img {
+		width: 80px;
+	}
+
+	.accommodation-button-wrapper .accommodation-button.active, .accommodation-button-wrapper .accommodation-button:active {
+		width: 106px;
+	}
+	/* SUBMIT PAGE END */
+}

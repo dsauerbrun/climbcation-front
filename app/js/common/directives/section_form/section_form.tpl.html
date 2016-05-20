@@ -51,12 +51,12 @@
 			</div>
 		</div>
 		<div class="titles">
-			<a ng-click="changePage(1)"><strong>1.</strong> General*</a>
-			<a ng-click="changePage(2)"><strong>2.</strong> Getting In</a>
-			<a ng-click="changePage(3)"><strong>3.</strong> Accommodation</a>
-			<a ng-click="changePage(4)"><strong>4.</strong> Cost</a>
-			<a ng-click="changePage(5)"><strong>5.</strong> Other</a>
-			<span><strong>6.</strong> Publish</span>
+			<a ng-click="changePage(1)"><strong>1.</strong> <span class="hidden-xs">General*</span></a>
+			<a ng-click="changePage(2)"><strong>2.</strong> <span class="hidden-xs">Getting In</span></a>
+			<a ng-click="changePage(3)"><strong>3.</strong> <span class="hidden-xs">Accommodation</span></a>
+			<a ng-click="changePage(4)"><strong>4.</strong> <span class="hidden-xs">Cost</span></a>
+			<a ng-click="changePage(5)"><strong>5.</strong> <span class="hidden-xs">Other</span></a>
+			<span><strong>6.</strong> <span class="hidden-xs">Publish</span></span>
 		</div>
 	</div>
 	<!-- header end -->
@@ -76,7 +76,7 @@
 
 				</div>
 				<div class="row">
-					<div class="col-md-offset-2 col-md-8 well climbcation-well forms-container">
+					<div class="col-md-offset-2 col-md-8 col-xs-offset-1 col-xs-10 well climbcation-well forms-container">
 						<div class="well-content">
 							<div class="row" ng-if="currentPage == 1">
 								<div class="col-md-3 hide" >
@@ -125,9 +125,9 @@
 												<option ng-repeat="grade in grades" ng-value="grade.id">{{ grade.grade }} and above</option>
 											</select>
 										</div>
-										<div class="col-md-3">
-											<label>What should I climb?<span class="text-danger">*</span></label>
-											<div ng-repeat="climbing_type in climbingTypes">
+										<div class="col-md-3 row">
+											<label class="col-xs-12">What should I climb?<span class="text-danger">*</span></label>
+											<div ng-repeat="climbing_type in climbingTypes" class="col-xs-4 col-md-12">
 												<label class="control control--checkbox" for="{{ climbing_type['name'] }}" ng-class="{'active': locationForm[climbing_type.name].$viewValue == true}">
 													<input name={{climbing_type['name']}} type="checkbox" id="{{ climbing_type['name'] }}" ng-model="locationObj.climbingTypes[climbing_type.id]">
 													<div class="control__indicator"></div>
@@ -138,7 +138,7 @@
 										<div class="col-md-4">
 											<label>When Should I go?<span class="text-danger">*</span></label>
 											<div class="row">
-												<div ng-repeat="month in months" class="col-md-4 text-center month-button">
+												<div ng-repeat="month in months" class="col-xs-4 text-center month-button">
 													<label for="{{ month['name'] }}" class="btn btn-climbcation" ng-class="{'active': locationForm[month.name].$viewValue == true}">
 														<input class="hide" name="{{month['name']}}" type="checkbox" id="{{ month['name'] }}" ng-model="locationObj.months[month.id]"/>
 														{{ month['name'] | limitTo:3 }}
@@ -151,9 +151,9 @@
 							</div>
 							<div class="row" ng-if="currentPage == 2">
 								<div class="col-md-12 bottom-padding border-bottom bottom-margin">
-									<div class="col-md-6">
-										<label>Select all available options for getting to {{locationObj.name}}</label>
-										<div ng-repeat="transportation in transportations">
+									<div class="col-md-6 row">
+										<label class="col-md-12">Select all available options for getting to {{locationObj.name}}</label>
+										<div ng-repeat="transportation in transportations" class="col-md-12 col-xs-4">
 											<label class="control control--checkbox" for="{{ transportation['name'] }}" ng-class="{'active': locationForm[transportation.name].$viewValue == true}">
 												<input name="{{transportation.name}}" type="checkbox" id="{{ transportation.name }}" ng-model="locationObj.transportations[transportation.id]">
 												<div class="control__indicator"></div>
@@ -245,9 +245,9 @@
 							</div>
 							<div class="row" ng-if="currentPage == 4">
 								<div class="col-md-12 border-bottom bottom-padding bottom-margin">
-									<div class="col-md-6">
-										<label>What food options are available in {{locationObj.name}}?</label>
-										<div ng-repeat="food in foodOptions" ng-click="cleanFoodOptionDetails()">
+									<div class="col-md-6 row">
+										<label class="col-xs-12">What food options are available in {{locationObj.name}}?</label>
+										<div ng-repeat="food in foodOptions" ng-click="cleanFoodOptionDetails()" class="col-xs-3 col-md-12">
 											<label class="control control--checkbox" for="{{ food['name'] }}" ng-class="{'active': locationForm[food.name].$viewValue == true}">
 												<input name="{{food.name}}" type="checkbox" id="{{ food.name }}" ng-model="locationObj.foodOptions[food.id]">
 												<div class="control__indicator"></div>
@@ -259,7 +259,7 @@
 										<div class="row" ng-if="locationObj.foodOptions">
 											<label>Cost for a single meal?</label>
 											<div class="row">
-												<div class="col-md-6" ng-repeat="foodOption in foodOptions | selectedFoodOptions:locationObj.foodOptions">
+												<div class="col-md-6 col-xs-6" ng-repeat="foodOption in foodOptions | selectedFoodOptions:locationObj.foodOptions">
 													<label class="center-block gray">{{foodOption.name}}</label>
 													<div class="btn-group btn-group-sm">
 														
@@ -331,19 +331,19 @@
 
 						<div class="col-md-12 well-footer">
 							<div class="row">
-								<div class="col-md-offset-8 col-md-1" ng-click="prevPage()" ng-if="currentPage != 6">
+								<div class="col-md-offset-8 col-md-1 col-xs-offset-7 col-xs-2" ng-click="prevPage()" ng-if="currentPage != 6">
 									<span class="text-button" ng-if="currentPage != 1 && currentPage != 6">Back</span>
 								</div>
-								<div class="col-md-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 5">
+								<div class="col-xs-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 5">
 									<div class=" ">Next</div>
 								</div>
-								<div class="col-md-2 btn btn-climbcation" ng-click="submitLocation()" ng-if="currentPage == 5">
+								<div class="col-xs-2 btn btn-climbcation" ng-click="submitLocation()" ng-if="currentPage == 5">
 									<div class=" ">Publish</div>
 								</div>
-								<div class="col-md-offset-7 col-md-1 right-margin" ng-if="currentPage == 6">
+								<div class="col-xs-offset-7 col-xs-1 right-margin" ng-if="currentPage == 6">
 									<div class="text-button"><a ng-href="/location/{{locationSlug}}" target="_blank">Preview</a></div>
 								</div>
-								<div class="col-md-3 btn btn-climbcation" ng-if="currentPage == 6" ng-click="startNewLocation()">
+								<div class="col-xs-3 btn btn-climbcation" ng-if="currentPage == 6" ng-click="startNewLocation()">
 									Submit Another Location
 								</div>
 							</div>

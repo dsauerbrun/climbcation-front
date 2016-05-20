@@ -12,19 +12,19 @@
 
 			</div>
 			<div class="col-md-4 location-card-attributes">
-				<div>
+				<div class="col-xs-6 col-md-12">
 					<label>Lodging Options</label>
 					<img ng-repeat="accommodation in locationData['accommodations']" ng-src="{{ accommodation['url'] }}" class='icon' title="{{ accommodation['name'] }}">	
 				</div>
-				<div>
+				<div class="col-xs-6 col-md-12">
 					<label>Climbing Types</label>
 					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">
 				</div>
-				<div>
+				<div class="col-xs-6 col-md-12">
 					<label>Best Seasons</label>
 					<p class="text-gray info-text">{{ locationData['date_range']}}</p>
 				</div>
-				<div>
+				<div class="col-xs-6 col-md-12">
 					<label>Climbing Difficulty</label>
 					<p class="text-gray info-text">{{ locationData['grade'] }} or harder</p>
 				</div>
