@@ -42,6 +42,7 @@
 .icon-row{
 	margin: 1em 0;
 }
+
 .filter{
 	position:relative;
 	margin: 2em 0;
@@ -51,6 +52,13 @@
 	border-top-width: 2px;
 	border-bottom-width: 2px;
 	border-width: 2px 0 2px 0;
+
+	&.fixed {
+	position: fixed;
+	bottom: initial;
+	top: 0;
+	}	
+
 	h4:first-child {
 		margin-top: 0;
 	}
@@ -91,7 +99,7 @@
 		}
 	}
 }
-#mapFilter{
+.mapFilter{
 	height:15em;
 }
 .locations-window{
@@ -153,7 +161,7 @@
 	.location-airfare {
 		min-height: 124px;
 		.sorry-message {
-			height: 124px;
+			min-height: 124px;
 			padding: 20px;
 			text-align: center;
 		}

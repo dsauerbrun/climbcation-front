@@ -4,7 +4,7 @@ filterDir.directive('filter', function(){
 	return {	
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
-		controller: function($http, $scope, LocationsGetter){
+		controller: function($http, $timeout, $scope, $rootScope, LocationsGetter){
 			$scope.endMonth = 12;
 			$scope.startMonth = 1;
 			$scope.endMonthName = 'December';
@@ -27,6 +27,17 @@ filterDir.directive('filter', function(){
 				filter.climbTypes = data['climbTypes'];
 				filter.accommodations = data.accommodations;
 			});
+
+			$scope.toggleMapFilter = function() {
+				$scope.mapFilterShown = !$scope.mapFilterShown;
+				$timeout(function(){
+					$scope.mapFilterShown && ($rootScope.filterMap.refresh());
+				})
+			};
+
+			$scope.toggleFilters = function() {
+				$scope.filtersShown = !$scope.filtersShown;
+			};
 		},
 		controllerAs: 'filter'
 	};

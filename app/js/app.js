@@ -1,4 +1,4 @@
-var home = angular.module('app', ['infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -100,7 +100,7 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 				$scope.tableOfContents = processTableContents($scope.sections);
 				$scope.locationData = success['location']
 				$scope.nearby = success['nearby'];
-				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,6);
+				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,4);
 				addCloseLocations($scope.gmap,success['nearby']);
 				addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
 
@@ -377,31 +377,40 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 });
 
-home.controller('MapFilterController',function($scope,LocationsGetter, $timeout){
+home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter, $timeout, $window){
+	console.log($window)
+	var filterId;
+	if($window.innerWidth < 768) {
+		filterId = 'mapFilterMobile';
+	} else {
+		filterId = 'mapFilter';
+	}
 	$scope.mapFilterEnabled = true;
-	$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
+	$rootScope.filterMap = createMap(filterId,20,0,1);
+	//$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
+
 	LocationsGetter.markerMap = {};
-	$scope.filterMap.addListener('dragend', function() {
-		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
-		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
-		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
-		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
+	$rootScope.filterMap.addListener('dragend', function() {
+		LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
+		LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
+		LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
+		LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
 		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
-	$scope.filterMap.addListener('zoom_changed', function() {
-		LocationsGetter.mapFilter['northeast']['longitude'] = $scope.filterMap.getBounds().getNorthEast().lng();
-		LocationsGetter.mapFilter['northeast']['latitude'] = $scope.filterMap.getBounds().getNorthEast().lat();
-		LocationsGetter.mapFilter['southwest']['longitude'] = $scope.filterMap.getBounds().getSouthWest().lng();
-		LocationsGetter.mapFilter['southwest']['latitude'] = $scope.filterMap.getBounds().getSouthWest().lat();
+	$rootScope.filterMap.addListener('zoom_changed', function() {
+		LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
+		LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
+		LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
+		LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
 		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
 	$scope.$watch('LocationsGetter.locations.length', function(){
-		$scope.filterMap.removeMarkers();
+		$rootScope.filterMap.removeMarkers();
 		LocationsGetter.markerMap = {};
 		//redo map points
 		
 		$.each(LocationsGetter.locations,function(){
-			LocationsGetter.markerMap[this['slug']] = addMarker($scope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+			LocationsGetter.markerMap[this['slug']] = addMarker($rootScope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
 			LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
 		});
 	});

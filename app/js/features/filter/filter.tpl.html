@@ -1,4 +1,128 @@
-<section class="filter">
+<section class="filter visible-xs" track-scroll="150" ng-class="{'full-screen': mapFilterShown || filtersShown}">
+	<div class="row filter-banner">
+		<div class="col-xs-3" ng-if="!mapFilterShown && !filtersShown" ng-click="toggleFilters()">
+			<div class="btn btn-climbcation">
+				Filter
+			</div>
+		</div>
+		<div class="col-xs-offset-3 col-xs-3" ng-if="!mapFilterShown && !filtersShown" ng-click="toggleMapFilter()">
+			<div class="btn btn-climbcation">
+				Open Map Filter
+			</div>
+		</div>
+		<div class="col-xs-3" ng-if="filtersShown" ng-click="toggleFilters()">
+			<div class="btn btn-climbcation">
+				Close Filters
+			</div>
+		</div>
+		<div class="col-xs-offset-6 col-xs-3" ng-if="mapFilterShown" ng-click="toggleMapFilter()">
+			<div class="btn btn-climbcation">
+				Close Map Filter
+			</div>
+		</div>
+	</div>
+	<div ng-show="filtersShown">		
+		<div class="col-md-9">
+			<div class="row col-md-offset-4">
+				<h4 class="text-center">
+					Select the relevant criteria to find your perfect climbing trip
+				</h4>
+			</div>
+			<div class="row bottom-padding">
+				<div class="col-md-5">
+					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
+					<input class="form-control" type="text" ng-model="originAirport" ng-trim="true" typeahead-min-length="3" 
+					typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+					typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
+					typeahead-on-select="getAirportPrices($item, $model, $label, $event)"/>
+				</div>
+				<div class="col-md-4">
+					<label>Keyword Search</label>
+					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="limestone"/>
+				</div>
+				<div class="col-md-3">
+					<label>Time</label>
+					<span class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="startMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					    {{startMonthName}}
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="startMonth">
+					    <li><a ng-click="startMonth = 1; startMonthName = 'January'">January</a></li>
+					    <li><a ng-click="startMonth = 2; startMonthName = 'February'">February</a></li>
+					    <li><a ng-click="startMonth = 3; startMonthName = 'March'">March</a></li>
+					    <li><a ng-click="startMonth = 4; startMonthName = 'April'">April</a></li>
+					    <li><a ng-click="startMonth = 5; startMonthName = 'May'">May</a></li>
+					    <li><a ng-click="startMonth = 6; startMonthName = 'June'">June</a></li>
+					    <li><a ng-click="startMonth = 7; startMonthName = 'July'">July</a></li>
+					    <li><a ng-click="startMonth = 8; startMonthName = 'August'">August</a></li>
+					    <li><a ng-click="startMonth = 9; startMonthName = 'September'">September</a></li>
+					    <li><a ng-click="startMonth = 10; startMonthName = 'October'">October</a></li>
+					    <li><a ng-click="startMonth = 11; startMonthName = 'November'">November</a></li>
+					    <li><a ng-click="startMonth = 12; startMonthName = 'December'">December</a></li>
+					  </ul>
+					</span>
+					<span class="text-gray">To </span>
+					<span class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-click="LocationsGetter.cancelFilterTimer()">
+					    {{endMonthName}}
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="endMonth">
+					    <li><a ng-click="endMonth = 1; endMonthName = 'January'">January</a></li>
+					    <li><a ng-click="endMonth = 2; endMonthName = 'February'">February</a></li>
+					    <li><a ng-click="endMonth = 3; endMonthName = 'March'">March</a></li>
+					    <li><a ng-click="endMonth = 4; endMonthName = 'April'">April</a></li>
+					    <li><a ng-click="endMonth = 5; endMonthName = 'May'">May</a></li>
+					    <li><a ng-click="endMonth = 6; endMonthName = 'June'">June</a></li>
+					    <li><a ng-click="endMonth = 7; endMonthName = 'July'">July</a></li>
+					    <li><a ng-click="endMonth = 8; endMonthName = 'August'">August</a></li>
+					    <li><a ng-click="endMonth = 9; endMonthName = 'September'">September</a></li>
+					    <li><a ng-click="endMonth = 10; endMonthName = 'October'">October</a></li>
+					    <li><a ng-click="endMonth = 11; endMonthName = 'November'">November</a></li>
+					    <li><a ng-click="endMonth = 12; endMonthName = 'December'">December</a></li>
+					  </ul>
+					</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<label>Climbing Type</label>
+					<div class="btn-group btn-group-sm btn-group-filter" data="climbing_types" role="group">
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types','All' )" type="button" class="filter-button btn btn-lg btn-default active all">All</button>
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label>Lodging Type</label>
+					<div class="btn-group btn-group-sm btn-group-filter" data="Lodging" role="group">
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'accommodations','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'accommodations',id )" ng-repeat="(name,id) in filter.accommodations" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<label>Cost<span class="gray">(Daily Expenses)</span></label>
+					<div class="btn-group btn-group-sm btn-group-filter" data="price" role="group">
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','15' )" type="button" class="filter-button btn btn-lg btn-default" data="15">$</button>
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','30' )" type="button" class="filter-button btn btn-lg btn-default" data="30">$$</button>
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','45' )" type="button" class="filter-button btn btn-lg btn-default" data="45">$$$</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-show="mapFilterShown">
+		<div ng-controller='MapFilterController' class="row">
+			<div id="mapFilterMobile" class="mapFilter">
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="filter hidden-xs">
 	<div class="container-fluid">		
 		<div class="col-md-9">
 			<div class="row col-md-offset-4">
@@ -100,7 +224,7 @@
 					<div class="control__indicator"></div>
 					<span class="gray">Redo search when map moved</span>
 				</label>
-				<div id="mapFilter">
+				<div id="mapFilter" class="mapFilter">
 				</div>
 			</div>
 		</div>

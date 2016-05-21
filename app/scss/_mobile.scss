@@ -21,6 +21,37 @@
 	.location-card .location-airfare h4 {
 		font-size: 14px;
 	}
+
+	
+
+	.full-screen {
+		position: absolute;
+		width: 100vh;
+		height: 100vh;
+		background-color: #fff;
+		z-index: 1100;
+		top: 0;
+		left: 0;
+		padding: 0;
+		margin: 0;
+		.mapFilter {
+			height: 87.5vh;
+		}
+	}
+
+	.filter {
+		
+		z-index: 1050;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		.filter-banner {
+			background-color: $light-blue;
+			padding: 1em 1em;
+			margin-right: 0px;
+			margin-left: 0px;
+		}
+	}
 	/* HOME PAGE END */
 
 	/* LOCATION PAGE START */
