@@ -386,7 +386,7 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 		filterId = 'mapFilter';
 	}
 	$scope.mapFilterEnabled = true;
-	$rootScope.filterMap = createMap(filterId,20,0,1);
+	$rootScope.filterMap = createMap(filterId,0,0,1);
 	//$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
 
 	LocationsGetter.markerMap = {};
@@ -398,22 +398,58 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
 	$rootScope.filterMap.addListener('zoom_changed', function() {
-		LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
-		LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
-		LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
-		LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
-		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+		if (notDefaultBounds($rootScope.filterMap.getBounds())) {
+			LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
+			LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
+			LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
+			LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
+			$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+		}
+		
 	});
-	$scope.$watch('LocationsGetter.locations.length', function(){
+
+	function notDefaultBounds(bounds) {
+		if (bounds.H.H == 0 && bounds.H.j == 0 && bounds.j.H == -180 && bounds.j.j == 180) {
+			return false
+		} else {
+			return true;
+		}
+	}
+	var firstMapLoad = true;
+	$scope.$watch('LocationsGetter.unpaginatedLocations.length', function(){
 		$rootScope.filterMap.removeMarkers();
 		LocationsGetter.markerMap = {};
 		//redo map points
 		
-		$.each(LocationsGetter.locations,function(){
+		$.each(LocationsGetter.unpaginatedLocations,function(){
 			LocationsGetter.markerMap[this['slug']] = addMarker($rootScope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
 			LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
 		});
+
+		if (firstMapLoad) {
+			var allowedBounds = new google.maps.LatLngBounds(
+			    new google.maps.LatLng(85, -180),           // top left corner of map
+				new google.maps.LatLng(-85, 180)            // bottom right corner
+			);
+
+			var k = 5; 
+			var n = allowedBounds.getNorthEast().lat() - k; 
+			var e = allowedBounds.getNorthEast().lng() - k; 
+			var s = allowedBounds.getSouthWest().lat() + k; 
+			var w = allowedBounds.getSouthWest().lng() + k; 
+			var neNew = new google.maps.LatLng( n, e ); 
+			var swNew = new google.maps.LatLng( s, w ); 
+			boundsNew = new google.maps.LatLngBounds();
+			boundsNew.extend(neNew);
+			boundsNew.extend(swNew); 
+			$rootScope.filterMap.fitBounds(boundsNew);
+			firstMapLoad = false;
+		}
 	});
+
+	
+
+	
 
 });
 
@@ -422,6 +458,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.flightQuotes = null;
 	var filter = {};
 	LocationsGetter.locations = [];
+	LocationsGetter.unpaginatedLocations = [];
 	LocationsGetter.pageNum = 1;
 	LocationsGetter.filterTimer = null;
 	LocationsGetter.mapFilter = {};
@@ -568,7 +605,8 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 			$timeout(function() {
 				LocationsGetter.loading = false;
 			}, 1000);
-			var promiseLocations = response.data
+			LocationsGetter.unpaginatedLocations = response.data.unpaginated;
+			var promiseLocations = response.data.paginated;
 			LocationsGetter.locations || (LocationsGetter.locations = []);
 			$.each(promiseLocations, function(key, promiseLocation){
 				LocationsGetter.locations.push(promiseLocation);
