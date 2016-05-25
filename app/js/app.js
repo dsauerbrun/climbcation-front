@@ -384,8 +384,8 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 		filterId = 'mapFilter';
 	}
 	$scope.mapFilterEnabled = true;
-	$rootScope.filterMap = createMap(filterId,0,0,1);
-	//$scope.filterMap = createMap('mapFilter',40.3427932,0,1);
+	$rootScope.filterMap = createMap(filterId,70,-160,2);
+	//$scope.filterMap = createMap(filterId,40.3427932,0,1);
 
 	LocationsGetter.markerMap = {};
 	$rootScope.filterMap.addListener('dragend', function() {
@@ -424,7 +424,7 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 			LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
 		});
 
-		if (firstMapLoad) {
+		if (firstMapLoad && filterId == 'mapFilter') {
 			var allowedBounds = new google.maps.LatLngBounds(
 			    new google.maps.LatLng(85, -180),           // top left corner of map
 				new google.maps.LatLng(-85, 180)            // bottom right corner
@@ -796,6 +796,7 @@ function setHighcharts(locationQuoteData, origin_airport){
 	        }]
 	    });
 	});
+	$('text:contains("Highcharts.com")').hide();
 }
 
 function setLocationHighchart(locationQuoteData, origin_airport){
