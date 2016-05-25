@@ -322,7 +322,6 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	LocationsGetter.locations = [];
 	
 	LocationsGetter.clearFilters();
-	LocationsGetter.getNextPage();
 
 	$scope.getAirportPrices = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;
@@ -378,7 +377,6 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 });
 
 home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter, $timeout, $window){
-	console.log($window)
 	var filterId;
 	if($window.innerWidth < 768) {
 		filterId = 'mapFilterMobile';
@@ -589,10 +587,8 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 				}
 			);
 		} else {
-			console.log(LocationsGetter.filter.sort.price)
 			filter.sort = {};
 			filter.sort[sortBy] = {asc: asc};
-			console.log(filter.sort)
 			LocationsGetter.setFilterTimer(0);
 		}
 		
@@ -600,7 +596,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 
 	LocationsGetter.getLocations = function(){
 		LocationsGetter.loading = true;
-		
 		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
 			$timeout(function() {
 				LocationsGetter.loading = false;
@@ -609,7 +604,10 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 			var promiseLocations = response.data.paginated;
 			LocationsGetter.locations || (LocationsGetter.locations = []);
 			$.each(promiseLocations, function(key, promiseLocation){
-				LocationsGetter.locations.push(promiseLocation);
+				var exists = _.find(LocationsGetter.locations, function(locationIter) {
+					return locationIter.id == promiseLocation.id;
+				});
+				!exists && LocationsGetter.locations.push(promiseLocation);
 			});
 			if (_.size(promiseLocations) == 0) {
 				LocationsGetter.scrollEnded = true;
