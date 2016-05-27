@@ -23,13 +23,16 @@
 	<div class="row">
 		<div class="locations-window" id="locations-window"
 			infinite-scroll='LocationsGetter.getNextPage()'
-			infinite-scroll-disabled='LocationsGetter.scrollEnded || LocationsGetter.loading'
+			infinite-scroll-disabled='LocationsGetter.scrollEnded || LocationsGetter.scrollLock'
 			infinite-scroll-distance='1'
 		>
 			<location class="location-item" ng-repeat="locationData in locationData"></location>
 		</div>
 		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
 			<h4><strong>No More Crags Available :(</strong></h4>
+		</div>
+		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollLock">
+			<h4><strong>Loading more crags!</strong></h4>
 		</div>
 	</div>
 </div>

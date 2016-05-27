@@ -13,7 +13,7 @@ helperService.service('helperService', function($rootScope, $http) {
 
 	this.getAirports = function(airport) {
 		console.log('calling')
-		return $http.jsonp('http://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=72e3b3e842&term=' + encodeURIComponent(airport)).then(function(response) {
+		return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=72e3b3e842&term=' + encodeURIComponent(airport)).then(function(response) {
 			return response.data.airports.map(function(airport){
 				return {
 					name: airport.name,

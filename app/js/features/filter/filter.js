@@ -4,7 +4,7 @@ filterDir.directive('filter', function(){
 	return {	
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
-		controller: function($http, $timeout, $scope, $rootScope, LocationsGetter){
+		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter){
 			$scope.endMonth = 12;
 			$scope.startMonth = 1;
 			$scope.endMonthName = 'December';
@@ -38,6 +38,12 @@ filterDir.directive('filter', function(){
 			$scope.toggleFilters = function() {
 				$scope.filtersShown = !$scope.filtersShown;
 			};
+
+			if ($window.innerWidth < 768) {
+				$scope.mobile = true;
+			} else {
+				$scope.mobile = false;
+			}
 		},
 		controllerAs: 'filter'
 	};

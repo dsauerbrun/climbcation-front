@@ -321,7 +321,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	$scope.helperService = helperService;
 	LocationsGetter.locations = [];
 	
-	LocationsGetter.clearFilters();
+	//LocationsGetter.clearFilters();
 
 	$scope.getAirportPrices = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;
@@ -366,7 +366,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 		$.each($scope.locationData, function(key, promiseLocation){
 			$scope.slugArray.push(this['slug']);
 		});
-		LocationsGetter.getFlightQuotes($scope.slugArray,$scope.originAirportCode);
+		LocationsGetter.getFlightQuotes($scope.slugArray, $scope.originAirportCode);
 	})
 
 	$scope.goToFilter = function() {
@@ -378,14 +378,13 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter, $timeout, $window){
 	var filterId;
-	if($window.innerWidth < 768) {
+	if ($window.innerWidth < 768) {
 		filterId = 'mapFilterMobile';
 	} else {
 		filterId = 'mapFilter';
 	}
 	$scope.mapFilterEnabled = true;
 	$rootScope.filterMap = createMap(filterId,70,-160,2);
-	//$scope.filterMap = createMap(filterId,40.3427932,0,1);
 
 	LocationsGetter.markerMap = {};
 	$rootScope.filterMap.addListener('dragend', function() {
@@ -396,18 +395,23 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
 	});
 	$rootScope.filterMap.addListener('zoom_changed', function() {
-		if (notDefaultBounds($rootScope.filterMap.getBounds())) {
+		if (!firstMapLoad) {
 			LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
 			LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
 			LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
 			LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
+					
+
 			$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+
+		} else {
+			firstMapLoad = false;
 		}
 		
 	});
 
 	function notDefaultBounds(bounds) {
-		if (bounds.H.H == 0 && bounds.H.j == 0 && bounds.j.H == -180 && bounds.j.j == 180) {
+		if (bounds.H.H <= -80 && bounds.H.j >= 80 && bounds.j.H >= 180 && bounds.j.j <= -180) {
 			return false
 		} else {
 			return true;
@@ -415,34 +419,38 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 	}
 	var firstMapLoad = true;
 	$scope.$watch('LocationsGetter.unpaginatedLocations.length', function(){
-		$rootScope.filterMap.removeMarkers();
-		LocationsGetter.markerMap = {};
-		//redo map points
 		
-		$.each(LocationsGetter.unpaginatedLocations,function(){
-			LocationsGetter.markerMap[this['slug']] = addMarker($rootScope.filterMap,this['latitude'],this['longitude'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
-			LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
-		});
+		if (LocationsGetter.unpaginatedLocations.length != 0) {
+			$rootScope.filterMap.removeMarkers();
+			LocationsGetter.markerMap = {};
+			//redo map points
+			
+			$.each(LocationsGetter.unpaginatedLocations,function(){
+				LocationsGetter.markerMap[this['slug']] = addMarker($rootScope.filterMap, this['latitude'], this['longitude'], this['name'], '<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+				LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
+			});
 
-		if (firstMapLoad && filterId == 'mapFilter') {
-			var allowedBounds = new google.maps.LatLngBounds(
-			    new google.maps.LatLng(85, -180),           // top left corner of map
-				new google.maps.LatLng(-85, 180)            // bottom right corner
-			);
+			// we set firstMapLoad to false when the zoom_changed watch catches the fitBounds call 
+			if (firstMapLoad && filterId == 'mapFilter') {
+				var allowedBounds = new google.maps.LatLngBounds(
+				    new google.maps.LatLng(85, -180),           // top left corner of map
+					new google.maps.LatLng(-85, 180)            // bottom right corner
+				);
 
-			var k = 5; 
-			var n = allowedBounds.getNorthEast().lat() - k; 
-			var e = allowedBounds.getNorthEast().lng() - k; 
-			var s = allowedBounds.getSouthWest().lat() + k; 
-			var w = allowedBounds.getSouthWest().lng() + k; 
-			var neNew = new google.maps.LatLng( n, e ); 
-			var swNew = new google.maps.LatLng( s, w ); 
-			boundsNew = new google.maps.LatLngBounds();
-			boundsNew.extend(neNew);
-			boundsNew.extend(swNew); 
-			$rootScope.filterMap.fitBounds(boundsNew);
-			firstMapLoad = false;
+				var k = 5; 
+				var n = allowedBounds.getNorthEast().lat() - k; 
+				var e = allowedBounds.getNorthEast().lng() - k; 
+				var s = allowedBounds.getSouthWest().lat() + k; 
+				var w = allowedBounds.getSouthWest().lng() + k; 
+				var neNew = new google.maps.LatLng( n, e ); 
+				var swNew = new google.maps.LatLng( s, w ); 
+				boundsNew = new google.maps.LatLngBounds();
+				boundsNew.extend(neNew);
+				boundsNew.extend(swNew); 
+				$rootScope.filterMap.fitBounds(allowedBounds);
+			}
 		}
+		
 	});
 
 	
@@ -462,6 +470,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.mapFilter = {};
 	LocationsGetter.markerMap = {};
 	LocationsGetter.filter = filter;
+	LocationsGetter.scrollLock = false;
 	filter['climbing_types'] = [];
 	filter['accommodations'] = [];
 
@@ -563,8 +572,10 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	};
 
 	LocationsGetter.getNextPage = function() {
+		LocationsGetter.scrollLock = true;
 		return LocationsGetter.getLocations().then(function(locations) {
 			LocationsGetter.pageNum++;
+			LocationsGetter.scrollLock = false;
 			return locations;
 		});
 	};
@@ -600,7 +611,9 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 			$timeout(function() {
 				LocationsGetter.loading = false;
 			}, 1000);
-			LocationsGetter.unpaginatedLocations = response.data.unpaginated;
+			if (response.data.unpaginated.length != LocationsGetter.unpaginatedLocations.length && response.data.unpaginated.length != 0) {
+				LocationsGetter.unpaginatedLocations = response.data.unpaginated;
+			}
 			var promiseLocations = response.data.paginated;
 			LocationsGetter.locations || (LocationsGetter.locations = []);
 			$.each(promiseLocations, function(key, promiseLocation){

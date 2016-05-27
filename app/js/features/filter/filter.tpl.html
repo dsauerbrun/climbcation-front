@@ -114,7 +114,7 @@
 		</div>
 	</div>
 	<div ng-show="mapFilterShown">
-		<div ng-controller='MapFilterController' class="row">
+		<div ng-controller='MapFilterController' class="row" ng-if="mobile">
 			<div id="mapFilterMobile" class="mapFilter">
 			</div>
 		</div>
@@ -218,7 +218,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-			<div ng-controller='MapFilterController' class="row">
+			<div ng-controller='MapFilterController' class="row" ng-if="!mobile">
 				<label class="control control--checkbox" for="mapFilterEnabled" ng-class="{'active': mapFilterEnabled}">
 					<input type="checkbox" name="mapFilterEnabled" id="mapFilterEnabled" ng-model="mapFilterEnabled">
 					<div class="control__indicator"></div>
