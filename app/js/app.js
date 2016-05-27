@@ -1,4 +1,4 @@
-var home = angular.module('app', ['trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider

@@ -51,6 +51,7 @@
   "_from": "git://github.com/Foxandxss/fox-angular-gulp-workflow",
   "_fromGithub": true,
   "dependencies": {
+    "angular-sanitize": "^1.5.5",
     "angular-scroll": "^1.0.0",
     "angular-ui-bootstrap": "^0.14.3"
   }
