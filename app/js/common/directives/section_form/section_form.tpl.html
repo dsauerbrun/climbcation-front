@@ -72,8 +72,6 @@
 					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 4">4. Cost <span class="small-gray">(How much should you expect to spend on this trip?)</span></h4>
 					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 5">5. Other <span class="small-gray">(Anything else you know about {{ locationObj.name}}?)</span></h4>
 					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 6">6. Done</h4>
-
-
 				</div>
 				<div class="row">
 					<div class="col-md-offset-2 col-md-8 col-xs-offset-1 col-xs-10 well climbcation-well forms-container">
@@ -86,7 +84,7 @@
 									<div class="row"> 
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
 											<label>Location Name<span class="text-danger">*</span></label>
-											<input name="name" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" ng-required="true" class="form-control"  popover-placement="bottom" uib-popover="This location already exists. If you would like to edit it, please find it on the home page and edit it there" popover-trigger="{none: ''}" popover-is-open="!locationForm.name.$valid && locationForm.name.$viewValue != ''" />
+											<input name="name" ng-model-options="{'allowInvalid': true, debounce: 500}" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" ng-required="true" class="form-control"  popover-placement="bottom" uib-popover-html="existsMessage()" popover-trigger="{none: ''}" popover-is-open="(!locationForm.name.$valid && locationForm.name.$viewValue != '') || levenshteinDistanceNum < LEVENSHTEIN_THRESHOLD" ng-change="levenCalc()" />
 										</span>
 										
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >

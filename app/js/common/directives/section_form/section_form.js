@@ -1,15 +1,29 @@
 var sectionForm = angular.module('section-form-directive', ['ngFileUpload','location-other-section-directives']);
 
-sectionForm.directive('sectionform', function(){
+function levenshteinDistance (s, t) {
+    if (!s.length) return t.length;
+    if (!t.length) return s.length;
+
+    return Math.min(
+        levenshteinDistance(s.substr(1), t) + 1,
+        levenshteinDistance(t.substr(1), s) + 1,
+        levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
+    ) + 1;
+}
+
+var locationNames;
+
+sectionForm.directive('sectionform', function($http){
 	return {
 		restrict: 'E',
 		templateUrl: 'common/directives/section_form/section_form.tpl.html',
 		controller: 'SectionFormController'
 	};
+
 });
 
 
-sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,$location, helperService, $route, $timeout){
+sectionForm.controller('SectionFormController', function(fastLevenshteinService,$sce, $scope,$q,$http,Upload,$location, helperService, $route, $timeout){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '<1 mile'};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
@@ -23,6 +37,36 @@ sectionForm.controller('SectionFormController', function($scope,$q,$http,Upload,
 	$scope.currentPage = 1;
 	$scope.progressBar;
 	$scope.locationObj.foodOptionDetails = {};
+
+	$http.get('api/location/name/all').then(function(locationList){
+		locationNames = locationList.data;
+	});
+
+	$scope.LEVENSHTEIN_THRESHOLD = 3;
+
+	$scope.levenCalc = function() {
+		$scope.levenshteinDistanceNum = 100;
+		_.forEach(locationNames, function(location) {
+			var newLevenCalc = fastLevenshteinService.distance(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase());
+			if (newLevenCalc < $scope.levenshteinDistanceNum) {
+				$scope.levenshteinDistanceNum = newLevenCalc;
+			}
+		});
+	}
+
+	var trustedHtml = {};
+	$scope.existsMessage = function() {
+		var exists = _.find(locationNames, function(location){
+        	return location[0].toLowerCase() == $scope.locationObj.name.toLowerCase() || fastLevenshteinService.distance(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase()) < $scope.LEVENSHTEIN_THRESHOLD;
+        });
+
+		if (exists && trustedHtml.existingLocation != exists[0]) {
+			trustedHtml.existingLocation = exists[0];
+			return trustedHtml.html = $sce.trustAsHtml('Did you mean ' + trustedHtml.existingLocation + '? <a class="btn btn-climbcation" href="/location/'+ exists[1] +'">Click here to edit it!</a>');
+		} else {
+			return trustedHtml.html
+		}
+	}
 
 	$scope.getAirport = function(item, model, label, event) {
 		$scope.locationObj.airportName = item.name;
@@ -308,10 +352,6 @@ sectionForm.directive('validationMessage', function () {
 });
 
 sectionForm.directive('locationExists', function ($http){ 
-	var locations;
-	$http.get('api/location/name/all').then(function(locationList){
-		locations = locationList.data;
-	})
    return {
       require: 'ngModel',
       link: function(scope, elem, attr, ctrl) {
@@ -321,10 +361,10 @@ sectionForm.directive('locationExists', function ($http){
 	          // consider empty models to be valid
 	          return false;
 	        }
-	        var exists = _.find(locations, function(location){
-	        	return location.toLowerCase() == viewValue.toLowerCase();
-	        })
-	        if( !exists){
+	        var exists = _.find(locationNames, function(location){
+	        	return location[0].toLowerCase() == viewValue.toLowerCase();
+	        });
+	        if(!exists){
 	        	ctrl.$setValidity('valid',true);
 	        	return true;
 	        }
@@ -335,6 +375,62 @@ sectionForm.directive('locationExists', function ($http){
           }
       }
    };
+});
+
+sectionForm.factory('fastLevenshteinService', function () {
+    return {
+      distance: function (str1, str2) {
+        // base cases
+        if (str1 === str2) {
+          return 0;
+        }
+        if (str1.length === 0) {
+          return str2.length;
+        }
+        if (str2.length === 0) {
+          return str1.length;
+        }
+
+        // two rows
+        var prevRow = new Array(str2.length + 1),
+          curCol, nextCol, i, j, tmp;
+
+        // initialise previous row
+        for (i = 0; i < prevRow.length; ++i) {
+          prevRow[i] = i;
+        }
+
+        // calculate current row distance from previous row
+        for (i = 0; i < str1.length; ++i) {
+          nextCol = i + 1;
+
+          for (j = 0; j < str2.length; ++j) {
+            curCol = nextCol;
+
+            // substution
+            nextCol = prevRow[j] + ( (str1.charAt(i) === str2.charAt(j)) ? 0 : 1 );
+            // insertion
+            tmp = curCol + 1;
+            if (nextCol > tmp) {
+              nextCol = tmp;
+            }
+            // deletion
+            tmp = prevRow[j + 1] + 1;
+            if (nextCol > tmp) {
+              nextCol = tmp;
+            }
+
+            // copy current col value into previous (in preparation for next iteration)
+            prevRow[j] = curCol;
+          }
+
+          // copy last col value into previous (in preparation for next iteration)
+          prevRow[j] = nextCol;
+        }
+
+        return nextCol;
+      }
+    };
 });
 
 sectionForm.directive('integer', function() {
