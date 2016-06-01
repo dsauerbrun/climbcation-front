@@ -47,6 +47,7 @@ home.filter('removeSpaces', function () {
 		return str;
 	};
 });
+
 home.controller('LocationPageController',function($scope,$rootScope,$q,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
 	slug = $routeParams.slug;
 	$scope.name = 'hello';
