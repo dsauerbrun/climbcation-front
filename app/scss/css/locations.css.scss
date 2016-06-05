@@ -50,6 +50,10 @@
 			img {
 				width: 100%;
 			}
+			h3 {
+				min-height: 12em;
+				line-height: 1100%;
+			}
 		}
 		.location-map {
 			padding: 0px;
@@ -88,11 +92,12 @@
 		}
 		.overview-container {
 			> div {
-				padding-top: 20px;
+				padding-top: 10px;
 			}
 			div > div > label {
 				display: block;
 			}
+			padding-bottom: 0px;
 		}
 	}
 

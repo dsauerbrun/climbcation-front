@@ -38,7 +38,10 @@
 						</div>
 					</div>
 					<div class="location-photo well climbcation-well">
-						<img ng-src="{{ locationData['home_thumb'] }}"  />
+						<img ng-src="{{ locationData['home_thumb'] }}" ng-if="locationData.home_thumb != '/images/original/missing.png'" />
+						<h3 class="text-center" ng-if="locationData.home_thumb == '/images/original/missing.png'" />
+							<strong>Image Coming Soon</strong>
+						</h3>
 					</div>
 					<div class="well climbcation-well overview-container">
 						<h3 class="text-center">{{ locationData['name'] }} Overview</h3>
