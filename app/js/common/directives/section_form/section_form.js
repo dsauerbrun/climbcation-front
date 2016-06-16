@@ -24,7 +24,7 @@ sectionForm.directive('sectionform', function($http){
 
 
 sectionForm.controller('SectionFormController', function(fastLevenshteinService,$sce, $scope,$q,$http,Upload,$location, helperService, $route, $timeout){
-	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: '<1 mile'};
+	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: ''};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
 	$scope.helperService = helperService;

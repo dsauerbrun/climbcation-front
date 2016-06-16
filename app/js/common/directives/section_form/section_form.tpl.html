@@ -196,7 +196,7 @@
 													ng-click="locationObj.walkingDistance = true">
 														Yes
 												</button>
-												<button class="btn btn-sm btn-default" ng-class="{'active': !locationObj.walkingDistance}"
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.walkingDistance == false}"
 													ng-click="locationObj.walkingDistance = false">
 														No
 												</button>
@@ -233,6 +233,7 @@
 									<div class="col-md-6">
 										<label>How close is the closest accommodation to the crag(s)?</label>
 										<select name="closestAccommodation" ng-model="locationObj.closestAccommodation" class="form-control">
+											<option ng-value=""></option>
 											<option ng-value="'<1 mile'">&lt;1 mile</option>
 											<option ng-value="'1-2 miles'">1-2 miles</option>
 											<option ng-value="'2-5 miles'">2-5 miles</option>

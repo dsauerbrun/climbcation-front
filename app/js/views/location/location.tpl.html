@@ -80,7 +80,8 @@
 						<h3 class="inline">Getting In</h3>
 						<span class="text-button" ng-click="toggleEditGettingIn()">Edit Category</span>
 					</div>
-					<p class="text-gray info-text">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> within walking distance.</p>
+					<p class="text-gray info-text" ng-if="locationData.walking_distance === null">Note: Do you know if crags and other destinations(food, camping, etc...) are within walking distance? Please let us know by editing this section.</p>
+					<p class="text-gray info-text" ng-if="locationData.walking_distance !== null">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> within walking distance.</p>
 					<div class="info-container">
 						<div>
 							<label class="text-center">Available Options</label>
@@ -115,7 +116,7 @@
 									ng-click="locationObj.walkingDistance = true">
 										Yes
 								</button>
-								<button class="btn btn-sm btn-default" ng-class="{'active': !locationObj.walkingDistance}"
+								<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.walkingDistance == false}"
 									ng-click="locationObj.walkingDistance = false">
 										No
 								</button>
@@ -174,7 +175,8 @@
 						<h3 class="inline">Accommodation</h3>
 						<span class="text-button" ng-click="toggleEditAccommodation()">Edit Category</span>
 					</div>
-					<p class="text-gray info-text">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</p>
+					<p class="text-gray info-text" ng-if="!locationData.closest_accommodation">Note: Do you know how close the closest accommodation is to the crags? Please help us out by editing this section</p>
+					<p class="text-gray info-text" ng-if="locationData.closest_accommodation">Closest accommodation is <strong>{{locationData.closest_accommodation}}</strong> from the crags.</p>
 					<div class="info-container">
 						<div class="accommodation-info-section" ng-repeat="accommodation in locationData.accommodations">
 							<h4 class="text-gray text-center">{{accommodation.name}}</h4>
