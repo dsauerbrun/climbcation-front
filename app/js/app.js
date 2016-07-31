@@ -562,7 +562,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 
 	LocationsGetter.filterByQuery = function(eventItem){
 		filter['search'] = eventItem;
-		LocationsGetter.setFilterTimer(1);
+		LocationsGetter.setFilterTimer(0);
 	}
 	LocationsGetter.getFlightQuotes = function(slugs,originAirportCode){
 		return $http.post('/api/collect_locations_quotes', {slugs: slugs, origin_airport: originAirportCode}).then(function(response){
@@ -608,9 +608,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.getLocations = function(){
 		LocationsGetter.loading = true;
 		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
-			$timeout(function() {
-				LocationsGetter.loading = false;
-			}, 1000);
+			LocationsGetter.loading = false;
 			if (response.data.unpaginated.length != LocationsGetter.unpaginatedLocations.length && response.data.unpaginated.length != 0) {
 				LocationsGetter.unpaginatedLocations = response.data.unpaginated;
 			}

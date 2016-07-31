@@ -118,9 +118,10 @@
 									</div>
 									<div class="row">
 										<div class="col-md-4">
-											<label>The best routes are<span class="text-danger">*</span></label>
+											<label>To get the most out of {{locationObj.name || 'this crag' }} I should climb at least:<span class="text-danger">*</span></label>
 											<select name="grade" ng-model="locationObj.grade" class="form-control" ng-required="true">
-												<option ng-repeat="grade in grades" ng-value="grade.id">{{ grade.grade }} and above</option>
+												<option value=''>Select a grade</option>
+												<option ng-repeat="grade in grades | reverse" ng-value="grade.id">{{ grade.grade }} and above</option>
 											</select>
 										</div>
 										<div class="col-md-3 row">

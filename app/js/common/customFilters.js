@@ -7,6 +7,12 @@ filters.filter('parseUrlFilter', function ($sce) {
     };
 });
 
+filters.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
+
 filters.filter('bestTransportationOptions', function() {
   return function(transportations, selectedTransportations) {
   	var selectedArray = [];

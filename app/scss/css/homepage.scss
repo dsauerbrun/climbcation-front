@@ -71,6 +71,9 @@
 		.loading-text {
 			padding: 6em 0;
 		}
+		h6, img {
+			display: inline;
+		}
 	}
 }
 .location-row:nth-of-type(odd){
