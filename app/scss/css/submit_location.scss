@@ -3,6 +3,14 @@
 		padding: 10px;
 	}
 
+	label {
+		height: 20px;
+		.required-field {
+			font-size: 20px;
+			vertical-align: -webkit-baseline-middle;
+		}
+	}
+
 	.small-gray {
 		text-align: center;
 		padding: 10px 0;

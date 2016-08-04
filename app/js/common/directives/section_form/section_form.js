@@ -146,8 +146,12 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 			//mark the id and create a cost range field
 			$scope.locationObj.accommodations[accommodation.id] = {id: accommodation.id, cost: ''};
 		}
-		console.log($scope.locationObj)
 	};
+
+	$scope.selectDailyExpenditures = function(low, high) {
+		$scope.locationObj.price_floor = low;
+		$scope.locationObj.price_ceiling = high;
+	}
 
 	$scope.selectFoodOptionDetail = function(id, range) {
 		$scope.locationObj.foodOptionDetails[id] = {};
@@ -157,7 +161,6 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 
 	$scope.cleanFoodOptionDetails = function() {
 		_.forEach($scope.locationObj.foodOptions, function(foodOption, key) {
-			console.log(key, foodOption)
 			if (!foodOption) {
 				$scope.locationObj.foodOptionDetails[key] = null;
 			} else if (!$scope.locationObj.foodOptionDetails[key]) {
@@ -238,12 +241,10 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 
 		}
 	}
-		$scope.updateProgressBar();
+	$scope.updateProgressBar();
 
 
 	$scope.$watch('locationForm.$valid', function(){
-		console.log('locationform validation changed')
-		console.log($scope.locationForm.$valid)
 	});
 	emptySection.clone = function(){
 		return jQuery.extend(true, {}, this);
@@ -289,7 +290,6 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 	}
 
 	$scope.submitEmail = function() {
-		console.log($scope.locationObj.submitterEmail)
 		$http.post('api/locations/' + $scope.locationId + '/email', {email: $scope.locationObj.submitterEmail})
 			.then(function(response) {
 				$scope.emailThankYou = true;
@@ -303,13 +303,13 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 			$('#errorModal').modal();
 		} else {
 			//upload
+			$scope.locationObj.grade = $scope.locationObj.grade.id;
 			Upload.upload({
 				url:'api/submit_new_location',
 				fields: {location: $scope.locationObj},
 				file: $scope.image})
 				.success(function(data, status, headers, config){
 					$scope.nextPage();
-					console.log(data);
 					$scope.locationId = data.id;
 					$scope.locationSlug = data.slug;
 				})

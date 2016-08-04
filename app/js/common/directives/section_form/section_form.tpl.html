@@ -83,27 +83,43 @@
 								<div class="col-md-12 <!--border-left-->">
 									<div class="row"> 
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
-											<label>Location Name<span class="text-danger">*</span></label>
-											<input name="name" ng-model-options="{'allowInvalid': true, debounce: 500}" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" ng-required="true" class="form-control"  popover-placement="bottom" uib-popover-html="existsMessage()" popover-trigger="{none: ''}" popover-is-open="(!locationForm.name.$valid && locationForm.name.$viewValue != '') || levenshteinDistanceNum < LEVENSHTEIN_THRESHOLD" ng-change="levenCalc()" />
+											<label>Location Name<span class="text-danger required-field">*</span></label>
+											<input name="name" ng-model-options="{'allowInvalid': true, debounce: 500}" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" class="form-control"  popover-placement="bottom" uib-popover-html="existsMessage()" popover-trigger="{none: ''}" popover-is-open="(!locationForm.name.$valid && locationForm.name.$viewValue != '') || levenshteinDistanceNum < LEVENSHTEIN_THRESHOLD" ng-change="levenCalc()" />
 										</span>
 										
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >
 											<label>Country</label>
-											<input name="country" ng-model="locationObj.country" placeholder="ex. United States" class="form-control" required/> 
+											<input name="country" ng-model="locationObj.country" placeholder="ex. United States" class="form-control" /> 
 										</span>
 									</div>
 									<div class="row">
 										<span class="form-group col-md-5" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
 											<label>Nearest Airport</label>
-											<input name="airport" ng-model="locationObj.airportName" placeholder="ex. Los Angeles International Airport" class="form-control" required typeahead-min-length="3" 
+											<input name="airport" ng-model="locationObj.airportName" placeholder="ex. Los Angeles International Airport" class="form-control" typeahead-min-length="3" 
 											typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
 											typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
 											typeahead-on-select="getAirport($item, $model, $label, $event)"/>
 											<input ng-model="locationObj.airport" class="hide"/>
 										</span>
 										<div class="form-group col-md-7">
-											<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger">*</span></label>
-											<div class="row col-md-10">
+											<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger required-field">*</span></label>
+
+											<div class="btn-group btn-group-sm center-block col-md-10">
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.price_floor == 5}"
+													ng-click="selectDailyExpenditures(5, 15)">
+														$5 - $15
+												</button>
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.price_floor == 15}"
+													ng-click="selectDailyExpenditures(15, 30)">
+														$15 - $30
+												</button>
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.price_floor == 30}"
+													ng-click="selectDailyExpenditures(30, 50)">
+														$30+
+												</button>
+											</div>
+
+											<!--<div class="row col-md-10">
 												<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }">
 													<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control short-input inline" /> <span class="small-label">USD ($)</span>
 												</span> 
@@ -113,19 +129,21 @@
 												<span ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }">
 													<input name="price_ceiling" class="form-control short-input inline" ng-model="locationObj.price_ceiling" integer/> <span class="small-label">USD ($)</span>
 												</span>
-											</div>
+											</div>-->
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-4">
-											<label>To get the most out of {{locationObj.name || 'this crag' }} I should climb at least:<span class="text-danger">*</span></label>
-											<select name="grade" ng-model="locationObj.grade" class="form-control" ng-required="true">
+											<label>To get the most out of {{locationObj.name || 'this crag' }} I should climb at least:<span class="text-danger required-field">*</span></label>
+											<select name="grade" 
+											ng-options="grade.grade + ' and above' for grade in grades | reverse track by grade.id"
+											ng-model="locationObj.grade" class="form-control">
 												<option value=''>Select a grade</option>
-												<option ng-repeat="grade in grades | reverse" ng-value="grade.id">{{ grade.grade }} and above</option>
 											</select>
+											(scroll down for Bouldering grades)
 										</div>
 										<div class="col-md-3 row">
-											<label class="col-xs-12">What should I climb?<span class="text-danger">*</span></label>
+											<label class="col-xs-12">What should I climb?<span class="text-danger required-field">*</span></label>
 											<div ng-repeat="climbing_type in climbingTypes" class="col-xs-4 col-md-12">
 												<label class="control control--checkbox" for="{{ climbing_type['name'] }}" ng-class="{'active': locationForm[climbing_type.name].$viewValue == true}">
 													<input name={{climbing_type['name']}} type="checkbox" id="{{ climbing_type['name'] }}" ng-model="locationObj.climbingTypes[climbing_type.id]">
@@ -135,7 +153,7 @@
 											</div>	
 										</div>
 										<div class="col-md-4">
-											<label>When Should I go?<span class="text-danger">*</span></label>
+											<label>When Should I go?<span class="text-danger required-field">*</span></label>
 											<div class="row">
 												<div ng-repeat="month in months" class="col-xs-4 text-center month-button">
 													<label for="{{ month['name'] }}" class="btn btn-climbcation" ng-class="{'active': locationForm[month.name].$viewValue == true}">
