@@ -51,8 +51,8 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 	slug = $routeParams.slug;
 	$scope.name = 'hello';
 	$scope.gmap;
-	$scope.originAirport = 'Los Angeles International';
-	$scope.originAirportCode = 'LAX';
+	$scope.originAirport = 'Denver International Airport';
+	$scope.originAirportCode = 'DEN';
 	$scope.nearbyShow = false;
 	$scope.editingAccommodation = false;
 	$scope.editingGettingIn = false;
@@ -315,13 +315,18 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
-	$scope.originAirport = "Los Angeles International";
-	$scope.originAirportCode = "LAX"
+	$scope.originAirport = "Denver International Airport";
+	$scope.originAirportCode = "DEN";
 	$scope.slugArray = [];
 	$scope.helperService = helperService;
-	LocationsGetter.locations = [];
+	LocationsGetter.locations = LocationsGetter.locations || [];
 	
-	//LocationsGetter.clearFilters();
+	// if we are returning to the front page we want to reset the locations and clear the filters
+	if(LocationsGetter.locations.length > 0) {
+		LocationsGetter.locations = [];
+		LocationsGetter.clearFilters();
+		LocationsGetter.setFilterTimer(0);
+	}
 
 	$scope.getAirportPrices = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;
