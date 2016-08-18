@@ -14,8 +14,9 @@ var paths = {
   appStyles:        'app/scss/**/*.scss',
   appImages:        'app/images/**/*',
   indexHtml:        'app/index.html',
-  vendorJavascript: vendor.javascript,
-  vendorCss:        vendor.css,
+  vendorFonts:      vendor.fonts || [],
+  vendorJavascript: vendor.javascript || [],
+  vendorCss:        vendor.css || [],
   finalAppJsPath:   '/js/app.js',
   finalAppCssPath:  '/css/app.css',
   specFolder:       ['spec/**/*_spec.js'],
@@ -23,10 +24,12 @@ var paths = {
   tmpJavascript:    'tmp/js',
   tmpAppJs:         'tmp/js/app.js',
   tmpCss:           'tmp/css',
+  tmpFonts:         'tmp/fonts',
   tmpImages:        'tmp/images',
   distFolder:       'dist',
   distJavascript:   'dist/js',
   distCss:          'dist/css',
+  distFonts:        'dist/fonts',
   distImages:       'dist/images',
   distJsManifest:   'dist/js/rev-manifest.json',
   distCssManifest:  'dist/css/rev-manifest.json'
@@ -65,11 +68,21 @@ gulp.task('styles-prod', function() {
   return gulp.src(paths.vendorCss.concat(paths.appMainSass))
     .pipe(plugins.if(/scss$/, plugins.sass()))
     .pipe(plugins.concat('app.css'))
-    .pipe(plugins.minifyCss())
+    .pipe(plugins.cleanCss())
     .pipe(plugins.rev())
     .pipe(gulp.dest(paths.distCss))
     .pipe(plugins.rev.manifest({path: 'rev-manifest.json'}))
     .pipe(gulp.dest(paths.distCss));
+});
+
+gulp.task('fonts-dev', function() {
+  return gulp.src(paths.vendorFonts)
+    .pipe(gulp.dest(paths.tmpFonts));
+});
+
+gulp.task('fonts-prod', function() {
+  return gulp.src(paths.vendorFonts)
+    .pipe(gulp.dest(paths.distFonts));
 });
 
 gulp.task('images-dev', function() {
@@ -138,7 +151,7 @@ gulp.task('watch', ['webserver'], function() {
   gulp.watch(paths.vendorCss, ['styles-dev']);
 });
 
-gulp.task('webserver', ['indexHtml-dev', 'images-dev'], function() {
+gulp.task('webserver', ['indexHtml-dev', 'fonts-dev', 'images-dev'], function() {
   plugins.connect.server({
     root: paths.tmpFolder,
     port: 5000,
@@ -147,16 +160,16 @@ gulp.task('webserver', ['indexHtml-dev', 'images-dev'], function() {
       return [ (function() {
         var url = require('url');
         var proxy = require('proxy-middleware');
-        var options = url.parse('http://localhost:3000/api/');
+        var options = url.parse('http://localhost:3000/api');
         options.route = '/api';
         return proxy(options);
-      })(), historyApiFallback ];
+      })(), historyApiFallback() ];
     }
   });
 });
 
 gulp.task('default', ['watch']);
-gulp.task('production', ['scripts-prod', 'styles-prod', 'images-prod', 'indexHtml-prod']);
+gulp.task('production', ['scripts-prod', 'styles-prod', 'fonts-prod', 'images-prod', 'indexHtml-prod']);
 
 function buildTemplates() {
   return es.pipeline(
