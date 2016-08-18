@@ -84,7 +84,7 @@
 									<div class="row"> 
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.name.$valid && locationForm.name.$dirty, 'has-error': locationForm.name.$invalid && locationForm.name.$dirty }" >
 											<label>Location Name<span class="text-danger required-field">*</span></label>
-											<input name="name" ng-model-options="{'allowInvalid': true, debounce: 500}" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" class="form-control"  popover-placement="bottom" uib-popover-html="existsMessage()" popover-trigger="{none: ''}" popover-is-open="(!locationForm.name.$valid && locationForm.name.$viewValue != '') || levenshteinDistanceNum < LEVENSHTEIN_THRESHOLD" ng-change="levenCalc()" />
+											<input name="name" ng-model-options="{'allowInvalid': true, debounce: 500}" tooltip-validation="hello" ng-model="locationObj.name" location-exists="{{existingLocations}}" placeholder="ex. Yosemite" class="form-control"  popover-placement="bottom" uib-popover-html="existsMessage()" popover-trigger="{none: ''}" popover-is-open="(!locationForm.name.$valid && locationForm.name.$viewValue != '') || diceDistanceNum > DICE_THRESHOLD" ng-change="diceCalc()" />
 										</span>
 										
 										<span class="form-group col-md-6" ng-class="{ 'has-success': locationForm.country.$valid && locationForm.country.$dirty, 'has-error': locationForm.country.$invalid && locationForm.country.$dirty }" >

@@ -1,16 +1,5 @@
 var sectionForm = angular.module('section-form-directive', ['ngFileUpload','location-other-section-directives']);
 
-function levenshteinDistance (s, t) {
-    if (!s.length) return t.length;
-    if (!t.length) return s.length;
-
-    return Math.min(
-        levenshteinDistance(s.substr(1), t) + 1,
-        levenshteinDistance(t.substr(1), s) + 1,
-        levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
-    ) + 1;
-}
-
 var locationNames;
 
 sectionForm.directive('sectionform', function($http){
@@ -23,7 +12,7 @@ sectionForm.directive('sectionform', function($http){
 });
 
 
-sectionForm.controller('SectionFormController', function(fastLevenshteinService,$sce, $scope,$q,$http,Upload,$location, helperService, $route, $timeout){
+sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,Upload,$location, helperService, $route, $timeout){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: ''};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
@@ -38,18 +27,22 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 	$scope.progressBar;
 	$scope.locationObj.foodOptionDetails = {};
 
+	console.log(clj_fuzzy)
+
 	$http.get('api/location/name/all').then(function(locationList){
 		locationNames = locationList.data;
 	});
 
-	$scope.LEVENSHTEIN_THRESHOLD = 3;
 
-	$scope.levenCalc = function() {
-		$scope.levenshteinDistanceNum = 100;
+	$scope.DICE_THRESHOLD = .75;
+
+	$scope.diceCalc = function() {
+		$scope.diceDistanceNum = 0;
 		_.forEach(locationNames, function(location) {
-			var newLevenCalc = fastLevenshteinService.distance(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase());
-			if (newLevenCalc < $scope.levenshteinDistanceNum) {
-				$scope.levenshteinDistanceNum = newLevenCalc;
+			var newDiceCalc = clj_fuzzy.metrics.dice(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase());
+			console.log('comparing to ', location[0], newDiceCalc)
+			if (newDiceCalc > $scope.diceDistanceNum) {
+				$scope.diceDistanceNum = newDiceCalc;
 			}
 		});
 	}
@@ -57,7 +50,7 @@ sectionForm.controller('SectionFormController', function(fastLevenshteinService,
 	var trustedHtml = {};
 	$scope.existsMessage = function() {
 		var exists = _.find(locationNames, function(location){
-        	return location[0].toLowerCase() == $scope.locationObj.name.toLowerCase() || fastLevenshteinService.distance(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase()) < $scope.LEVENSHTEIN_THRESHOLD;
+        	return location[0].toLowerCase() == $scope.locationObj.name.toLowerCase() || clj_fuzzy.metrics.dice(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase()) > $scope.DICE_THRESHOLD;
         });
 
 		if (exists && trustedHtml.existingLocation != exists[0]) {
@@ -375,62 +368,6 @@ sectionForm.directive('locationExists', function ($http){
           }
       }
    };
-});
-
-sectionForm.factory('fastLevenshteinService', function () {
-    return {
-      distance: function (str1, str2) {
-        // base cases
-        if (str1 === str2) {
-          return 0;
-        }
-        if (str1.length === 0) {
-          return str2.length;
-        }
-        if (str2.length === 0) {
-          return str1.length;
-        }
-
-        // two rows
-        var prevRow = new Array(str2.length + 1),
-          curCol, nextCol, i, j, tmp;
-
-        // initialise previous row
-        for (i = 0; i < prevRow.length; ++i) {
-          prevRow[i] = i;
-        }
-
-        // calculate current row distance from previous row
-        for (i = 0; i < str1.length; ++i) {
-          nextCol = i + 1;
-
-          for (j = 0; j < str2.length; ++j) {
-            curCol = nextCol;
-
-            // substution
-            nextCol = prevRow[j] + ( (str1.charAt(i) === str2.charAt(j)) ? 0 : 1 );
-            // insertion
-            tmp = curCol + 1;
-            if (nextCol > tmp) {
-              nextCol = tmp;
-            }
-            // deletion
-            tmp = prevRow[j + 1] + 1;
-            if (nextCol > tmp) {
-              nextCol = tmp;
-            }
-
-            // copy current col value into previous (in preparation for next iteration)
-            prevRow[j] = curCol;
-          }
-
-          // copy last col value into previous (in preparation for next iteration)
-          prevRow[j] = nextCol;
-        }
-
-        return nextCol;
-      }
-    };
 });
 
 sectionForm.directive('integer', function() {

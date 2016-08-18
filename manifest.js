@@ -15,17 +15,17 @@ exports.javascript = [
   'vendor/lodash/dist/lodash.js',
   'vendor/gmapsjs/gmaps.js',
   'vendor/highcharts/highcharts.js',
-	'node_modules/angular-ui-bootstrap/ui-bootstrap.js',
-	'node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.min.js',
 	'vendor/angular-easyfb/src/angular-easyfb.js',
 	'node_modules/angular-scroll/angular-scroll.js',
 	'vendor/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
-	'node_modules/angular-sanitize/angular-sanitize.min.js'
+	'vendor/clj-fuzzy/src-js/clj-fuzzy.js',
+	'node_modules/angular-sanitize/angular-sanitize.min.js',
+	'browserified.js'
 ];
 
 exports.css = [
 	'vendor/bootstrap/dist/css/bootstrap.min.css',
-	'node_modules/angular-ui-bootstrap/ui-bootstrap-csp.css',
+	'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css',
 	'vendor/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css'
 
 ];
