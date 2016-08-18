@@ -2,5 +2,5 @@
 /dist/
 /node_modules/
 /vendor/
-!/vendor/gmapsjs/gmaps.js
-!/vendor/highcharts/highcharts.js
+!/vendor/gmapsjs/
+!/vendor/highcharts/
