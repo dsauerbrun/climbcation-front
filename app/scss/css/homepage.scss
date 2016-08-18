@@ -108,7 +108,7 @@
 }
 .mapFilter{
 	height:15em;
-	z-index: 9999;
+	z-index: 1039;
 }
 .locations-window{
 	position: relative;
@@ -128,7 +128,7 @@
 .location-card {
 	border-color: rgb(214,214,214);
 	border-style: solid;
-	border-width: 2px;
+	border-width: 1px;
 	margin-bottom: 1em;
 	.icon {
 		height: auto;
@@ -139,7 +139,7 @@
 		position:relative;
 		border-color: rgb(214,214,214);
 		border-style: solid;
-		border-width: 0px 0px 2px 0px;
+		border-width: 0px 0px 1px 0px;
 		.location-card-attributes {
 			position: relative;
 			height: 100%;
@@ -153,11 +153,11 @@
 			}
 			.location-list-thumb-title {
 				position: absolute;
-				width: 80%;
+				width: 93%;
 				bottom: 2em;
 				padding-left: 1em;
 				padding-top: 10px;
-				background-image: linear-gradient(to right, rgb(188,188,188), rgba(255,255,255,0));
+				background-image: linear-gradient(to right, rgb(188,188,188), rgba(255,255,255,0) 120%);
 			}
 		}
 		.location-card-cost {
