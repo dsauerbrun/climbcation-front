@@ -27,8 +27,6 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 	$scope.progressBar;
 	$scope.locationObj.foodOptionDetails = {};
 
-	console.log(clj_fuzzy)
-
 	$http.get('api/location/name/all').then(function(locationList){
 		locationNames = locationList.data;
 	});
@@ -40,7 +38,6 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		$scope.diceDistanceNum = 0;
 		_.forEach(locationNames, function(location) {
 			var newDiceCalc = clj_fuzzy.metrics.dice(location[0].toLowerCase(), $scope.locationObj.name.toLowerCase());
-			console.log('comparing to ', location[0], newDiceCalc)
 			if (newDiceCalc > $scope.diceDistanceNum) {
 				$scope.diceDistanceNum = newDiceCalc;
 			}
@@ -297,17 +294,16 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		} else {
 			//upload
 			$scope.locationObj.grade = $scope.locationObj.grade.id;
-			Upload.upload({
-				url:'api/submit_new_location',
-				fields: {location: $scope.locationObj},
-				file: $scope.image})
-				.success(function(data, status, headers, config){
-					$scope.nextPage();
-					$scope.locationId = data.id;
-					$scope.locationSlug = data.slug;
-				})
-				.error(function(data, status, headers, config){
-					console.log('error submitting locationSection')
+			$http.post('api/submit_new_location', {location: $scope.locationObj})
+				.then(function(response) {
+					if (response.status == 200) {
+						$scope.nextPage();
+						$scope.locationId = response.data.id;
+						$scope.locationSlug = response.data.slug;
+					} else {
+						console.log('error submitting locationSection')
+
+					}
 				});
 		}
 
