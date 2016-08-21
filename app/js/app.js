@@ -1,4 +1,4 @@
-var home = angular.module('app', ['ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -47,8 +47,9 @@ home.filter('removeSpaces', function () {
 	};
 });
 
-home.controller('LocationPageController',function($scope,$rootScope,$q,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
+home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
 	slug = $routeParams.slug;
+	var editMessage = 'Your edit has been submitted and will be approved by a moderator shortly!';
 	$scope.name = 'hello';
 	$scope.gmap;
 	$scope.originAirport = 'Denver International Airport';
@@ -58,6 +59,7 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 	$scope.editingGettingIn = false;
 	$scope.editingFoodOptions = false;
 	$scope.helperService = helperService;
+
 
 	$scope.getAirport = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;
@@ -167,6 +169,10 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 					$scope.locationData.accommodation_notes = response.data.location.accommodation_notes;
 					$scope.locationData.closest_accommodation = response.data.location.closest_accommodation;
 					$scope.toggleEditAccommodation();
+					ngToast.create({
+						additionalClasses: 'climbcation-toast',
+						content: editMessage
+					});
 				});
 			}
 		});
@@ -195,7 +201,10 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 					$scope.locationData.best_transportation = response.data.location.best_transportation;
 					$scope.locationData.walking_distance = response.data.location.walking_distance;
 					$scope.toggleEditGettingIn();
-
+					ngToast.create({
+						additionalClasses: 'climbcation-toast',
+						content: editMessage
+					});
 				});
 			}
 		});
@@ -242,7 +251,10 @@ home.controller('LocationPageController',function($scope,$rootScope,$q,helperSer
 					$scope.locationData.common_expenses_notes = response.data.location.common_expenses_notes;
 					$scope.locationData.saving_money_tip = response.data.location.saving_money_tip;
 					$scope.toggleEditFoodOptions();
-
+					ngToast.create({
+						additionalClasses: 'climbcation-toast',
+						content: editMessage
+					});
 				});
 			}
 		});

@@ -20,12 +20,14 @@ exports.javascript = [
 	'vendor/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
 	'vendor/clj-fuzzy/src-js/clj-fuzzy.js',
 	'node_modules/angular-sanitize/angular-sanitize.min.js',
+	'node_modules/ng-toast/dist/ngToast.min.js',
 	'browserified.js'
 ];
 
 exports.css = [
 	'vendor/bootstrap/dist/css/bootstrap.min.css',
 	'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css',
+	'node_modules/ng-toast/dist/ngToast.min.css',
 	'vendor/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css'
 
 ];

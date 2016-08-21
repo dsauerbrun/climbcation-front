@@ -1,6 +1,6 @@
-var locationOtherSection = angular.module('location-other-section-directives', []);
+var locationOtherSection = angular.module('location-other-section-directives', ['ngToast']);
 
-locationOtherSection.controller('locationOtherSectionController', function($scope, $http){
+locationOtherSection.controller('locationOtherSectionController', function($scope, $http, ngToast){
 	$scope.togglePreview = function(section){
 		section.previewOff = !section.previewOff;
 	}
@@ -17,7 +17,14 @@ locationOtherSection.controller('locationOtherSectionController', function($scop
 			}
 		).then(function(response) {
 			if (response.status == 200) {
-					response.data.new_id && ($scope.section.id = response.data.new_id);
+					if (response.data.new_id) {
+						$scope.section.id = response.data.new_id
+					} else {
+						ngToast.create({
+							additionalClasses: 'climbcation-toast',
+							content: 'Your edit has been submitted and will be approved by a moderator shortly!'
+						});
+					}
 					$scope.oldBody = $scope.section.body;
 					$scope.oldTitle = $scope.section.title;
 					$scope.togglePreview($scope.section);

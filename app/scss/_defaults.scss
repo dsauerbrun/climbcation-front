@@ -9,6 +9,15 @@ label {
 	}
 }
 
+.climbcation-toast {
+	> div {
+		background: $light-gray;
+		border-color: $light-blue;
+		color: $light-blue;
+		font-weight: bold;
+	}
+}
+
 .display-block {
 	display: block;
 }
