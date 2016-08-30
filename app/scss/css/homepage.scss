@@ -158,6 +158,9 @@
 				padding-left: 1em;
 				padding-top: 10px;
 				background-image: linear-gradient(to right, rgb(188,188,188), rgba(255,255,255,0) 120%);
+				.text-gray {
+					color: #eee;
+				}
 			}
 		}
 		.location-card-cost {
