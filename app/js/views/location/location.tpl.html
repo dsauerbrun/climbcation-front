@@ -92,7 +92,7 @@
 						<div>
 							<label class="text-center">Best Transportation Option</label>
 							<h4 class="text-center text-gray">{{locationData.best_transportation.name}}</h4>
-							<h5 class="text-center text-gray">{{locationData.best_transportation.cost}}</h5>
+							<h5 class="text-center text-gray">{{locationData.best_transportation.cost != -1 ? locationData.best_transportation.cost : ''}}</h5>
 						</div>
 					</div>
 					<label>Any additional tips about getting around {{locationData.name}}?</label>
