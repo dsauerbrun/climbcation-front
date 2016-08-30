@@ -20,7 +20,7 @@
 				<div ng-if="!editable" class="btn btn-default btn-climbcation right-margin" ng-class="{'disabled': section.isSaving }" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
 				<div ng-if="!editable" class="text-button pad-top" ng-if="sectionsLength != -2 && (indexIterator != sectionsLength-1)" ng-click="removeSection(section)">remove section</div>
 
-				<div ng-if="editable" class="btn btn-default btn-climbcation pull-right" ng-click="saveChanges()">
+				<div ng-if="editable" class="btn btn-default btn-climbcation pull-right" ng-class="{'disabled': section.isSaving }" ng-click="saveChanges()">
 					Save Changes
 				</div>
 				<div ng-if="editable" class="text-button pull-right pad-top" ng-click="togglePreview(section)">

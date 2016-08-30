@@ -1,4 +1,4 @@
-var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','location-section-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -117,23 +117,6 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 		}
 	);
 
-	$scope.updateSection = function(sectionId, section){
-		section.isSaving = true;
-		$http.post('/api/infosection/'+sectionId,{section: section}).then(function(response){
-			section.isSaving = false;
-			$('#saveSuccessModal').modal()
-		})
-	};
-
-	$scope.saveSection = function(locationId, section){
-		section.isSaving = true;
-		$http.post('/api/infosection/',{locationId: locationId, section: section}).then(function(response){
-			section.isSaving = false;
-			$('#saveSuccessModal').modal()
-			$scope.emptySection = emptySectionTemplate.clone();
-		})
-	};
-
 	$scope.toggleNearby = function() {
 		$scope.nearbyShow = !$scope.nearbyShow;
 	}
@@ -160,22 +143,28 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	};
 
 	$scope.submitAccommodationChanges = function() {
-		$http.post('api/locations/' + $scope.locationData.id +'/accommodations',
-			{location: $scope.locationObj}
-		).then(function(response) {
-			if (response.status == 200) {
-				$http.get('api/location/'+slug).then(function(response) {
-					$scope.locationData.accommodations = response.data.location.accommodations;
-					$scope.locationData.accommodation_notes = response.data.location.accommodation_notes;
-					$scope.locationData.closest_accommodation = response.data.location.closest_accommodation;
-					$scope.toggleEditAccommodation();
-					ngToast.create({
-						additionalClasses: 'climbcation-toast',
-						content: editMessage
+		if (!$scope.saving) {
+			$('.submit-button').addClass('disabled');
+			$scope.saving = true;
+			$http.post('api/locations/' + $scope.locationData.id +'/accommodations',
+				{location: $scope.locationObj}
+			).then(function(response) {
+				if (response.status == 200) {
+					$http.get('api/location/'+slug).then(function(response) {
+						$scope.locationData.accommodations = response.data.location.accommodations;
+						$scope.locationData.accommodation_notes = response.data.location.accommodation_notes;
+						$scope.locationData.closest_accommodation = response.data.location.closest_accommodation;
+						$scope.toggleEditAccommodation();
+						ngToast.create({
+							additionalClasses: 'climbcation-toast',
+							content: editMessage
+						});
 					});
-				});
-			}
-		});
+				}
+				$scope.saving = false;
+				$('.submit-button').removeClass('disabled');
+			});
+		}
 	}
 
 	$scope.selectAccommodation = function(accommodation) {
@@ -191,23 +180,29 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	};
 
 	$scope.submitGettingInChanges = function() {
-		$http.post('api/locations/' + $scope.locationData.id +'/gettingin',
-			{location: $scope.locationObj}
-		).then(function(response) {
-			if (response.status == 200) {
-				$http.get('api/location/'+slug).then(function(response) {
-					$scope.locationData.transportations = response.data.location.transportations;
-					$scope.locationData.getting_in_notes = response.data.location.getting_in_notes;
-					$scope.locationData.best_transportation = response.data.location.best_transportation;
-					$scope.locationData.walking_distance = response.data.location.walking_distance;
-					$scope.toggleEditGettingIn();
-					ngToast.create({
-						additionalClasses: 'climbcation-toast',
-						content: editMessage
+		if (!$scope.saving) {
+			$('.submit-button').addClass('disabled');
+			$scope.saving = true;
+			$http.post('api/locations/' + $scope.locationData.id +'/gettingin',
+				{location: $scope.locationObj}
+			).then(function(response) {
+				if (response.status == 200) {
+					$http.get('api/location/'+slug).then(function(response) {
+						$scope.locationData.transportations = response.data.location.transportations;
+						$scope.locationData.getting_in_notes = response.data.location.getting_in_notes;
+						$scope.locationData.best_transportation = response.data.location.best_transportation;
+						$scope.locationData.walking_distance = response.data.location.walking_distance;
+						$scope.toggleEditGettingIn();
+						ngToast.create({
+							additionalClasses: 'climbcation-toast',
+							content: editMessage
+						});
 					});
-				});
-			}
-		});
+				}
+				$('.submit-button').removeClass('disabled');
+				$scope.saving = false;
+			});
+		}
 	}
 
 	$scope.selectBestTransportation = function(id) {
@@ -242,22 +237,28 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	}
 
 	$scope.submitFoodOptionsChanges = function() {
-		$http.post('api/locations/' + $scope.locationData.id +'/foodoptions',
-			{location: $scope.locationObj}
-		).then(function(response) {
-			if (response.status == 200) {
-				$http.get('api/location/'+slug).then(function(response) {
-					$scope.locationData.food_options = response.data.location.food_options;
-					$scope.locationData.common_expenses_notes = response.data.location.common_expenses_notes;
-					$scope.locationData.saving_money_tip = response.data.location.saving_money_tip;
-					$scope.toggleEditFoodOptions();
-					ngToast.create({
-						additionalClasses: 'climbcation-toast',
-						content: editMessage
+		if (!$scope.saving) {
+			$('.submit-button').addClass('disabled');
+			$scope.saving = true;
+			$http.post('api/locations/' + $scope.locationData.id +'/foodoptions',
+				{location: $scope.locationObj}
+			).then(function(response) {
+				if (response.status == 200) {
+					$http.get('api/location/'+slug).then(function(response) {
+						$scope.locationData.food_options = response.data.location.food_options;
+						$scope.locationData.common_expenses_notes = response.data.location.common_expenses_notes;
+						$scope.locationData.saving_money_tip = response.data.location.saving_money_tip;
+						$scope.toggleEditFoodOptions();
+						ngToast.create({
+							additionalClasses: 'climbcation-toast',
+							content: editMessage
+						});
 					});
-				});
-			}
-		});
+				}
+				$('.submit-button').removeClass('disabled');
+				$scope.saving = false;
+			});
+		}
 	}
 
 	$scope.selectFoodOptionDetail = function(id, range) {

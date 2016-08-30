@@ -6,30 +6,34 @@ locationOtherSection.controller('locationOtherSectionController', function($scop
 	}
 
 	$scope.saveChanges = function() {
-		$http.post('api/locations/' + $scope.locationId +'/sections',
-			{
-				locationId: $scope.locationId,
-				section: {
-						id: $scope.section.id,
-						title: $scope.section.title,
-						body: $scope.section.body
-					}
-			}
-		).then(function(response) {
-			if (response.status == 200) {
-					if (response.data.new_id) {
-						$scope.section.id = response.data.new_id
-					} else {
-						ngToast.create({
-							additionalClasses: 'climbcation-toast',
-							content: 'Your edit has been submitted and will be approved by a moderator shortly!'
-						});
-					}
-					$scope.oldBody = $scope.section.body;
-					$scope.oldTitle = $scope.section.title;
-					$scope.togglePreview($scope.section);
-			}
-		});
+		if (!$scope.section.isSaving) {
+			$scope.section.isSaving = true;
+			$http.post('api/locations/' + $scope.locationId +'/sections',
+				{
+					locationId: $scope.locationId,
+					section: {
+							id: $scope.section.id,
+							title: $scope.section.title,
+							body: $scope.section.body
+						}
+				}
+			).then(function(response) {
+				if (response.status == 200) {
+						if (response.data.new_id) {
+							$scope.section.id = response.data.new_id
+						} else {
+							ngToast.create({
+								additionalClasses: 'climbcation-toast',
+								content: 'Your edit has been submitted and will be approved by a moderator shortly!'
+							});
+						}
+						$scope.oldBody = $scope.section.body;
+						$scope.oldTitle = $scope.section.title;
+						$scope.togglePreview($scope.section);
+						$scope.section.isSaving = false;
+				}
+			});
+		}
 	}
 	$scope.oldBody = $scope.section.body;
 	$scope.oldTitle = $scope.section.title;

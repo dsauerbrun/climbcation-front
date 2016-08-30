@@ -293,18 +293,25 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 			$('#errorModal').modal();
 		} else {
 			//upload
-			$scope.locationObj.grade = $scope.locationObj.grade.id;
-			$http.post('api/submit_new_location', {location: $scope.locationObj})
-				.then(function(response) {
-					if (response.status == 200) {
-						$scope.nextPage();
-						$scope.locationId = response.data.id;
-						$scope.locationSlug = response.data.slug;
-					} else {
-						console.log('error submitting locationSection')
-
-					}
-				});
+			if (!$scope.loading) {
+				var tmpGrade = $scope.locationObj.grade;
+				$scope.locationObj.grade = $scope.locationObj.grade.id;
+				$('#publish-button').addClass('disabled');
+				$scope.loading = true;
+				$http.post('api/submit_new_location', {location: $scope.locationObj})
+					.then(function(response) {
+						if (response.status == 200) {
+							$scope.nextPage();
+							$scope.locationId = response.data.id;
+							$scope.locationSlug = response.data.slug;
+						} else {
+							console.log('error submitting locationSection');
+						}
+						$scope.locationObj.grade = tmpGrade;
+						$('#publish-button').removeClass('disabled');
+						$scope.loading = false;
+					});
+			}
 		}
 
 	}

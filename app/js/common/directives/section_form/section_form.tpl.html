@@ -355,8 +355,9 @@
 								<div class="col-xs-2 btn btn-climbcation" ng-click="nextPage()" ng-if="currentPage < 5">
 									<div class=" ">Next</div>
 								</div>
-								<div class="col-xs-2 btn btn-climbcation" ng-click="submitLocation()" ng-if="currentPage == 5">
-									<div class=" ">Publish</div>
+								<div class="col-xs-2 btn btn-climbcation" id="publish-button" ng-click="submitLocation()" ng-if="currentPage == 5">
+									<div class=" " ng-if="!loading">Publish</div>
+									<img ng-src="/images/climbcation-loading.gif" ng-if="loading">
 								</div>
 								<div class="col-xs-offset-7 col-xs-1 right-margin" ng-if="currentPage == 6">
 									<div class="text-button"><a ng-href="/location/{{locationSlug}}" target="_blank">Preview</a></div>
