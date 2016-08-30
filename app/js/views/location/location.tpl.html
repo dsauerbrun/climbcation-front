@@ -26,7 +26,7 @@
 						<div class="nearby-locations" ng-class="{'expanded': nearbyShow}">
 							
 							<div ng-if="nearbyShow" class="nearby-display">
-								<div class="nearby-location" ng-repeat="nearbyLoc in nearby | limitTo:5">
+								<div class="nearby-location" ng-repeat="nearbyLoc in nearby">
 									<a href="/location/{{nearbyLoc.slug}}">{{ nearbyLoc.name }}</a> <span class="text-gray bold">({{nearbyLoc.distance}} mi away)</span>
 									<img ng-repeat="nearbyType in nearbyLoc.climbing_types" ng-src="{{nearbyType.url}}" class="icon"/>
 								</div>
