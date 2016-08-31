@@ -358,13 +358,14 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 			var lowestPrice = 9999999;
 			var lowestPriceDate = '';
 			_.forEach(quote, function(monthArray, month) {
-				_.forEach(monthArray, function(cost, day) {
-					if (lowestPrice > cost) {
-						lowestPrice = cost;
-						lowestPriceDate = month + '/' + day;
-					}
-				});
-
+				if (month != 'referral') {
+					_.forEach(monthArray, function(cost, day) {
+						if (lowestPrice > cost) {
+							lowestPrice = cost;
+							lowestPriceDate = month + '/' + day;
+						}
+					});
+				}
 			});
 
 			location.lowestPrice = {};
