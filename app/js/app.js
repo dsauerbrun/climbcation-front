@@ -773,8 +773,9 @@ function setHighcharts(locationQuoteData, origin_airport){
 	            height: '100'
 	        },
 	        title: {
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '(source: Skyscanner)',
-	            floating: true
+	        	useHTML: true,
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="http://skyscanner.net" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            floating: false
 	        },
 	        xAxis: {
 	        	visible: false,
@@ -847,8 +848,9 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 	            height: '200'
 	        },
 	        title: {
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '(source: Skyscanner)',
-	            floating: true
+	        	useHTML: true,
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="http://skyscanner.net" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            floating: false
 	        },
 	        xAxis: {
 	        	visible: true,
