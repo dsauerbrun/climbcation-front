@@ -760,11 +760,14 @@ function setHighcharts(locationQuoteData, origin_airport){
 		quote_array = [];
 		var maxPrice = 0;
 		$.each(this,function(monthKey,value){
-			$.each(value, function(dayKey,cost){
-				quote_array.push([monthKey+'/'+dayKey,cost])
-				if(cost > maxPrice)
-					maxPrice = cost;
-			})
+			if (monthKey != 'referral') {
+				$.each(value, function(dayKey,cost){
+					quote_array.push([monthKey+'/'+dayKey,cost])
+					if(cost > maxPrice) {
+						maxPrice = cost;
+					}
+				});
+			}
 
 		});
 		$('#highchart'+slug).highcharts({
@@ -774,7 +777,7 @@ function setHighcharts(locationQuoteData, origin_airport){
 	        },
 	        title: {
 	        	useHTML: true,
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="http://skyscanner.net" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="' + this.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
 	            floating: false
 	        },
 	        xAxis: {
@@ -830,17 +833,19 @@ function setHighcharts(locationQuoteData, origin_airport){
 }
 
 function setLocationHighchart(locationQuoteData, origin_airport){
-	$.each(locationQuoteData,function(slug,months){
+	$.each(locationQuoteData,function(slug, months){
 		destinationAirport = slug.split("-")[0]
 		quote_array = [];
 		var maxPrice = 0;
 		$.each(this,function(monthKey,value){
-			$.each(value, function(dayKey,cost){
-				quote_array.push([monthKey+'/'+dayKey,cost])
-				if(cost > maxPrice)
-					maxPrice = cost;
-			})
-
+			if (monthKey != 'referral') {
+				$.each(value, function(dayKey,cost){
+					quote_array.push([monthKey+'/'+dayKey,cost])
+					if(cost > maxPrice) {
+						maxPrice = cost;
+					}
+				});
+			}
 		});
 		$('#highchart'+slug).highcharts({
 	        chart: {
@@ -849,7 +854,7 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 	        },
 	        title: {
 	        	useHTML: true,
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="http://skyscanner.net" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="' + this.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
 	            floating: false
 	        },
 	        xAxis: {
