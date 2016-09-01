@@ -348,24 +348,21 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 	$scope.$watch('LocationsGetter.flightQuotes', function(){
 		//set the lowest price and date for location
-		_.forEach(LocationsGetter.flightQuotes, function(quote, key) {
-			var splitKey = key.split('-');
-			var locationId = splitKey[splitKey.length - 1];
+		_.forEach(LocationsGetter.flightQuotes, function(locationQuote, key) {
+			var locationId = locationQuote.id;
 			var location = _.find($scope.locationData, function(locationIter) {
 				return locationIter.location.id == locationId;
 			});
 
 			var lowestPrice = 9999999;
 			var lowestPriceDate = '';
-			_.forEach(quote, function(monthArray, month) {
-				if (month != 'referral') {
-					_.forEach(monthArray, function(cost, day) {
-						if (lowestPrice > cost) {
-							lowestPrice = cost;
-							lowestPriceDate = month + '/' + day;
-						}
-					});
-				}
+			_.forEach(locationQuote.quotes, function(monthArray, month) {
+				_.forEach(monthArray, function(cost, day) {
+					if (lowestPrice > cost) {
+						lowestPrice = cost;
+						lowestPriceDate = month + '/' + day;
+					}
+				});
 			});
 
 			location.lowestPrice = {};
@@ -382,8 +379,8 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	$scope.$watch('LocationsGetter.locations.length', function() {
 		$scope.locationData = LocationsGetter.locations;
 		$scope.slugArray = [];
-		$.each($scope.locationData, function(key, promiseLocation){
-			$scope.slugArray.push(this['slug']);
+		_.forEach($scope.locationData, function(promiseLocation, key){
+			$scope.slugArray.push(promiseLocation.slug);
 		});
 		LocationsGetter.getFlightQuotes($scope.slugArray, $scope.originAirportCode);
 	})
@@ -756,21 +753,19 @@ function processSectionsByPair(sectionMap){
 }
 
 function setHighcharts(locationQuoteData, origin_airport){
-	$.each(locationQuoteData,function(slug,months){
-		destinationAirport = slug.split("-")[0]
-		quote_array = [];
+	_.forEach(locationQuoteData,function(location, slug){
+		var destinationAirport = location.airport_code
+		var quoteArray = [];
 		var maxPrice = 0;
-		$.each(this,function(monthKey,value){
-			if (monthKey != 'referral') {
-				$.each(value, function(dayKey,cost){
-					quote_array.push([monthKey+'/'+dayKey,cost])
-					if(cost > maxPrice) {
-						maxPrice = cost;
-					}
-				});
-			}
-
+		_.forEach(location.quotes,function(value, monthKey){
+			_.forEach(value, function(cost, dayKey){
+				quoteArray.push([monthKey + '/' + dayKey, cost])
+				if(cost > maxPrice) {
+					maxPrice = cost;
+				}
+			});
 		});
+
 		$('#highchart'+slug).highcharts({
 	        chart: {
 	            type: 'line',
@@ -778,7 +773,7 @@ function setHighcharts(locationQuoteData, origin_airport){
 	        },
 	        title: {
 	        	useHTML: true,
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="' + this.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            text: 'One Way cost from ' + origin_airport + ' to ' + destinationAirport + '<a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
 	            floating: false
 	        },
 	        xAxis: {
@@ -814,7 +809,7 @@ function setHighcharts(locationQuoteData, origin_airport){
 	        },
 	        series: [{
 	            name: 'Price',
-	            data: quote_array,
+	            data: quoteArray,
 	            dataLabels: {
 	                enabled: false,
 	                rotation: -90,
@@ -834,19 +829,17 @@ function setHighcharts(locationQuoteData, origin_airport){
 }
 
 function setLocationHighchart(locationQuoteData, origin_airport){
-	$.each(locationQuoteData,function(slug, months){
-		destinationAirport = slug.split("-")[0]
-		quote_array = [];
+	_.forEach(locationQuoteData,function(location, slug) {
+		var destinationAirport = location.airport_code;
+		var quoteArray = [];
 		var maxPrice = 0;
-		$.each(this,function(monthKey,value){
-			if (monthKey != 'referral') {
-				$.each(value, function(dayKey,cost){
-					quote_array.push([monthKey+'/'+dayKey,cost])
-					if(cost > maxPrice) {
-						maxPrice = cost;
-					}
-				});
-			}
+		_.forEach(location.quotes, function(value, monthKey){
+			_.forEach(value, function(cost, dayKey){
+				quoteArray.push([monthKey + '/' + dayKey, cost])
+				if(cost > maxPrice) {
+					maxPrice = cost;
+				}
+			});
 		});
 		$('#highchart'+slug).highcharts({
 	        chart: {
@@ -855,7 +848,7 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 	        },
 	        title: {
 	        	useHTML: true,
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="' + this.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
 	            floating: false
 	        },
 	        xAxis: {
@@ -891,7 +884,7 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 	        },
 	        series: [{
 	            name: 'Price',
-	            data: quote_array,
+	            data: quoteArray,
 	            dataLabels: {
 	                enabled: false,
 	                rotation: -90,
