@@ -348,6 +348,10 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 	$scope.$watch('LocationsGetter.flightQuotes', function(){
 		//set the lowest price and date for location
+		_.forEach($scope.locationData,function(location) {
+			location.lowestPrice = {};
+		});
+		
 		_.forEach(LocationsGetter.flightQuotes, function(locationQuote, key) {
 			var locationId = locationQuote.id;
 			var location = _.find($scope.locationData, function(locationIter) {
@@ -373,7 +377,6 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 		$timeout(function(){
 			setHighcharts(LocationsGetter.flightQuotes,$scope.originAirportCode);
 		});
-
 	});
 
 	$scope.$watch('LocationsGetter.locations.length', function() {
@@ -754,76 +757,80 @@ function processSectionsByPair(sectionMap){
 
 function setHighcharts(locationQuoteData, origin_airport){
 	_.forEach(locationQuoteData,function(location, slug){
-		var destinationAirport = location.airport_code
-		var quoteArray = [];
-		var maxPrice = 0;
-		_.forEach(location.quotes,function(value, monthKey){
-			_.forEach(value, function(cost, dayKey){
-				quoteArray.push([monthKey + '/' + dayKey, cost])
-				if(cost > maxPrice) {
-					maxPrice = cost;
-				}
+		console.log($('#highchart' + slug).attr('origin'))
+		if($('#highchart' + slug).attr('origin') != origin_airport) {
+			var destinationAirport = location.airport_code
+			var quoteArray = [];
+			var maxPrice = 0;
+			_.forEach(location.quotes,function(value, monthKey){
+				_.forEach(value, function(cost, dayKey){
+					quoteArray.push([monthKey + '/' + dayKey, cost])
+					if(cost > maxPrice) {
+						maxPrice = cost;
+					}
+				});
 			});
-		});
 
-		$('#highchart'+slug).highcharts({
-	        chart: {
-	            type: 'line',
-	            height: '100'
-	        },
-	        title: {
-	        	useHTML: true,
-	            text: 'One Way cost from ' + origin_airport + ' to ' + destinationAirport + '<a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
-	            floating: false
-	        },
-	        xAxis: {
-	        	visible: false,
-	            type: 'category',
-	            title: {
-	            	text: 'Date'
-	            },
-	            labels: {
-	                rotation: -45,
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	            
-	        },
-	        yAxis: {
-	        	visible: false,
-	            min: 0,
-	            title: {
-	                text: 'Price(USD)'
-	            },
-	            tickInterval: 50,
-	            max: maxPrice
+			$('#highchart'+slug).highcharts({
+		        chart: {
+		            type: 'line',
+		            height: '100'
+		        },
+		        title: {
+		        	useHTML: true,
+		            text: 'One Way cost from ' + origin_airport + ' to ' + destinationAirport + '<a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+		            floating: false
+		        },
+		        xAxis: {
+		        	visible: false,
+		            type: 'category',
+		            title: {
+		            	text: 'Date'
+		            },
+		            labels: {
+		                rotation: -45,
+		                style: {
+		                    fontSize: '13px',
+		                    fontFamily: 'Verdana, sans-serif'
+		                }
+		            }
+		            
+		        },
+		        yAxis: {
+		        	visible: false,
+		            min: 0,
+		            title: {
+		                text: 'Price(USD)'
+		            },
+		            tickInterval: 50,
+		            max: maxPrice
 
-	        },
-	        legend: {
-	            enabled: false
-	        },
-	        tooltip: {
-	            pointFormat: 'Price: <b>${point.y:.1f} </b>'
-	        },
-	        series: [{
-	            name: 'Price',
-	            data: quoteArray,
-	            dataLabels: {
-	                enabled: false,
-	                rotation: -90,
-	                color: '#FFFFFF',
-	                align: 'right',
-	                format: '{point.y:.1f}', // one decimal
-	                y: 10, // 10 pixels down from the top
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	        }]
-	    });
+		        },
+		        legend: {
+		            enabled: false
+		        },
+		        tooltip: {
+		            pointFormat: 'Price: <b>${point.y:.1f} </b>'
+		        },
+		        series: [{
+		            name: 'Price',
+		            data: quoteArray,
+		            dataLabels: {
+		                enabled: false,
+		                rotation: -90,
+		                color: '#FFFFFF',
+		                align: 'right',
+		                format: '{point.y:.1f}', // one decimal
+		                y: 10, // 10 pixels down from the top
+		                style: {
+		                    fontSize: '13px',
+		                    fontFamily: 'Verdana, sans-serif'
+		                }
+		            }
+		        }]
+		    });
+			$('#highchart'+slug).attr('origin', origin_airport)
+		}
 	});
 	$('text:contains("Highcharts.com")').hide();
 }
