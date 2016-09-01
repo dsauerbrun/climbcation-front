@@ -344,6 +344,10 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	$scope.getAirportPrices = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;
 		$scope.loadingQuotes = true;
+		// clear out lowest price so we show loading symbol
+		_.forEach($scope.locationData,function(location) {
+			location.lowestPrice = {};
+		});
 		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata, function(){
 			$scope.loadingQuotes = false;
 		});

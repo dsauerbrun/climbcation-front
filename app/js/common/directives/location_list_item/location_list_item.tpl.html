@@ -49,7 +49,7 @@
 		</div>
 		<div ng-if="!locationData.lowestPrice.date">
 			<div class="sorry-message" ng-if="!loadingQuotes">
-				<h4>We're sorry, we couldn't find any flight information from your local airport. You may have better luck searching with a bigger airport or for specific dates on Skyscanner or your preferred airline's website.</h4>
+				<h4>We're sorry, we couldn't find any flight information from {{ originAirport }} to {{ locationData.airport_code }}. You may have better luck searching with a bigger airport or for specific dates on Skyscanner or your preferred airline's website.</h4>
 			</div>
 			<div ng-if="loadingQuotes">
 				<img class="loading-quote" src="/images/climbcation-loading.gif" />
