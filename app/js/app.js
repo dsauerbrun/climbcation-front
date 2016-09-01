@@ -343,7 +343,10 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 
 	$scope.getAirportPrices = function(item, model, label, event) {
 		$scope.originAirportCode = item.iata;
-		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata);
+		$scope.loadingQuotes = true;
+		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata, function(){
+			$scope.loadingQuotes = false;
+		});
 	}
 
 	$scope.$watch('LocationsGetter.flightQuotes', function(){
@@ -351,7 +354,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 		_.forEach($scope.locationData,function(location) {
 			location.lowestPrice = {};
 		});
-		
+
 		_.forEach(LocationsGetter.flightQuotes, function(locationQuote, key) {
 			var locationId = locationQuote.id;
 			var location = _.find($scope.locationData, function(locationIter) {
@@ -385,7 +388,10 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 		_.forEach($scope.locationData, function(promiseLocation, key){
 			$scope.slugArray.push(promiseLocation.slug);
 		});
-		LocationsGetter.getFlightQuotes($scope.slugArray, $scope.originAirportCode);
+		$scope.loadingQuotes = true;
+		LocationsGetter.getFlightQuotes($scope.slugArray, $scope.originAirportCode, function() {
+			$scope.loadingQuotes = false;
+		});
 	})
 
 	$scope.goToFilter = function() {
@@ -583,9 +589,10 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		filter['search'] = eventItem;
 		LocationsGetter.setFilterTimer(0);
 	}
-	LocationsGetter.getFlightQuotes = function(slugs,originAirportCode){
+	LocationsGetter.getFlightQuotes = function(slugs, originAirportCode, callback){
 		return $http.post('/api/collect_locations_quotes', {slugs: slugs, origin_airport: originAirportCode}).then(function(response){
 			LocationsGetter.flightQuotes = response.data;
+			callback && callback();
 			return response.data;
 		});
 	};
@@ -757,7 +764,6 @@ function processSectionsByPair(sectionMap){
 
 function setHighcharts(locationQuoteData, origin_airport){
 	_.forEach(locationQuoteData,function(location, slug){
-		console.log($('#highchart' + slug).attr('origin'))
 		if($('#highchart' + slug).attr('origin') != origin_airport) {
 			var destinationAirport = location.airport_code
 			var quoteArray = [];
