@@ -772,8 +772,8 @@ function setHighcharts(locationQuoteData, origin_airport){
 			var destinationAirport = location.airport_code
 			var quoteArray = [];
 			var maxPrice = 0;
-			_.forEach(location.quotes,function(value, monthKey){
-				_.forEach(value, function(cost, dayKey){
+			_.keys(location.quotes).sort().forEach(function(monthKey) {
+				_.forEach(location.quotes[monthKey], function(cost, dayKey){
 					quoteArray.push([monthKey + '/' + dayKey, cost])
 					if(cost > maxPrice) {
 						maxPrice = cost;
@@ -850,8 +850,8 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 		var destinationAirport = location.airport_code;
 		var quoteArray = [];
 		var maxPrice = 0;
-		_.forEach(location.quotes, function(value, monthKey){
-			_.forEach(value, function(cost, dayKey){
+		_.keys(location.quotes).sort().forEach(function(monthKey){
+			_.forEach(location.quotes[monthKey], function(cost, dayKey){
 				quoteArray.push([monthKey + '/' + dayKey, cost])
 				if(cost > maxPrice) {
 					maxPrice = cost;
