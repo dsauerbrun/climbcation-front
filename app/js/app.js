@@ -365,6 +365,8 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 				return locationIter.location.id == locationId;
 			});
 
+			location.referral = locationQuote.referral;
+
 			var lowestPrice = 9999999;
 			var lowestPriceDate = '';
 			_.forEach(locationQuote.quotes, function(monthArray, month) {
@@ -788,7 +790,7 @@ function setHighcharts(locationQuoteData, origin_airport){
 		        },
 		        title: {
 		        	useHTML: true,
-		            text: 'One Way cost from ' + origin_airport + ' to ' + destinationAirport + '<a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+		            text: '<a href="' + location.referral + '" target="_blank">One Way cost from ' + origin_airport + ' to ' + destinationAirport + '<img src="/images/skyscannerinline.png"></a>',
 		            floating: false
 		        },
 		        xAxis: {
