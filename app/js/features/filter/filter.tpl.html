@@ -32,13 +32,13 @@
 				<div class="col-md-5">
 					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
 					<input class="form-control" type="text" ng-model="originAirport" ng-trim="true" typeahead-min-length="3" 
-					typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+					typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
 					typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
 					typeahead-on-select="getAirportPrices($item, $model, $label, $event)"/>
 				</div>
 				<div class="col-md-4">
 					<label>Keyword Search</label>
-					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. kitchen"/>
+					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
 				</div>
 				<div class="col-md-3">
 					<label>Time</label>
@@ -143,7 +143,7 @@
 				</div>
 				<div class="col-md-4">
 					<label>Keyword Search</label>
-					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. kitchen"/>
+					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
 				</div>
 				<div class="col-md-3">
 					<label>Time</label>

@@ -96,7 +96,7 @@
 										<span class="form-group col-md-5" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
 											<label>Nearest Airport</label>
 											<input name="airport" ng-model="locationObj.airportName" placeholder="ex. Los Angeles International Airport" class="form-control" typeahead-min-length="3" 
-											typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+											typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
 											typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
 											typeahead-on-select="getAirport($item, $model, $label, $event)"/>
 											<input ng-model="locationObj.airport" class="hide"/>
