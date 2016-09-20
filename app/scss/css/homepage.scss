@@ -111,7 +111,7 @@
 	height:15em;
 	z-index: 1039;
 }
-.locations-window{
+.locations-window {
 	position: relative;
 	width: 90%;
 	margin: 0 auto;
@@ -124,6 +124,15 @@
 	display: inline-block;
 	max-width: 48%;
 	margin: 0 10px;
+}
+
+@media (max-width: 1025px) {
+	@media (min-width: 1000px) {
+		.locations-window {
+			width: 98%;
+		}
+	}
+	
 }
 
 .location-card {
