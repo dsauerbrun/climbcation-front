@@ -244,7 +244,7 @@
 			<div class="col-md-6">
 				<div class="well climbcation-well">
 					<h3>One way flight cost(
-						<input class="form-control inline" ng-model="originAirport" ng-trim="true"
+						<input class="form-control inline" ng-model="helperService.originAirport" ng-trim="true"
 						typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
 						typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
 						typeahead-on-select="getAirport($item, $model, $label, $event)"/>

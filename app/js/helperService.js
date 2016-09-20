@@ -21,4 +21,7 @@ helperService.service('helperService', function($rootScope, $http) {
 			})
 		})
 	};
+
+	this.originAirport = 'Denver International Airport';
+	this.originAirportCode = 'DEN';
 });

@@ -52,8 +52,6 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	var editMessage = 'Your edit has been submitted and will be approved by a moderator shortly!';
 	$scope.name = 'hello';
 	$scope.gmap;
-	$scope.originAirport = 'Denver International Airport';
-	$scope.originAirportCode = 'DEN';
 	$scope.nearbyShow = false;
 	$scope.editingAccommodation = false;
 	$scope.editingGettingIn = false;
@@ -62,11 +60,11 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 
 
 	$scope.getAirport = function(item, model, label, event) {
-		$scope.originAirportCode = item.iata;
-		$scope.originAirport = item.name;
-		LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.originAirportCode).then(function(promiseQuotes) {
+		helperService.originAirportCode = item.iata;
+		helperService.originAirport = item.name;
+		LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
 			$timeout(function(){
-				setLocationHighchart(promiseQuotes,$scope.originAirportCode);
+				setLocationHighchart(promiseQuotes, helperService.originAirportCode);
 			});
 		});
 	}
@@ -108,9 +106,9 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 
 				populateEditables($scope.locationData);
 
-				LocationsGetter.getFlightQuotes([$scope.locationData.slug], $scope.originAirportCode).then(function(promiseQuotes) {
+				LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
 					$timeout(function(){
-						setLocationHighchart(promiseQuotes,$scope.originAirportCode);
+						setLocationHighchart(promiseQuotes, helperService.originAirportCode);
 					});
 				});
 			}
@@ -324,12 +322,10 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 
 });
 
-home.controller('LocationsController',function($scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+home.controller('LocationsController',function($rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
-	$scope.originAirport = "Denver International Airport";
-	$scope.originAirportCode = "DEN";
 	$scope.slugArray = [];
 	$scope.helperService = helperService;
 	LocationsGetter.locations = LocationsGetter.locations || [];
@@ -342,8 +338,8 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 	}
 
 	$scope.getAirportPrices = function(item, model, label, event) {
-		$scope.originAirportCode = item.iata;
-		$scope.loadingQuotes = true;
+		helperService.originAirportCode = item.iata;
+		$rootScope.loadingQuotes = true;
 		// clear out lowest price so we show loading symbol
 		_.forEach($scope.locationData,function(location) {
 			location.lowestPrice = {};
@@ -384,7 +380,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 			
 		});
 		$timeout(function(){
-			setHighcharts(LocationsGetter.flightQuotes,$scope.originAirportCode);
+			setHighcharts(LocationsGetter.flightQuotes, helperService.originAirportCode);
 		});
 	});
 
@@ -395,7 +391,7 @@ home.controller('LocationsController',function($scope, $timeout,LocationsGetter,
 			$scope.slugArray.push(promiseLocation.slug);
 		});
 		$scope.loadingQuotes = true;
-		LocationsGetter.getFlightQuotes($scope.slugArray, $scope.originAirportCode, function() {
+		LocationsGetter.getFlightQuotes($scope.slugArray, helperService.originAirportCode, function() {
 			$scope.loadingQuotes = false;
 		});
 	})
