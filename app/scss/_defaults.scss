@@ -358,6 +358,21 @@ textarea.form-control {
 	width: 15%;
 }
 
+.airport-wrapper {
+	position: relative;
+	.loading-airports {
+		background-color: #fff;
+		border: 1px solid rgba(0,0,0,.15);
+		border-radius: 4px;
+		left: 0;
+		min-width: 160px;
+		padding: 5px 0px;
+		margin: 2px 0 0;
+		position: absolute;
+		z-index: 1000;
+	}
+}
+
 /* forms end */
 
 

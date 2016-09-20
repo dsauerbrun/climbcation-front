@@ -244,10 +244,15 @@
 			<div class="col-md-6">
 				<div class="well climbcation-well">
 					<h3>One way flight cost(
-						<input class="form-control inline" ng-model="helperService.originAirport" ng-trim="true"
-						typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
-						typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
-						typeahead-on-select="getAirport($item, $model, $label, $event)"/>
+						<div class="airport-wrapper inline">
+							<input class="form-control inline" ng-model="helperService.originAirport" ng-trim="true"
+							typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+							typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
+							typeahead-on-select="getAirport($item, $model, $label, $event)"/>
+							<div class="loading-airports" ng-if="helperService.loadingAirports">
+								<img src="/images/climbcation-loading.gif" />
+							</div>
+						</div>
 						 to {{locationData.airport_code}})</h3>
 					<div id="highchart{{locationData.airport_code + '-' + locationData.slug + '-' + locationData.id}}">
 					</div>
