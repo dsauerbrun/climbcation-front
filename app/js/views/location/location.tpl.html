@@ -31,7 +31,7 @@
 									<img ng-repeat="nearbyType in nearbyLoc.climbing_types" ng-src="{{nearbyType.url}}" class="icon"/>
 								</div>
 							</div>
-							<a class="toggle" ng-click="toggleNearby()">{{ nearbyShow? 'Hide Nearby Locations':'Show Nearby Locations' }}</a>
+							<a class="toggle" ng-click="toggleNearby()">{{ nearbyShow? '[-] Hide Nearby Locations':'[+] Show Nearby Locations' }}</a>
 						</div>
 						<div id="map-canvas" class="">
 							

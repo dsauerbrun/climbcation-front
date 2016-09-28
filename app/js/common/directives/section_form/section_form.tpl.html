@@ -123,30 +123,9 @@
 														$30+
 												</button>
 											</div>
-
-											<!--<div class="row col-md-10">
-												<span ng-class="{ 'has-success': locationForm.price_floor.$valid && locationForm.price_floor.$dirty, 'has-error': locationForm.price_floor.$invalid && locationForm.price_floor.$dirty }">
-													<input name="price_floor" ng-model="locationObj.price_floor" integer class="form-control short-input inline" /> <span class="small-label">USD ($)</span>
-												</span> 
-												<span class="text-center small-gray">
-													to
-												</span>
-												<span ng-class="{ 'has-success': locationForm.price_ceiling.$valid && locationForm.price_ceiling.$dirty, 'has-error': locationForm.price_ceiling.$invalid && locationForm.price_ceiling.$dirty }">
-													<input name="price_ceiling" class="form-control short-input inline" ng-model="locationObj.price_ceiling" integer/> <span class="small-label">USD ($)</span>
-												</span>
-											</div>-->
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-md-4">
-											<label>To get the most out of {{locationObj.name || 'this crag' }} I should climb at least:<span class="text-danger required-field">*</span></label>
-											<select name="grade" 
-											ng-options="grade.grade + ' and above' for grade in grades | reverse track by grade.id"
-											ng-model="locationObj.grade" class="form-control">
-												<option value=''>Select a grade</option>
-											</select>
-											(scroll down for Bouldering grades)
-										</div>
 										<div class="col-md-3 row">
 											<label class="col-xs-12">What should I climb?<span class="text-danger required-field">*</span></label>
 											<div ng-repeat="climbing_type in climbingTypes" class="col-xs-4 col-md-12">
@@ -156,6 +135,15 @@
 													<span class="gray">{{climbing_type.name}}</span>
 												</label>
 											</div>	
+										</div>
+										<div class="col-md-4">
+											<label>To get the most out of {{locationObj.name || 'this crag' }} I should climb at least:<span class="text-danger required-field">*</span></label>
+											<select name="grade" 
+											ng-options="grade.grade + ' and above' for grade in grades | reverse track by grade.id"
+											ng-model="locationObj.grade" class="form-control">
+												<option value=''>Select a grade</option>
+											</select>
+											(scroll down for Bouldering grades)
 										</div>
 										<div class="col-md-4">
 											<label>When Should I go?<span class="text-danger required-field">*</span></label>
