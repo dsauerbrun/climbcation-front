@@ -132,7 +132,7 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 		months: {},
 		accommodations: {},
 		climbingTypes: {},
-		grade: '',
+		grades: '',
 		sections: [],
 		closestAccommodation: '<1 mile',
 		foodOptions: {},
@@ -863,7 +863,7 @@ function setLocationHighchart(locationQuoteData, origin_airport){
 	        },
 	        title: {
 	        	useHTML: true,
-	            text: 'One Way cost from '+origin_airport+' to '+destinationAirport + '<a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
+	            text: '<a href="' + location.referral + '" target="_blank">One Way cost from '+origin_airport+' to '+destinationAirport + '</a><a href="' + location.referral + '" target="_blank"><img src="/images/skyscannerinline.png"></a>',
 	            floating: false
 	        },
 	        xAxis: {

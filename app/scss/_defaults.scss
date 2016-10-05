@@ -91,6 +91,14 @@ label {
 	border-color: $light-gray;
 }
 
+.multiple-grades {
+	> img {
+		height: 18px;
+		width: 18px;
+	}
+	font-size: 10px;
+}
+
 /* wells */
 
 .well-footer {
