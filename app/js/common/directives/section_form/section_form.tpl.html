@@ -38,12 +38,12 @@
 	</div>
 	<div class="well climbcation-well no-padding progress-container">
 		<div class="progress-icon-container">
-				<span><img ng-show="currentPage > 0" ng-src="{{getIconUrl(1)}}" /></span>
-				<span><img ng-show="currentPage > 1" ng-src="{{getIconUrl(2)}}" /></span>
-				<span><img ng-show="currentPage > 2" ng-src="{{getIconUrl(3)}}" /></span>
-				<span><img ng-show="currentPage > 3" ng-src="{{getIconUrl(4)}}" /></span>
-				<span><img ng-show="currentPage > 4" ng-src="{{getIconUrl(5)}}" /></span>
-				<span><img ng-show="currentPage > 5" ng-src="{{getIconUrl(6)}}" /></span>
+			<span><img ng-show="currentPage > 0" ng-src="{{getIconUrl(1)}}" /></span>
+			<span><img ng-show="currentPage > 1" ng-src="{{getIconUrl(2)}}" /></span>
+			<span><img ng-show="currentPage > 2" ng-src="{{getIconUrl(3)}}" /></span>
+			<span><img ng-show="currentPage > 3" ng-src="{{getIconUrl(4)}}" /></span>
+			<span><img ng-show="currentPage > 4" ng-src="{{getIconUrl(5)}}" /></span>
+			<span><img ng-show="currentPage > 5" ng-src="{{getIconUrl(6)}}" /></span>
 		</div>
 		<div class="progress-bar-wrapper">
 			<div class="progress-bar" style="width: {{progressBar}}%">
@@ -60,7 +60,6 @@
 		</div>
 	</div>
 	<!-- header end -->
-
 	<form name="locationForm">
 		<div class="container">
 			<!-- {{ locationObj |json }}  -->
@@ -138,12 +137,16 @@
 										</div>
 										<div class="col-md-4">
 											<label>To get the most out of {{locationObj.name || 'this crag' }} I should climb at least:<span class="text-danger required-field">*</span></label>
-											<select name="grade" 
-											ng-options="grade.grade + ' and above' for grade in grades | reverse track by grade.id"
-											ng-model="locationObj.grade" class="form-control">
-												<option value=''>Select a grade</option>
-											</select>
-											(scroll down for Bouldering grades)
+											<!-- multiple grades -->
+											<div class="grade-selector" ng-repeat="(climbingTypeId, enabled) in locationObj.climbingTypes" ng-if="enabled">
+												<img ng-src="{{findClimbingType(climbingTypeId).url}}" /> 
+												<select name="grade" 
+												ng-options="grade.grade + ' and above' for grade in grades | gradeFilter:climbingTypeId | reverse track by grade.id"
+												ng-model="locationObj.grade[climbingTypeId]" class="form-control">
+													<option value=''>Select a grade</option>
+												</select>
+											</div>
+											<!-- multiple grades -->
 										</div>
 										<div class="col-md-4">
 											<label>When Should I go?<span class="text-danger required-field">*</span></label>

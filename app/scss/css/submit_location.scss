@@ -146,6 +146,21 @@
 		}
 	}
 
+	.grade-selector {
+		img {
+			display: inline;
+			width: 20px;
+		}
+		select {
+			display: inline;
+			font-size: 12px;
+			min-width: 60%;
+			width: auto;
+			margin-bottom: 5px;
+			margin-left: 5px;
+		}
+	}
+
 	/* general end */
 
 	.email-input {

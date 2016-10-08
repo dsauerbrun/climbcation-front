@@ -13,7 +13,7 @@ sectionForm.directive('sectionform', function($http){
 
 
 sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,Upload,$location, helperService, $route, $timeout){
-	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':'', 'sections':[], closestAccommodation: ''};
+	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':{}, 'sections':[], closestAccommodation: ''};
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
 	$scope.helperService = helperService;
@@ -100,7 +100,15 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		var name = $scope.locationObj.name != '';
 		var priceFloor = $scope.locationObj.price_floor != '';
 		var priceCeiling = $scope.locationObj.price_ceiling != '';
-		var grade = $scope.locationObj.grade != '';
+		// check grades
+		var grade = true;
+		// TODO: FIXME: kind of done as a hack due to time constraint
+		// go through each climbing type to get the typeID, check to see if that type's grade exists
+		_.forEach($scope.locationObj.climbingTypes, function(enabled, climbingTypeId) {
+			if(enabled && !$scope.locationObj.grade[climbingTypeId]) {
+				grade = false;
+			}
+		});
 		var types = _.size(cleanTypes) > 0;
 		var months = _.size(cleanMonths) > 0;
 		if(name && priceFloor && priceCeiling && grade && types && months) {
@@ -252,7 +260,11 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		$scope.transportations = respData['transportations'];
 	});
 
-	
+	$scope.findClimbingType = function(typeId) {
+		return $scope.climbingTypes.find(function(type) {
+			return typeId == type.id;
+		});
+	}	
 
 	$scope.closeSuccessModal = function(){
 		$('#successModal').modal('hide')
@@ -295,7 +307,10 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 			//upload
 			if (!$scope.loading) {
 				var tmpGrade = $scope.locationObj.grade;
-				$scope.locationObj.grade = $scope.locationObj.grade.id;
+				$scope.locationObj.grade = [];
+				_.forEach(tmpGrade, function(grade) {
+					$scope.locationObj.grade.push(grade.id);
+				});
 				$('#publish-button').addClass('disabled');
 				$scope.loading = true;
 				$http.post('api/submit_new_location', {location: $scope.locationObj})

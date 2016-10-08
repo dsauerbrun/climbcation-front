@@ -1,5 +1,14 @@
 var filters = angular.module('customFilters', []);
 
+filters.filter('gradeFilter', function() {
+  return function(grades, climbingType) {
+    grades = grades.filter(function(grade) {
+      return grade.type.id == climbingType;
+    })
+    return grades;
+  };
+});
+
 filters.filter('parseUrlFilter', function ($sce) {
     var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
     return function (text, target) {
