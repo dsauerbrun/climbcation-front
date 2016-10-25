@@ -15,12 +15,14 @@ helperService.service('helperService', function($rootScope, $http) {
 	this.getAirports = function(airport) {
 		var that = this;
 		that.loadingAirports = true;
-		return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=72e3b3e842&term=' + encodeURIComponent(airport).replace(/%20/g, "+")).then(function(response) {
+
+		return $http.get('/api/airports/?search=' + encodeURIComponent(airport).replace(/%20/g, "+"))
+		.then(function(response) {
 			that.loadingAirports = false;
-			return response.data.airports.map(function(airport){
+			return response.data.map(function(airport){
 				return {
 					name: airport.name,
-					iata: airport.iata
+					iata: airport.code
 				};
 			})
 		})
