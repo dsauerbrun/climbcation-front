@@ -15,7 +15,7 @@ helperService.service('helperService', function($rootScope, $http) {
 	this.getAirports = function(airport) {
 		var that = this;
 		that.loadingAirports = true;
-		return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=b9ad07b1f2&term=' + encodeURIComponent(airport).replace(/%20/g, "+")).then(function(response) {
+		return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=780f61bcf3&term=' + encodeURIComponent(airport).replace(/%20/g, "+")).then(function(response) {
 			that.loadingAirports = false;
 			return response.data.airports.map(function(airport){
 				return {

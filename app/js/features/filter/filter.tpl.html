@@ -32,8 +32,9 @@
 				<div class="col-md-5">
 					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
 					<div class="airport-wrapper">
-						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-trim="true" typeahead-min-length="3" 
-						typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
+						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-trim="true"
+						typeahead-min-length="3" 
+						typeahead-wait-ms="500" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
 						typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
 						typeahead-on-select="getAirportPrices($item, $model, $label, $event)"/>
 						<div class="loading-airports" ng-if="helperService.loadingAirports">

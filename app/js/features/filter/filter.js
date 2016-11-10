@@ -24,8 +24,9 @@ filterDir.directive('filter', function(){
 			this.fixVar = 'this is not a test';
 			this.loading = true;
 			$http.get('/api/filters').success(function(data){
-				filter.climbTypes = data['climbTypes'];
+				filter.climbTypes = data.climbTypes;
 				filter.accommodations = data.accommodations;
+				filter.grades = data.grades;
 			});
 
 			$scope.toggleMapFilter = function() {
