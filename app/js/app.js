@@ -57,6 +57,7 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	$scope.editingGettingIn = false;
 	$scope.editingFoodOptions = false;
 	$scope.helperService = helperService;
+	helperService.setAirportApiKey();
 
 
 	$scope.getAirport = function(item, model, label, event) {
@@ -329,6 +330,7 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 	$scope.slugArray = [];
 	$scope.helperService = helperService;
 	LocationsGetter.locations = LocationsGetter.locations || [];
+	helperService.setAirportApiKey();
 	
 	// if we are returning to the front page we want to reset the locations and clear the filters
 	if(LocationsGetter.locations.length > 0) {

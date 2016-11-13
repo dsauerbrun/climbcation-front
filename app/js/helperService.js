@@ -1,6 +1,19 @@
 var helperService = angular.module('helperService', []);
 
 helperService.service('helperService', function($rootScope, $http) {
+
+	this.setAirportApiKey = function() {
+		var that = this;
+		if (that.airportApiKey) {
+			return Promise.resolve(null);
+		}
+		return $http.get('/api/airportsapikey')
+			.then(function(key) {
+				that.airportApiKey = key.data;
+				return key;
+			});
+	};
+
 	this.cleanFalses = function(keyMap) {
 		var returnMap = {};
 		_.forEach(keyMap, function(value, key) {
@@ -15,15 +28,20 @@ helperService.service('helperService', function($rootScope, $http) {
 	this.getAirports = function(airport) {
 		var that = this;
 		that.loadingAirports = true;
-		return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=780f61bcf3&term=' + encodeURIComponent(airport).replace(/%20/g, "+")).then(function(response) {
-			that.loadingAirports = false;
-			return response.data.airports.map(function(airport){
-				return {
-					name: airport.name,
-					iata: airport.iata
-				};
+		return Promise.resolve(function() {
+			return that.airportApiKey || that.setAirportApiKey();
+		}).then(function() {
+			return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=' + that.airportApiKey + '&term=' + encodeURIComponent(airport).replace(/%20/g, "+")).then(function(response) {
+				that.loadingAirports = false;
+				return response.data.airports.map(function(airport){
+					return {
+						name: airport.name,
+						iata: airport.iata
+					};
+				})
 			})
 		})
+		
 	};
 
 	this.originAirport = 'Denver International Airport';

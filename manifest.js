@@ -1,4 +1,5 @@
 exports.javascript = [
+  'node_modules/promise-polyfill/promise.min.js',
 	'vendor/jquery/dist/jquery.min.js',
 	'vendor/bootstrap/dist/js/bootstrap.min.js',
 	'vendor/api-check/dist/api-check.js',

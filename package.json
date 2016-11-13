@@ -49,6 +49,7 @@
     "dice-coefficient": "^1.0.0",
     "gmaps": "^0.4.24",
     "ng-toast": "^2.0.0",
+    "promise-polyfill": "^6.0.2",
     "requirejs": "^2.2.0",
     "string-similarity": "^1.1.0"
   }
