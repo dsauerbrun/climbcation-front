@@ -47,6 +47,10 @@
 	margin: 1em 0;
 }
 
+.grade-filter-button {
+	padding-right: 2px;
+}
+
 .filter{
 	position:relative;
 	margin: 2em 0;
@@ -67,12 +71,15 @@
 		margin-top: 0;
 	}
 }
-.location-row:nth-of-type(odd){
+
+.location-row:nth-of-type(odd) {
 	background-color: #f9f9f9;
 }
+
 .location-row{
 	padding: 1em 0;
 }
+
 .navbar.home {
 	padding: 1em 0px;
 	margin-bottom: 0;

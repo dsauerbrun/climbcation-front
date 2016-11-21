@@ -140,7 +140,14 @@
 				</h5>
 			</div>
 			<div class="row bottom-padding">
-				<div class="col-md-5">
+				<div class="col-md-6">
+					<label>What do you want to climb?</label>
+					<div class="btn-group btn-group-sm btn-group-filter" data="climbing_types" role="group">
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types','All' )" type="button" class="filter-button btn btn-lg btn-default active all">All</button>
+						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
+					</div>
+				</div>
+				<div class="col-md-3">
 					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
 					<div class="airport-wrapper">
 						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-trim="true" typeahead-min-length="3" 
@@ -152,12 +159,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<label>Keyword Search</label>
-					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
-				</div>
 				<div class="col-md-3">
-					<label>Time</label>
+					<label>When do you want to go?</label>
 					<span class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="startMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 					    {{startMonthName}}
@@ -202,29 +205,26 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-5">
-					<label>Climbing Type</label>
-					<div class="btn-group btn-group-sm btn-group-filter" data="climbing_types" role="group">
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types','All' )" type="button" class="filter-button btn btn-lg btn-default active all">All</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
+				<div class="col-md-6">
+					<label>What is the hardest grade you're looking for?</label>
+					<div class="btn-group grade-filter-button" ng-repeat="type in filter.grades">
+						<button type="button" class="filter-button btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+					    <li ng-click="setGradeFilter(type.type, 'all')"><a>All {{type.type.name}} Grades</a></li>
+					    <li ng-repeat="grade in type.grades" ng-click="setGradeFilter(type.type, grade)"><a>{{grade.grade}}</a></li>
+					  </ul>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<label>Lodging Type</label>
+				<div class="col-md-3">
+					<label>Keyword Search</label>
+					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
+				</div>
+				<div class="col-md-3">
+					<label>Where do you want to stay?</label>
 					<div class="btn-group btn-group-sm btn-group-filter" data="Lodging" role="group">
 						<button ng-click="LocationsGetter.toggleFilterButton($event,'accommodations','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
 						<button ng-click="LocationsGetter.toggleFilterButton($event,'accommodations',id )" ng-repeat="(name,id) in filter.accommodations" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
 					</div>
-				</div>
-				<div class="col-md-3">
-					<label>Cost<span class="gray">(Daily Expenses)</span></label>
-					<div class="btn-group btn-group-sm btn-group-filter" data="price" role="group">
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','15' )" type="button" class="filter-button btn btn-lg btn-default" data="15">$</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','30' )" type="button" class="filter-button btn btn-lg btn-default" data="30">$$</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','45' )" type="button" class="filter-button btn btn-lg btn-default" data="45">$$$</button>
-					</div>
-					
 				</div>
 			</div>
 		</div>

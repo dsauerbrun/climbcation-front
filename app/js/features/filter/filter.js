@@ -5,10 +5,29 @@ filterDir.directive('filter', function(){
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
 		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter){
+			var filter = this;
 			$scope.endMonth = 12;
 			$scope.startMonth = 1;
 			$scope.endMonthName = 'December';
 			$scope.startMonthName = 'January';
+			$scope.gradeFilter = {};
+
+			$scope.setGradeFilter = function(type, grade) {
+				console.log(type, grade,filter)
+				if (grade == 'all') {
+					delete $scope.gradeFilter[type.id];
+					var gradesToFilter = null;
+				} else {
+					$scope.gradeFilter[type.id] = grade;
+					var gradeIndex = filter.grades[type.name].grades.indexOf(grade);
+					var gradesToFilter = filter.grades[type.name].grades.slice(0, gradeIndex + 1);
+					gradesToFilter = gradesToFilter.map(function(gradeIter) {
+						return gradeIter.id;
+					});
+				}
+
+				LocationsGetter.filterByGrade(type.id, gradesToFilter);
+			}
 
 			$scope.$watch('endMonth', function(newVal, oldVal) {
 				if (newVal != oldVal) {
@@ -20,8 +39,7 @@ filterDir.directive('filter', function(){
 					LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
 				}
 			});
-			var filter = this;
-			this.fixVar = 'this is not a test';
+
 			this.loading = true;
 			$http.get('/api/filters').success(function(data){
 				filter.climbTypes = data.climbTypes;

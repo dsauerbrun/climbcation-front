@@ -481,11 +481,6 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 		}
 		
 	});
-
-	
-
-	
-
 });
 
 home.factory("LocationsGetter",function($q,$http, $timeout){
@@ -501,6 +496,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.filter = filter;
 	LocationsGetter.scrollLock = false;
 	filter['climbing_types'] = [];
+	filter.grades = {};
 	filter['accommodations'] = [];
 
 	filter['continents'] = [];
@@ -539,6 +535,7 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		this.markerMap = {};
 		this.pageNum = 1;
 		filter['climbing_types'] = [];
+		filter.grades = {};
 		filter['accommodations'] = [];
 
 		filter['continents'] = [];
@@ -587,6 +584,16 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		filter['start_month'] = startMonth;
 		filter['end_month'] = endMonth;
 		LocationsGetter.setFilterTimer(1.5);
+	}
+
+	LocationsGetter.filterByGrade = function(typeId, grades) {
+		if (grades == null) {
+			// resetting grade filter
+			delete filter.grades[typeId];
+		} else {
+			filter.grades[typeId] = grades;
+		}
+		LocationsGetter.setFilterTimer(1);
 	}
 
 	LocationsGetter.filterByQuery = function(eventItem){
@@ -692,7 +699,7 @@ function inactivateGroupAll(buttonGroup){
 }
 
 function createMap(mapId,latitude,longitude,zoom){
-	var map =new GMaps({
+	var map = new GMaps({
 		div: '#'+mapId,
 		lat: latitude,
 		lng: longitude,
@@ -729,6 +736,7 @@ function addMarker(map,lat,lng,title,infowindow,isSecondary){
 			}
 		});
 }
+
 function processTableContents(sectionMap){
 	var titleArray = [];
 	var counter = 0;
