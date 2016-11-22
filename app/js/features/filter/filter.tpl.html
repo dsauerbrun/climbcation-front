@@ -140,14 +140,14 @@
 				</h5>
 			</div>
 			<div class="row bottom-padding">
-				<div class="col-md-6">
+				<div class="col-md-5">
 					<label>What do you want to climb?</label>
 					<div class="btn-group btn-group-sm btn-group-filter" data="climbing_types" role="group">
 						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types','All' )" type="button" class="filter-button btn btn-lg btn-default active all">All</button>
 						<button ng-click="LocationsGetter.toggleFilterButton($event,'climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" data="{{ name }}">{{name}}</button>
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
 					<div class="airport-wrapper">
 						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-trim="true" typeahead-min-length="3" 
@@ -205,17 +205,17 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-5">
 					<label>What is the hardest grade you're looking for?</label>
 					<div class="btn-group grade-filter-button" ng-repeat="type in filter.grades">
-						<button type="button" class="filter-button btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
+						<button type="button" class="filter-button btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
 						<ul class="dropdown-menu">
 					    <li ng-click="setGradeFilter(type.type, 'all')"><a>All {{type.type.name}} Grades</a></li>
 					    <li ng-repeat="grade in type.grades" ng-click="setGradeFilter(type.type, grade)"><a>{{grade.grade}}</a></li>
 					  </ul>
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<label>Keyword Search</label>
 					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
 				</div>
