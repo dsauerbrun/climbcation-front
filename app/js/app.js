@@ -312,9 +312,7 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 			});
 			$scope.locationObj.commonExpensesNotes = location.common_expenses_notes
 			$scope.locationObj.savingMoneyTips = location.saving_money_tip;
-		})
-		
-		
+		});
 	}
 
 	$scope.stopPropagation = function($event) {

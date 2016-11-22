@@ -17,7 +17,8 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 	var emptySection = {'previewOff':true, 'title':'','body':''}
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
 	$scope.helperService = helperService;
-	
+	helperService.setAirportApiKey();
+
 	$scope.accommodations = [];
 	$scope.climbingTypes = [];
 	$scope.months =[];
