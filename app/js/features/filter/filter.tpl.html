@@ -107,12 +107,13 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<label>Cost<span class="gray">(Daily Expenses)</span></label>
-					<div class="btn-group btn-group-sm btn-group-filter" data="price" role="group">
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','All' )" type="button" class="filter-button btn btn-lg btn-default active all" data="all">All</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','15' )" type="button" class="filter-button btn btn-lg btn-default" data="15">$</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','30' )" type="button" class="filter-button btn btn-lg btn-default" data="30">$$</button>
-						<button ng-click="LocationsGetter.toggleFilterButton($event,'price_max','45' )" type="button" class="filter-button btn btn-lg btn-default" data="45">$$$</button>
+					<label>What is the hardest grade you're looking for?</label>
+					<div class="btn-group grade-filter-button" ng-repeat="type in filter.grades">
+						<button type="button" class="filter-button btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+					    <li ng-click="setGradeFilter(type.type, 'all')"><a>All {{type.type.name}} Grades</a></li>
+					    <li ng-repeat="grade in type.grades" ng-click="setGradeFilter(type.type, grade)"><a>{{grade.grade}}</a></li>
+					  </ul>
 					</div>
 					
 				</div>
