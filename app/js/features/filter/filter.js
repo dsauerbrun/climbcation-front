@@ -4,7 +4,7 @@ filterDir.directive('filter', function(){
 	return {	
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
-		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter){
+		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService){
 			var filter = this;
 			$scope.endMonth = 12;
 			$scope.startMonth = 1;
@@ -56,6 +56,12 @@ filterDir.directive('filter', function(){
 
 			$scope.toggleFilters = function() {
 				$scope.filtersShown = !$scope.filtersShown;
+			};
+
+			$scope.clearPristine = function() {
+				if (helperService.originAirport == 'Denver International Airport') {
+					helperService.originAirport = '';
+				}
 			};
 
 			if ($window.innerWidth < 768) {
