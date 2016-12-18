@@ -29,7 +29,7 @@ helperService.service('helperService', function($rootScope, $http) {
 		var that = this;
 		that.loadingAirports = true;
 		return Promise.resolve(that.airportApiKey || that.setAirportApiKey()).then(function() {
-			return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=' + that.airportApiKey + '&term=' + encodeURIComponent(airport).replace(/%20/g, "+")).then(function(response) {
+			return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=' + that.airportApiKey + '&term=' + encodeURIComponent(airport).replace(/'/g, '').replace(/%20/g, "+")).then(function(response) {
 				that.loadingAirports = false;
 				return response.data.airports.map(function(airport){
 					return {
