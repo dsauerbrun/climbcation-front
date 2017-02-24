@@ -51,7 +51,7 @@
 					<label>Time</label>
 					<span class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="startMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-					    {{startMonthName}}
+					    {{startMonthName | limitTo: 3}}
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="startMonth">
@@ -72,7 +72,7 @@
 					<span class="text-gray">To </span>
 					<span class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-click="LocationsGetter.cancelFilterTimer()">
-					    {{endMonthName}}
+					    {{endMonthName | limitTo: 3}}
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="endMonth">
@@ -165,7 +165,7 @@
 					<label>When do you want to go?</label>
 					<span class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="startMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-					    {{startMonthName}}
+					    {{startMonthName | limitTo: 3}}
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="startMonth">
@@ -186,7 +186,7 @@
 					<span class="text-gray">To </span>
 					<span class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="endMonth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-click="LocationsGetter.cancelFilterTimer()">
-					    {{endMonthName}}
+					    {{endMonthName | limitTo: 3}}
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="endMonth">
