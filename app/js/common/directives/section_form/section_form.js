@@ -76,13 +76,13 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 					url = $scope.generalComplete()?'/images/check-icon.png':'/images/x-icon.png';
 					break;
 				case 2:
-					url = $scope.gettingInComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					url = $scope.gettingInComplete()?'/images/check-icon.png':'/images/warning-icon.png';
 					break;
 				case 3:
-					url = $scope.accommodationComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					url = $scope.accommodationComplete()?'/images/check-icon.png':'/images/warning-icon.png';
 					break;
 				case 4:
-					url = $scope.costComplete()?'/images/check-icon.png':'/images/x-icon.png';
+					url = $scope.costComplete()?'/images/check-icon.png':'/images/warning-icon.png';
 					break;
 				case 5:
 					url = '/images/check-icon.png';
