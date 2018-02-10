@@ -9,7 +9,8 @@ helperService.service('helperService', function($rootScope, $http, $sce) {
 		}
 		return $http.get('/api/airportsapikey')
 			.then(function(key) {
-				return key;
+				that.airportApiKey = key.data;
+				return key.data;
 			});
 	};
 
