@@ -21,6 +21,8 @@ exports.javascript = [
 	'vendor/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
 	'vendor/clj-fuzzy/src-js/clj-fuzzy.js',
 	'node_modules/ng-toast/dist/ngToast.min.js',
+  'node_modules/angular-animate/angular-animate.js',
+  'node_modules/angular-strap/dist/angular-strap.min.js',
 	'browserified.js'
 ];
 
@@ -31,3 +33,7 @@ exports.css = [
 	'vendor/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css'
 
 ];
+
+exports.fonts = [
+  'node_modules/bootstrap3/fonts/glyphicons-halflings-regular.woff'
+]

@@ -99,6 +99,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		var cleanTypes = helperService.cleanFalses($scope.locationObj.climbingTypes);
 		var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 		var name = $scope.locationObj.name != '';
+		var rating = $scope.locationObj.rating > 0 && $scope.locationObj.rating < 4;
 		// check grades
 		var grade = true;
 		// TODO: FIXME: kind of done as a hack due to time constraint
@@ -110,7 +111,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		});
 		var types = _.size(cleanTypes) > 0;
 		var months = _.size(cleanMonths) > 0;
-		if(name && grade && types && months) {
+		if(name && grade && types && months && rating) {
 			return true;
 		} else {
 			return false;

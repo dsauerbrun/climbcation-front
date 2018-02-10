@@ -1,4 +1,4 @@
-var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap']);
 
 home.config( function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -58,6 +58,8 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	$scope.editingFoodOptions = false;
 	$scope.helperService = helperService;
 	helperService.setAirportApiKey();
+
+
 
 
 	$scope.getAirport = function(item, model, label, event) {

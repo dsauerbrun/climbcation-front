@@ -56,7 +56,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-12 col-xs-12">
+							<div class="col-md-8 col-xs-8">
 								<label>Climbing Difficulty (Most classics are)</label>
 								<p class="text-gray info-text" ng-repeat="grade in locationData.grades" ng-class="{'multiple-grades': locationData.grades.length > 1}">
 									<img ng-src="{{grade.type.url}}" ng-if="locationData.grades.length > 1" />
@@ -64,6 +64,14 @@
 									{{locationData.grades.length == 1 ? 'and harder':''}}
 								</p>
 								<p class="text-gray info-text multiple-grades" ng-if="locationData.grades.length > 1"> (and harder)</p>
+							</div>
+							<div class="col-md-4 col-xs-4">
+								<label>Rating</label>
+								<span data-template-url="views/tooltips/startooltip.tpl.html" data-animation="am-flip-x" bs-tooltip="helperService.getRatingName(locationData.rating)">
+									<span class="glyphicon glyphicon-star"></span>
+									<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': locationData.rating < 2}"></span>
+									<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': locationData.rating < 3}">
+								</span>
 							</div>
 						</div>
 					</div>

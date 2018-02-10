@@ -7,7 +7,8 @@ locationListItemDir.directive('location', function(){
 		controller: 'LocationListItemController'
 	};
 });
-locationListItemDir.controller('LocationListItemController',function($scope,$element,LocationsGetter){
+locationListItemDir.controller('LocationListItemController',function($scope,$element,LocationsGetter, helperService){
+	$scope.helperService = helperService;
 	$($element).mouseenter(function(){
 		LocationsGetter.markerMap[$scope.locationData.slug].setOptions({opacity:1});
 	});

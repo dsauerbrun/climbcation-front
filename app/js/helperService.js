@@ -42,6 +42,16 @@ helperService.service('helperService', function($rootScope, $http) {
 		
 	};
 
+	this.getRatingName = function(rating) {
+		if (rating == 1) {
+			return 'Worth a Stop.';
+		} else if (rating == 2) {
+			return 'Worth a Detour.';
+		} else if (rating == 3) {
+			return 'Worth Its Own Trip.'
+		}
+	}
+
 	this.originAirport = 'Denver International Airport';
 	this.originAirportCode = 'DEN';
 });

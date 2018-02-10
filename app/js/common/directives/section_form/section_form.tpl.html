@@ -92,7 +92,7 @@
 										</span>
 									</div>
 									<div class="row">
-										<span class="form-group col-md-5" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
+										<span class="form-group col-md-4" ng-class="{ 'has-success': locationForm.airport.$valid && locationForm.airport.$dirty, 'has-error': locationForm.airport.$invalid && locationForm.airport.$dirty }" >
 											<label>Nearest Airport</label>
 											<div class="airport-wrapper">
 												<input name="airport" ng-model="locationObj.airportName" placeholder="ex. Los Angeles International Airport" class="form-control" typeahead-min-length="3" 
@@ -105,6 +105,29 @@
 											</div>
 											<input ng-model="locationObj.airport" class="hide"/>
 										</span>
+										<div class="form-group col-md-8">
+											<label>Rating:<span class="text-danger required-field">*</span></label>
+											<div class="radio display-inline-block rating-container">
+											  <label>
+											    <input type="radio" ng-model="locationObj.rating" value="1">
+											    <span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span> (Worth a stop)
+											  </label>
+											</div>
+											<div class="radio display-inline-block rating-container">
+											  <label>
+											  	<input type="radio" ng-model="locationObj.rating" value="2">
+											    <span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star-empty"></span>
+											    (Worth a detour)
+											  </label>
+											</div>
+											 <div class="radio display-inline-block rating-container">
+											  <label>
+											  	<input type="radio" ng-model="locationObj.rating" value="3">
+											    <span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span>
+											    (Worth a trip)
+											  </label>
+											</div>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-3 row">

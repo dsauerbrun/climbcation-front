@@ -44,8 +44,10 @@
   },
   "dependencies": {
     "angular": "^1.6.9",
+    "angular-animate": "^1.6.9",
     "angular-sanitize": "^1.5.8",
     "angular-scroll": "^1.0.0",
+    "angular-strap": "^2.3.12",
     "angular-ui-bootstrap": "^2.0.2",
     "bootstrap3": "^3.3.5",
     "dice-coefficient": "^1.0.0",
