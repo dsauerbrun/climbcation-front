@@ -1,6 +1,6 @@
 var helperService = angular.module('helperService', []);
 
-helperService.service('helperService', function($rootScope, $http) {
+helperService.service('helperService', function($rootScope, $http, $sce) {
 
 	this.setAirportApiKey = function() {
 		var that = this;
@@ -9,7 +9,6 @@ helperService.service('helperService', function($rootScope, $http) {
 		}
 		return $http.get('/api/airportsapikey')
 			.then(function(key) {
-				that.airportApiKey = key.data;
 				return key;
 			});
 	};
@@ -29,7 +28,10 @@ helperService.service('helperService', function($rootScope, $http) {
 		var that = this;
 		that.loadingAirports = true;
 		return Promise.resolve(that.airportApiKey || that.setAirportApiKey()).then(function() {
-			return $http.jsonp('https://www.air-port-codes.com/search/?callback=JSON_CALLBACK&limit=5&key=' + that.airportApiKey + '&term=' + encodeURIComponent(airport).replace(/'/g, '').replace(/%20/g, "+")).then(function(response) {
+			var url = 'https://www.air-port-codes.com/search/?limit=5&key=' + that.airportApiKey + '&term=' + encodeURIComponent(airport).replace(/'/g, '').replace(/%20/g, "+");
+			var trustedUrl = $sce.trustAsResourceUrl(url);
+
+			return $http.jsonp(trustedUrl, {jsonpCallbackParam: 'callback'}).then(function(response) {
 				that.loadingAirports = false;
 				return response.data.airports.map(function(airport){
 					return {
@@ -37,6 +39,8 @@ helperService.service('helperService', function($rootScope, $http) {
 						iata: airport.iata
 					};
 				})
+			}).catch(function(err) {
+				console.log(err);
 			})
 		})
 		
