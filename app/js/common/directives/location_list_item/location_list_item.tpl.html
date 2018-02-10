@@ -36,9 +36,6 @@
 
 			</div>
 		</div>
-		<div class="location-card-cost">
-			<label>${{ locationData['price_range_floor_cents']}}  - ${{ locationData['price_range_ceiling_cents'] }} / day</label>
-		</div>
 	</div>
 	<div class="location-airfare">
 		<div ng-if="locationData.lowestPrice.date">
@@ -53,8 +50,11 @@
 			</div>
 		</div>
 		<div ng-if="!locationData.lowestPrice.date">
-			<div class="sorry-message" ng-if="!loadingQuotes">
+			<div class="sorry-message" ng-if="!loadingQuotes || helperService.originAirport != locationData.airport_code">
 				<h4>We're sorry, we couldn't find any flight information from {{ helperService.originAirport }} to {{ locationData.airport_code }}. You may have better luck searching with a bigger airport or for specific dates on Skyscanner or your preferred airline's website.</h4>
+			</div>
+			<div class="sorry-message" ng-if="helperService.originAirport == locationData.airport_code">
+				<h4>This Destination's airport is the same as the one you are flying out of.</h4>
 			</div>
 			<div ng-if="loadingQuotes">
 				<img class="loading-quote" src="/images/climbcation-loading.gif" />

@@ -41,7 +41,8 @@ filterDir.directive('filter', function(){
 			});
 
 			this.loading = true;
-			$http.get('/api/filters').success(function(data){
+			$http.get('/api/filters').then(function(resp){
+				var data = resp.data;
 				filter.climbTypes = data.climbTypes;
 				filter.accommodations = data.accommodations;
 				filter.grades = data.grades;

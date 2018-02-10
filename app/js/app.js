@@ -498,7 +498,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	filter['accommodations'] = [];
 
 	filter['continents'] = [];
-	filter['price_max'] = [];
 	filter['sort'] = [];
 	filter['search'] = '';
 	filter['start_month'] = 1;
@@ -512,7 +511,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	LocationsGetter.loading = false;
 
 	var sort = {};
-	sort['price'] = [];
 	sort['grade'] = [];
 
 	LocationsGetter.setFilterTimer = function(seconds) {
@@ -537,7 +535,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		filter['accommodations'] = [];
 
 		filter['continents'] = [];
-		filter['price_max'] = [];
 		filter['sort'] = [];
 		filter['search'] = '';
 		filter['start_month'] = 1;
@@ -550,7 +547,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		this.mapFilter['southwest']['latitude'] = null;
 		this.loading = false;
 
-		sort['price'] = [];
 		sort['grade'] = [];
 	};
 

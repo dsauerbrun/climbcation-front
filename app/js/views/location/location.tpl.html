@@ -56,18 +56,14 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-6 col-xs-6">
-								<label>Daily Expenses<br />(excluding accommodation)</label>
-								<p class="text-gray info-text">${{ locationData.price_range_floor_cents}} - ${{ locationData.price_range_ceiling_cents}}</p>
-							</div>
-							<div class="col-md-6 col-xs-6">
-								<label>Climbing Difficulty<br />(Most classics are)</label>
+							<div class="col-md-12 col-xs-12">
+								<label>Climbing Difficulty (Most classics are)</label>
 								<p class="text-gray info-text" ng-repeat="grade in locationData.grades" ng-class="{'multiple-grades': locationData.grades.length > 1}">
 									<img ng-src="{{grade.type.url}}" ng-if="locationData.grades.length > 1" />
 									{{grade.grade}} 
 									{{locationData.grades.length == 1 ? 'and harder':''}}
 								</p>
-								<div class="text-gray info-text multiple-grades" ng-if="locationData.grades.length > 1">and harder</div>
+								<p class="text-gray info-text multiple-grades" ng-if="locationData.grades.length > 1"> (and harder)</p>
 							</div>
 						</div>
 					</div>

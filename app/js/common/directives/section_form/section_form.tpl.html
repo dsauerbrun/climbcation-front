@@ -105,24 +105,6 @@
 											</div>
 											<input ng-model="locationObj.airport" class="hide"/>
 										</span>
-										<div class="form-group col-md-7">
-											<label>Daily expenditures range(in USD, not including accommodation):<span class="text-danger required-field">*</span></label>
-
-											<div class="btn-group btn-group-sm center-block col-md-10">
-												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.price_floor == 5}"
-													ng-click="selectDailyExpenditures(5, 15)">
-														$5 - $15
-												</button>
-												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.price_floor == 15}"
-													ng-click="selectDailyExpenditures(15, 30)">
-														$15 - $30
-												</button>
-												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.price_floor == 30}"
-													ng-click="selectDailyExpenditures(30, 50)">
-														$30+
-												</button>
-											</div>
-										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-3 row">

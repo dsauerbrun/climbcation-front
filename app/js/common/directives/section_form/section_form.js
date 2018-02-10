@@ -99,8 +99,6 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		var cleanTypes = helperService.cleanFalses($scope.locationObj.climbingTypes);
 		var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 		var name = $scope.locationObj.name != '';
-		var priceFloor = $scope.locationObj.price_floor != '';
-		var priceCeiling = $scope.locationObj.price_ceiling != '';
 		// check grades
 		var grade = true;
 		// TODO: FIXME: kind of done as a hack due to time constraint
@@ -112,7 +110,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		});
 		var types = _.size(cleanTypes) > 0;
 		var months = _.size(cleanMonths) > 0;
-		if(name && priceFloor && priceCeiling && grade && types && months) {
+		if(name && grade && types && months) {
 			return true;
 		} else {
 			return false;
@@ -146,11 +144,6 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 			$scope.locationObj.accommodations[accommodation.id] = {id: accommodation.id, cost: ''};
 		}
 	};
-
-	$scope.selectDailyExpenditures = function(low, high) {
-		$scope.locationObj.price_floor = low;
-		$scope.locationObj.price_ceiling = high;
-	}
 
 	$scope.selectFoodOptionDetail = function(id, range) {
 		$scope.locationObj.foodOptionDetails[id] = {};
