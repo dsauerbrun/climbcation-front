@@ -6,6 +6,7 @@ filterDir.directive('filter', function(){
 		templateUrl: 'features/filter/filter.tpl.html',
 		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService){
 			var filter = this;
+			$scope.LocationsGetter = LocationsGetter;
 			$scope.endMonth = 12;
 			$scope.startMonth = 1;
 			$scope.endMonthName = 'December';
@@ -28,17 +29,6 @@ filterDir.directive('filter', function(){
 
 				LocationsGetter.filterByGrade(type.id, gradesToFilter);
 			}
-
-			$scope.$watch('endMonth', function(newVal, oldVal) {
-				if (newVal != oldVal) {
-					LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
-				}
-			});
-			$scope.$watch('startMonth', function(newVal, oldVal) {
-				if (newVal != oldVal) {
-					LocationsGetter.filterByMonth($scope.startMonth, $scope.endMonth);
-				}
-			});
 
 			this.loading = true;
 			$http.get('/api/filters').then(function(resp){

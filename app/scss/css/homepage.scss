@@ -3,6 +3,34 @@
 	width: 32px;
 }
 
+.preset {
+	width: 300px;
+	height: 100px;
+	white-space: normal;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 20px;
+	border: 1px solid rgb(60,126,145);
+	text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+
+	&.alpine {
+		background: linear-gradient(rgba(60, 126, 145, .2), rgba(60, 126, 145, .2)), url('../images/alpinerock.jpeg');
+	}
+
+	&.euro-sport {
+		background: linear-gradient(rgba(60, 126, 145, .2), rgba(60, 126, 145, .2)), url('../images/euroSport.jpg');
+	}
+
+	&.summer-na {
+		background: linear-gradient(rgba(60, 126, 145, .2), rgba(60, 126, 145, .2)), url('../images/summerNA.jpg');
+	}
+}
+
 .home-hero {
 	position: relative;
 	height: 20em;
@@ -23,10 +51,11 @@
 				transform: translateX(-50%);
 				color: #fff;
 				text-align: center;
+				width: 100%;
 			}
 			> div {
 				font-size: 20px;
-				top: 150px;
+				top: 100px;
 			}
 		}
 		img {

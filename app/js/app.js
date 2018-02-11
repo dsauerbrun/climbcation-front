@@ -398,9 +398,34 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 		});
 	})
 
-	$scope.goToFilter = function() {
+	$scope.goToFilter = function(preset) {
+		var presets = {
+			alpine: {climbingTypes: ['Alpine'], months: {start: 6, end: 9} },
+			euroSport: {climbingTypes: ['Sport'], map: {zoom: 2, center: {latitude: 55.875310835696816, longitude: 11.162109375}} },
+			summerNA: {months: {start: 6, end: 9}, map: {zoom: 2, center: {latitude: 46.80005944678737, longitude: -100.986328125}}}
+		}
+		
 		var filter = angular.element(document.getElementById('filter'));
 		$document.scrollToElement(filter, 0, 500);
+
+		if (presets[preset]) {
+			var presetObj = presets[preset];
+			LocationsGetter.clearFilters();
+			
+			if (presetObj.map) {				
+				$rootScope.filterMap.setCenter(presetObj.map.center.latitude, presetObj.map.center.longitude);
+				$rootScope.filterMap.setZoom(presetObj.map.zoom);
+			}
+
+			if (presetObj.months) {
+				LocationsGetter.filterByMonth(presetObj.months.start, presetObj.months.end);
+			}
+			if (presetObj.climbingTypes) {
+				presetObj.climbingTypes.forEach(function(type) {
+					LocationsGetter.toggleFilterButton('climbing_types', type);
+				})
+			}
+		}
 	}
 
 });
@@ -421,18 +446,23 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 		LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
 		LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
 		LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
+		
 		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+		console.log($rootScope.filterMap.getCenter().lat(), $rootScope.filterMap.getCenter().lng(), 'drag end')
 	});
 	$rootScope.filterMap.addListener('zoom_changed', function() {
 		if (!firstMapLoad) {
-			LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
-			LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
-			LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
-			LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
-					
+			$timeout(function (){
+				LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
+				LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
+				LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
+				LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
+						
 
-			$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
-
+				$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+				console.log(LocationsGetter.mapFilter)
+				console.log($rootScope.filterMap.getCenter().lat(), $rootScope.filterMap.getCenter().lng(), 'zoom end')
+			})
 		} else {
 			firstMapLoad = false;
 		}
@@ -483,7 +513,8 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 	});
 });
 
-home.factory("LocationsGetter",function($q,$http, $timeout){
+home.factory('LocationsGetter',function($q,$http, $timeout){
+	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	var LocationsGetter = {};
 	LocationsGetter.flightQuotes = null;
 	var filter = {};
@@ -502,8 +533,11 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	filter['continents'] = [];
 	filter['sort'] = [];
 	filter['search'] = '';
-	filter['start_month'] = 1;
-	filter['end_month'] = 12;
+	filter.start_month = 1;
+	filter.end_month = 12;
+
+	filter.start_month_name = monthNames[filter.start_month - 1];
+	filter.end_month_name = monthNames[filter.end_month - 1];;
 	LocationsGetter.mapFilter['northeast'] = {};
 	LocationsGetter.mapFilter['northeast']['longitude'] = null;
 	LocationsGetter.mapFilter['northeast']['latitude'] = null;
@@ -514,6 +548,15 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 
 	var sort = {};
 	sort['grade'] = [];
+
+	LocationsGetter.isButtonActive = function(filterArray, filterValue) {
+		if (filterValue == 'empty') {
+			return filter[filterArray] && filter[filterArray].length == 0
+		} else {
+			return filter[filterArray] && filter[filterArray].indexOf(filterValue) > -1;
+		}
+		
+	}
 
 	LocationsGetter.setFilterTimer = function(seconds) {
 		LocationsGetter.cancelFilterTimer();
@@ -541,6 +584,8 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		filter['search'] = '';
 		filter['start_month'] = 1;
 		filter['end_month'] = 12;
+		filter.start_month_name = monthNames[filter.start_month - 1];
+		filter.end_month_name = monthNames[filter.end_month - 1];;
 		this.mapFilter['northeast'] = {};
 		this.mapFilter['northeast']['longitude'] = null;
 		this.mapFilter['northeast']['latitude'] = null;
@@ -552,33 +597,25 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 		sort['grade'] = [];
 	};
 
-	LocationsGetter.toggleFilterButton = function(eventItem,filterArray,filterValue){
-		toggleButtonActive(angular.element(eventItem.currentTarget));
-		angular.element(eventItem.currentTarget).blur();
+	LocationsGetter.toggleFilterButton = function(filterArray,filterValue){
 		if(filterValue != 'sort' && $.inArray(filterValue,filter[filterArray]) != -1){
 			//remove item from filter
 			filter[filterArray].splice($.inArray(filterValue,filter[filterArray]), 1);
 		}
 		else if( filterValue == 'All'){
 			filter[filterArray] = [];
-			resetButtonsGroup(angular.element(eventItem.currentTarget).parent());
 		}
 		else{
 			filter[filterArray].push(filterValue);
-			inactivateGroupAll(angular.element(eventItem.currentTarget).parent());
-			//only one sorter can be active at a time so we have special cases for it
-			if(filterArray == 'sort'){
-				resetButtonsGroup(angular.element(eventItem.currentTarget).parent());
-				toggleButtonActive(angular.element(eventItem.currentTarget));
-				inactivateGroupAll(angular.element(eventItem.currentTarget).parent());
-			}
 		}
 		LocationsGetter.setFilterTimer(1);
 	};
 
 	LocationsGetter.filterByMonth = function(startMonth, endMonth) {
-		filter['start_month'] = startMonth;
-		filter['end_month'] = endMonth;
+		filter.start_month = startMonth;
+		filter.end_month = endMonth;
+		filter.start_month_name = monthNames[filter.start_month - 1];
+		filter.end_month_name = monthNames[filter.end_month - 1];;
 		LocationsGetter.setFilterTimer(1.5);
 	}
 
@@ -666,33 +703,6 @@ home.factory("LocationsGetter",function($q,$http, $timeout){
 	return LocationsGetter;
 
 });
-
-function toggleButtonActive(clickedButton){
-	if(clickedButton.hasClass('active')){
-		clickedButton.removeClass('active');
-	}
-	else{
-		clickedButton.addClass('active');
-	}
-
-}
-
-function resetButtonsGroup(buttonGroup){
-	buttonGroup.children('button').each(function(){
-		$(this).removeClass('active');
-		if($(this).hasClass('all')){
-			$(this).addClass('active');
-		}
-	});
-}
-function inactivateGroupAll(buttonGroup){
-	buttonGroup.children('button').each(function(){
-		if($(this).hasClass('all')){
-			$(this).removeClass('active');
-		}
-	});
-
-}
 
 function createMap(mapId,latitude,longitude,zoom){
 	var map = new GMaps({

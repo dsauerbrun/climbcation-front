@@ -4,8 +4,19 @@
 <div class="home-hero hidden-xs">
 	<div class="home-hero-overlay">
 		<div class="home-hero-overlay-title">
-			<h2>Ever heard of Rodellar? It offers some of the best sport climbing in Europe</h2>
-			<div class="btn btn-climbcation" ng-click="goToFilter()">Find more awesome places you've never heard of below</div>
+			<h2 ng-show="0">Ever heard of Rodellar? It offers some of the best sport climbing in Europe</h2>
+			<div>
+				<div class="btn btn-climbcation preset alpine" ng-click="goToFilter('alpine')">
+					Get Psyched on Alpine Rock Season
+				</div>
+				<div class="btn btn-climbcation preset euro-sport" ng-click="goToFilter('euroSport')">
+					Taste Some European Sport climbing
+				</div>
+				<div class="btn btn-climbcation preset summer-na" ng-click="goToFilter('summerNA')">
+					Summer Road Trip Through North America
+				</div>
+			</div>
+			<div class="btn btn-climbcation" ng-click="goToFilter()" ng-show="0">Find more awesome places you've never heard of below</div>
 		</div>
 		<img class="pull-left hidden-xs" src="/images/hero-image-left.png" />
 		<img class="pull-right hidden-xs" src="/images/hero-image-right.png" />

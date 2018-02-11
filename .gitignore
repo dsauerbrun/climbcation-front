@@ -4,3 +4,4 @@
 vendor/*
 !vendor/gmapsjs/
 !vendor/highcharts/
+*.DS_Store
