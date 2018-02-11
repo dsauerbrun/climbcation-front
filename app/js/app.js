@@ -352,7 +352,6 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 	}
 
 	$scope.getAirportPricesCode = function(code) {
-		console.log('in getting code')
 		if (code.length == 3 || code.length == 4) {
 			helperService.originAirportCode = code;
 			$rootScope.loadingQuotes = true;
@@ -417,8 +416,8 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 	$scope.goToFilter = function(preset) {
 		var presets = {
 			alpine: {climbingTypes: ['Alpine'], months: {start: 6, end: 9} },
-			euroSport: {climbingTypes: ['Sport'], map: {zoom: 2, center: {latitude: 55.875310835696816, longitude: 11.162109375}} },
-			summerNA: {months: {start: 6, end: 9}, map: {zoom: 2, center: {latitude: 46.80005944678737, longitude: -100.986328125}}}
+			euroSport: {climbingTypes: ['Sport'], map: {zoom: 2, center: {latitude: 55.875310835696816, longitude: 11.162109375}, northeast: {longitude: 82.529296875, latitude: 71.69129271864}, southwest: {longitude: -60.205078125, latitude: 29.38217507514534}} },
+			summerNA: {months: {start: 6, end: 9}, map: {zoom: 2, center: {latitude: 46.80005944678737, longitude: -100.986328125}, northeast: {longitude: -29.619140625, latitude: 67.067433351083}, southwest: {longitude: -172.353515625, latitude: 17.30868788677006}}}
 		}
 		
 		var filter = angular.element(document.getElementById('filter'));
@@ -431,6 +430,15 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 			if (presetObj.map) {				
 				$rootScope.filterMap.setCenter(presetObj.map.center.latitude, presetObj.map.center.longitude);
 				$rootScope.filterMap.setZoom(presetObj.map.zoom);
+
+				$timeout(function() {
+					LocationsGetter.mapFilter.northeast.longitude = presetObj.map.northeast.longitude;
+					LocationsGetter.mapFilter.northeast.latitude = presetObj.map.northeast.latitude;
+					LocationsGetter.mapFilter.southwest.longitude = presetObj.map.southwest.longitude;
+					LocationsGetter.mapFilter.southwest.latitude = presetObj.map.southwest.latitude;
+					LocationsGetter.setFilterTimer(1.5);
+				})
+				
 			}
 
 			if (presetObj.months) {
@@ -474,10 +482,7 @@ home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter
 				LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
 				LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
 						
-
 				$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
-				console.log(LocationsGetter.mapFilter)
-				console.log($rootScope.filterMap.getCenter().lat(), $rootScope.filterMap.getCenter().lng(), 'zoom end')
 			})
 		} else {
 			firstMapLoad = false;
