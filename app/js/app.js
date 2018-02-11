@@ -351,6 +351,22 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 		});
 	}
 
+	$scope.getAirportPricesCode = function(code) {
+		console.log('in getting code')
+		if (code.length == 3 || code.length == 4) {
+			helperService.originAirportCode = code;
+			$rootScope.loadingQuotes = true;
+			// clear out lowest price so we show loading symbol
+			_.forEach($scope.locationData,function(location) {
+				location.lowestPrice = {};
+			});
+			LocationsGetter.getFlightQuotes($scope.slugArray, code, function(){
+				$scope.loadingQuotes = false;
+			});
+		}
+		
+	}
+
 	$scope.$watch('LocationsGetter.flightQuotes', function(){
 		//set the lowest price and date for location
 		_.forEach($scope.locationData,function(location) {

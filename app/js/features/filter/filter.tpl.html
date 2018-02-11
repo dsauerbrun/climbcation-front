@@ -154,7 +154,7 @@
 					<div class="airport-wrapper">
 						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-click="clearPristine()" ng-trim="true" typeahead-min-length="3" 
 						typeahead-wait-ms="100" uib-typeahead="airport.name for airport in helperService.getAirports($viewValue)"
-						typeahead-popup-template-url="views/airport_autocomplete.tpl.html"
+						typeahead-popup-template-url="views/airport_autocomplete.tpl.html" ng-change="getAirportPricesCode(helperService.originAirport)"
 						typeahead-on-select="getAirportPrices($item, $model, $label, $event)" />
 						<div class="loading-airports" ng-if="helperService.loadingAirports">
 							<img src="/images/climbcation-loading.gif" />
