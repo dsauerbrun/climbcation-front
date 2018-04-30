@@ -61,19 +61,19 @@
 	</div>
 	<!-- header end -->
 	<form name="locationForm">
-		<div class="container">
+		<div class="form-container">
 			<!-- {{ locationObj |json }}  -->
 			<div class="row">
 				<div class="row bottom-padding">
-					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 1">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
-					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 2">2. Getting In <span class="small-gray">(How do you get to the crag?)</span></h4>
-					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 3">3. Accommodation <span class="small-gray">(Where will you stay when you get there?)</span></h4>
-					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 4">4. Cost <span class="small-gray">(How much should you expect to spend on this trip?)</span></h4>
-					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 5">5. Other <span class="small-gray">(Anything else you know about {{ locationObj.name}}?)</span></h4>
-					<h4 class="col-md-offset-2 col-md-10" ng-if="currentPage == 6">6. Done</h4>
+					<h4 class="col-md-offset-3 col-md-9" ng-if="currentPage == 1">1. General <span class="small-gray">(Don't worry, this is the hardest step!)</span></h4>
+					<h4 class="col-md-offset-3 col-md-9" ng-if="currentPage == 2">2. Getting In <span class="small-gray">(How do you get to the crag?)</span></h4>
+					<h4 class="col-md-offset-3 col-md-9" ng-if="currentPage == 3">3. Accommodation <span class="small-gray">(Where will you stay when you get there?)</span></h4>
+					<h4 class="col-md-offset-3 col-md-9" ng-if="currentPage == 4">4. Cost <span class="small-gray">(How much should you expect to spend on this trip?)</span></h4>
+					<h4 class="col-md-offset-3 col-md-9" ng-if="currentPage == 5">5. Other <span class="small-gray">(Anything else you know about {{ locationObj.name}}?)</span></h4>
+					<h4 class="col-md-offset-3 col-md-9" ng-if="currentPage == 6">6. Done</h4>
 				</div>
 				<div class="row">
-					<div class="col-md-offset-2 col-md-8 col-xs-offset-1 col-xs-10 well climbcation-well forms-container">
+					<div class="col-md-offset-3 col-xs-offset-1 col-xs-10 col-md-6 well climbcation-well forms-container">
 						<div class="well-content">
 							<div class="row" ng-if="currentPage == 1">
 								<div class="col-md-3 hide" >
@@ -366,6 +366,18 @@
 								<div class="col-xs-3 btn btn-climbcation" ng-if="currentPage == 6" ng-click="startNewLocation()">
 									Submit Another Location
 								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 hidden-xs">
+						<div class="well climbcation-well forms-container">
+							<div class="well-content">
+								<h4>{{ generalComplete() ? 'Form Completed!' : 'Form Incomplete'}}</h4>
+								<ul>
+									<li ng-repeat="incompleted in incompletedSectionMessages()">
+										{{incompleted}}
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>

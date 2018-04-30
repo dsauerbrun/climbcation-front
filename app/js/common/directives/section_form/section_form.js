@@ -64,6 +64,51 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$q,$http,U
 		$scope.locationObj.airport = item.iata;
 	}
 
+	$scope.incompletedSectionMessages = function() {
+		let messages = [];
+		if (!$scope.generalComplete()) {
+			var cleanTypes = helperService.cleanFalses($scope.locationObj.climbingTypes);
+			var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
+			var name = $scope.locationObj.name != '';
+			var rating = $scope.locationObj.rating > 0 && $scope.locationObj.rating < 4;
+			// check grades
+			var grade = true;
+			// TODO: FIXME: kind of done as a hack due to time constraint
+			// go through each climbing type to get the typeID, check to see if that type's grade exists
+			_.forEach($scope.locationObj.climbingTypes, function(enabled, climbingTypeId) {
+				if(enabled && !$scope.locationObj.grade[climbingTypeId]) {
+					grade = false;
+				}
+			});
+			var types = _.size(cleanTypes) > 0;
+			var months = _.size(cleanMonths) > 0;
+
+			if (!name) {
+				messages.push('Please enter a location name.');
+			}
+
+			if (!types) {
+				messages.push('Please choose at least one climbing discipline.');
+			}
+
+			if (!grade) {
+				messages.push('Please choose a grade for all selected climbing disciplines.');
+			}
+
+			if (!rating) {
+				messages.push('Please enter a location rating.');
+			}
+
+			if (!months) {
+				messages.push('Please choose the months this location is in season.');
+			}
+		} else {
+			messages.push('You\'re all done with the required information and can submit your location NOW! We appreciate any other info you can provide us on the other pages!');
+		}
+
+		return messages;
+	}
+
 	$scope.getIconUrl = function(page) {
 		var url;
 		if (page == $scope.currentPage) {
