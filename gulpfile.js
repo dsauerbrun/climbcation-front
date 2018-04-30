@@ -1,4 +1,7 @@
 var gulp               = require('gulp');
+var addsrc = require('gulp-add-src');
+const babel = require('gulp-babel');
+
 var fs                 = require('fs');
 var plugins            = require('gulp-load-plugins')();
 var es                 = require('event-stream');
@@ -36,7 +39,8 @@ var paths = {
 };
 
 gulp.task('scripts-dev', function() {
-  return gulp.src(paths.vendorJavascript.concat(paths.appJavascript, paths.appTemplates))
+  return gulp.src(paths.appJavascript.concat(paths.appTemplates))
+    .pipe(addsrc.prepend(paths.vendorJavascript))  
     .pipe(plugins.if(/html$/, buildTemplates()))
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.concat('app.js'))
@@ -45,7 +49,12 @@ gulp.task('scripts-dev', function() {
     .pipe(plugins.connect.reload());
 });
 gulp.task('scripts-prod', function() {
-  return gulp.src(paths.vendorJavascript.concat(paths.appJavascript, paths.appTemplates))
+  return gulp.src(paths.appJavascript.concat(paths.appTemplates))
+    .pipe(babel({
+      presets: ['env'],
+      ignore: '*.html'
+    }))
+    .pipe(addsrc.prepend(paths.vendorJavascript)) 
     .pipe(plugins.if(/html$/, buildTemplates()))
     .pipe(plugins.concat('app.js'))
     .pipe(plugins.ngAnnotate())
