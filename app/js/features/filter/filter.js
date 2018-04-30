@@ -4,6 +4,9 @@ filterDir.directive('filter', function(){
 	return {	
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
+		scope: {
+			filterMapDisabled: '='
+		},
 		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService){
 			var filter = this;
 			$scope.LocationsGetter = LocationsGetter;
@@ -12,9 +15,9 @@ filterDir.directive('filter', function(){
 			$scope.endMonthName = 'December';
 			$scope.startMonthName = 'January';
 			$scope.gradeFilter = {};
+			$scope.helperService = helperService;
 
 			$scope.setGradeFilter = function(type, grade) {
-				console.log(type, grade,filter)
 				if (grade == 'all') {
 					delete $scope.gradeFilter[type.id];
 					var gradesToFilter = null;
@@ -41,7 +44,7 @@ filterDir.directive('filter', function(){
 			$scope.toggleMapFilter = function() {
 				$scope.mapFilterShown = !$scope.mapFilterShown;
 				$timeout(function(){
-					$scope.mapFilterShown && ($rootScope.filterMap.refresh());
+					$scope.mapFilterShown && (LocationsGetter.maps.mobile.map.refresh());
 				})
 			};
 

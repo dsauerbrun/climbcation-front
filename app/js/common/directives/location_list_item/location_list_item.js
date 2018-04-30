@@ -10,9 +10,16 @@ locationListItemDir.directive('location', function(){
 locationListItemDir.controller('LocationListItemController',function($scope,$element,LocationsGetter, helperService){
 	$scope.helperService = helperService;
 	$($element).mouseenter(function(){
-		LocationsGetter.markerMap[$scope.locationData.slug].setOptions({opacity:1});
+		for (let key in LocationsGetter.maps) {
+			let currentMap = LocationsGetter.maps[key];
+			
+			LocationsGetter.markerMap[$scope.locationData.slug + key] && LocationsGetter.markerMap[$scope.locationData.slug + key].setOptions({opacity:1, icon: 'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png', zIndex: 101});
+		}
 	});
 	$($element).mouseleave(function(){
-		LocationsGetter.markerMap[$scope.locationData.slug].setOptions({opacity:.5});
+		for (let key in LocationsGetter.maps) {
+			let currentMap = LocationsGetter.maps[key];
+			LocationsGetter.markerMap[$scope.locationData.slug + key] && LocationsGetter.markerMap[$scope.locationData.slug + key].setOptions({opacity:.5, icon: '', zIndex: 100});
+		}
 	});
 });

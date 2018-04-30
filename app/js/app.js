@@ -59,9 +59,6 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 	$scope.helperService = helperService;
 	helperService.setAirportApiKey();
 
-
-
-
 	$scope.getAirport = function(item, model, label, event) {
 		helperService.originAirportCode = item.iata;
 		helperService.originAirport = item.name;
@@ -329,6 +326,7 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 	$scope.LocationsGetter = LocationsGetter;
 	$scope.slugArray = [];
 	$scope.helperService = helperService;
+	$scope.largeMapEnabled = false;
 	LocationsGetter.locations = LocationsGetter.locations || [];
 	helperService.setAirportApiKey();
 	
@@ -337,6 +335,22 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 		LocationsGetter.locations = [];
 		LocationsGetter.clearFilters();
 		LocationsGetter.setFilterTimer(0);
+	}
+
+	$scope.toggleLargeMap = function () {
+		$scope.largeMapEnabled = !$scope.largeMapEnabled;
+		LocationsGetter.reloadMapMarkers();
+
+
+		$timeout(function() {
+			setHighcharts(LocationsGetter.flightQuotes, helperService.originAirportCode);
+      if ($scope.largeMapEnabled) {
+      	$('html, body').animate({
+          scrollTop: $("#infinite-scroll-container").offset().top - 10
+      	}, 500);
+      }
+      
+    });
 	}
 
 	$scope.getAirportPrices = function(item, model, label, event) {
@@ -428,8 +442,8 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 			LocationsGetter.clearFilters();
 			
 			if (presetObj.map) {				
-				$rootScope.filterMap.setCenter(presetObj.map.center.latitude, presetObj.map.center.longitude);
-				$rootScope.filterMap.setZoom(presetObj.map.zoom);
+				LocationsGetter.maps.small.map.setCenter(presetObj.map.center.latitude, presetObj.map.center.longitude);
+				LocationsGetter.maps.small.map.setZoom(presetObj.map.zoom);
 
 				$timeout(function() {
 					LocationsGetter.mapFilter.northeast.longitude = presetObj.map.northeast.longitude;
@@ -454,90 +468,75 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 
 });
 
-home.controller('MapFilterController',function($rootScope,$scope,LocationsGetter, $timeout, $window){
-	var filterId;
-	if ($window.innerWidth < 768) {
-		filterId = 'mapFilterMobile';
-	} else {
-		filterId = 'mapFilter';
-	}
-	$scope.mapFilterEnabled = true;
-	$rootScope.filterMap = createMap(filterId,70,-160,2);
-
-	LocationsGetter.markerMap = {};
-	$rootScope.filterMap.addListener('dragend', function() {
-		LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
-		LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
-		LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
-		LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
-		
-		$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
-		console.log($rootScope.filterMap.getCenter().lat(), $rootScope.filterMap.getCenter().lng(), 'drag end')
-	});
-	$rootScope.filterMap.addListener('zoom_changed', function() {
-		if (!firstMapLoad) {
-			$timeout(function (){
-				LocationsGetter.mapFilter['northeast']['longitude'] = $rootScope.filterMap.getBounds().getNorthEast().lng();
-				LocationsGetter.mapFilter['northeast']['latitude'] = $rootScope.filterMap.getBounds().getNorthEast().lat();
-				LocationsGetter.mapFilter['southwest']['longitude'] = $rootScope.filterMap.getBounds().getSouthWest().lng();
-				LocationsGetter.mapFilter['southwest']['latitude'] = $rootScope.filterMap.getBounds().getSouthWest().lat();
-						
-				$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
-			})
-		} else {
-			firstMapLoad = false;
-		}
-		
-	});
-
-	function notDefaultBounds(bounds) {
-		if (bounds.H.H <= -80 && bounds.H.j >= 80 && bounds.j.H >= 180 && bounds.j.j <= -180) {
-			return false
-		} else {
-			return true;
-		}
-	}
-	var firstMapLoad = true;
-	$scope.$watch('LocationsGetter.unpaginatedLocations.length', function(){
-		
-		if (LocationsGetter.unpaginatedLocations.length != 0) {
-			$rootScope.filterMap.removeMarkers();
-			LocationsGetter.markerMap = {};
-			//redo map points
-			
-			$.each(LocationsGetter.unpaginatedLocations,function(){
-				LocationsGetter.markerMap[this['slug']] = addMarker($rootScope.filterMap, this['latitude'], this['longitude'], this['name'], '<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
-				LocationsGetter.markerMap[this['slug']].setOptions({opacity: .5})
-			});
-
-			// we set firstMapLoad to false when the zoom_changed watch catches the fitBounds call 
-			if (firstMapLoad && filterId == 'mapFilter') {
-				var allowedBounds = new google.maps.LatLngBounds(
-				    new google.maps.LatLng(85, -180),           // top left corner of map
-					new google.maps.LatLng(-85, 180)            // bottom right corner
-				);
-
-				var k = 5; 
-				var n = allowedBounds.getNorthEast().lat() - k; 
-				var e = allowedBounds.getNorthEast().lng() - k; 
-				var s = allowedBounds.getSouthWest().lat() + k; 
-				var w = allowedBounds.getSouthWest().lng() + k; 
-				var neNew = new google.maps.LatLng( n, e ); 
-				var swNew = new google.maps.LatLng( s, w ); 
-				boundsNew = new google.maps.LatLngBounds();
-				boundsNew.extend(neNew);
-				boundsNew.extend(swNew); 
-				$rootScope.filterMap.fitBounds(allowedBounds);
+home.directive('mapFilter', function() {
+	return {	
+		restrict: 'E',
+		templateUrl: 'views/directives/map.tpl.html',
+		//transclude: true,
+		scope: {
+			filterType: '@',
+			//locationsGetter: '='
+		},
+		controller: function($rootScope,$scope, $timeout, $window, LocationsGetter) {
+			var filterId;
+			var mapDefaults = {};
+			if ($window.innerWidth < 768) {
+				filterId = 'mapFilterMobile';
+				mapDefaults.latitude = 70;
+				mapDefaults.longitude = -160;
+				mapDefaults.zoom = 2;
+			} else {
+				if ($scope.filterType == 'small') {
+					filterId = 'mapFilter';
+					mapDefaults.latitude = 70;
+					mapDefaults.longitude = -160;
+					mapDefaults.zoom = 2;
+				} else {
+					filterId = 'mapFilterLarge';
+					mapDefaults.latitude = 30;
+					mapDefaults.longitude = -40;
+					mapDefaults.zoom = 3;
+				}
+				
 			}
+			$scope.mapFilterEnabled = true;
+			LocationsGetter.maps[$scope.filterType] = {map: createMap(filterId, mapDefaults.latitude, mapDefaults.longitude, mapDefaults.zoom), firstMapLoad: true};
+
+			LocationsGetter.markerMap = {};
+
+			LocationsGetter.maps[$scope.filterType].map.addListener('dragend', function() {
+				LocationsGetter.mapFilter['northeast']['longitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getNorthEast().lng();
+				LocationsGetter.mapFilter['northeast']['latitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getNorthEast().lat();
+				LocationsGetter.mapFilter['southwest']['longitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getSouthWest().lng();
+				LocationsGetter.mapFilter['southwest']['latitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getSouthWest().lat();
+				
+				$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+			});
+			LocationsGetter.maps[$scope.filterType].map.addListener('zoom_changed', function() {
+				if (!LocationsGetter.maps[$scope.filterType].firstMapLoad) {
+					$timeout(function (){
+						LocationsGetter.mapFilter['northeast']['longitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getNorthEast().lng();
+						LocationsGetter.mapFilter['northeast']['latitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getNorthEast().lat();
+						LocationsGetter.mapFilter['southwest']['longitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getSouthWest().lng();
+						LocationsGetter.mapFilter['southwest']['latitude'] = LocationsGetter.maps[$scope.filterType].map.getBounds().getSouthWest().lat();
+								
+						$scope.mapFilterEnabled && LocationsGetter.setFilterTimer(1.5);
+					})
+				} else {
+					LocationsGetter.maps[$scope.filterType].firstMapLoad = false;
+				}
+				
+			});
 		}
-		
-	});
+	}
 });
 
-home.factory('LocationsGetter',function($q,$http, $timeout){
+home.service('LocationsGetter',function($q,$http, $timeout, $rootScope){
+	var LocationsGetter = this;
 	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-	var LocationsGetter = {};
+	//var LocationsGetter = {};
 	LocationsGetter.flightQuotes = null;
+	LocationsGetter.maps = {};
 	var filter = {};
 	LocationsGetter.locations = [];
 	LocationsGetter.unpaginatedLocations = [];
@@ -577,6 +576,55 @@ home.factory('LocationsGetter',function($q,$http, $timeout){
 			return filter[filterArray] && filter[filterArray].indexOf(filterValue) > -1;
 		}
 		
+	}
+
+	LocationsGetter.reloadMapMarkers = function() {
+		if (LocationsGetter.unpaginatedLocations.length != 0) {
+			//redo map points
+			LocationsGetter.markerMap = {};
+			for (let key in LocationsGetter.maps) {
+				let currentMap = LocationsGetter.maps[key];
+				currentMap.map.removeMarkers();
+			
+				LocationsGetter.unpaginatedLocations.forEach(function(unpagLocation) {
+					var clickFunc = null;
+					if (key == 'large') {
+						clickFunc = async function(e) {
+							await LocationsGetter.addSingleLocation(unpagLocation.slug);
+							$('#infinite-scroll-container').animate({
+				          scrollTop: $('#location-item-' + unpagLocation.id).offset().top - $('#infinite-scroll-container').offset().top  + $('#infinite-scroll-container').scrollTop()
+				      }, 1000);
+						}
+					}
+					LocationsGetter.markerMap[unpagLocation['slug'] + key] = addMarker(currentMap.map, unpagLocation['latitude'], unpagLocation['longitude'], unpagLocation['name'], '<p><a href="/location/'+unpagLocation['slug']+'">'+unpagLocation['name']+'</a></p>',true, clickFunc);
+					
+					let options = {opacity: .5};
+					
+
+					LocationsGetter.markerMap[unpagLocation['slug'] + key].setOptions(options);
+				});
+
+				// we set firstMapLoad to false when the zoom_changed watch catches the fitBounds call 
+				if (currentMap.firstMapLoad && key == 'small') {
+					var allowedBounds = new google.maps.LatLngBounds(
+					    new google.maps.LatLng(85, -180),           // top left corner of map
+						new google.maps.LatLng(-85, 180)            // bottom right corner
+					);
+
+					var k = 5; 
+					var n = allowedBounds.getNorthEast().lat() - k; 
+					var e = allowedBounds.getNorthEast().lng() - k; 
+					var s = allowedBounds.getSouthWest().lat() + k; 
+					var w = allowedBounds.getSouthWest().lng() + k; 
+					var neNew = new google.maps.LatLng( n, e ); 
+					var swNew = new google.maps.LatLng( s, w ); 
+					boundsNew = new google.maps.LatLngBounds();
+					boundsNew.extend(neNew);
+					boundsNew.extend(swNew); 
+					currentMap.map.fitBounds(allowedBounds);
+				}
+			}
+		}
 	}
 
 	LocationsGetter.setFilterTimer = function(seconds) {
@@ -684,7 +732,7 @@ home.factory('LocationsGetter',function($q,$http, $timeout){
 					console.error('error getting location(probably blocked)');
 					alert('Need location permission to sort by distance, ' +
 						'if you arent given the option to grant permission, ' +
-						'it is probably because your browser doesnt support non-ssl geolocation requests... the webmaster is a cheap bastard' +
+						'it is probably because your browser doesnt support non-ssl geolocation requests... the webmaster is a cheap bastard ' +
 						'and doesnt want to spend $20/mo, go to https://climbcation.herokuapp.com and it should work just fine');
 				}
 			);
@@ -696,32 +744,48 @@ home.factory('LocationsGetter',function($q,$http, $timeout){
 		
 	}
 
-	LocationsGetter.getLocations = function(){
+	LocationsGetter.getLocations = function() {
 		LocationsGetter.loading = true;
-		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response){
+		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response) {
 			LocationsGetter.loading = false;
 			if (response.data.unpaginated.length != LocationsGetter.unpaginatedLocations.length && response.data.unpaginated.length != 0) {
 				LocationsGetter.unpaginatedLocations = response.data.unpaginated;
 			}
 			var promiseLocations = response.data.paginated;
 			LocationsGetter.locations || (LocationsGetter.locations = []);
-			$.each(promiseLocations, function(key, promiseLocation){
-				var exists = _.find(LocationsGetter.locations, function(locationIter) {
-					return locationIter.id == promiseLocation.id;
-				});
-				!exists && LocationsGetter.locations.push(promiseLocation);
+			$.each(promiseLocations, function(key, promiseLocation) {
+				LocationsGetter.addLocationToList(promiseLocation);
 			});
 			if (_.size(promiseLocations) == 0) {
 				LocationsGetter.scrollEnded = true;
 			} else {
 				LocationsGetter.scrollEnded = false;
 			}
+			LocationsGetter.reloadMapMarkers();
 			return response.data;
 		});
 	};
 
+	LocationsGetter.addSingleLocation = function(slug) {
+		return $http.get('/api/location/' + slug).then(function(resp) {
+			LocationsGetter.addLocationToList(resp.data.location, true);
+		});
+	};
+
+	LocationsGetter.addLocationToList = function(location, unshift) {
+		var exists = LocationsGetter.locations.find(function(locationIter) {
+			return locationIter.id == location.id;
+		});
+		if (unshift) {
+			!exists && LocationsGetter.locations.unshift(location);
+		} else {
+			!exists && LocationsGetter.locations.push(location);
+		}
+		
+	};
+
 	
-	return LocationsGetter;
+	//return LocationsGetter;
 
 });
 
@@ -748,19 +812,20 @@ function createMap(mapId,latitude,longitude,zoom){
 
 function addCloseLocations(map,locationMap){
 	$.each(locationMap,function(){
-		addMarker(map,this['lat'],this['lng'],this['name'],'<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>',true);
+		addMarker(map, this['lat'], this['lng'], this['name'], '<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>', true);
 	});
 }
 
-function addMarker(map,lat,lng,title,infowindow,isSecondary){
+function addMarker(map,lat,lng,title,infowindow,isSecondary, clickFunc = null){
 		return map.addMarker({
 			lat: lat,
 			lng: lng,
 			title: title,
-			icon: isSecondary?'':'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png',
-			infoWindow:{
+			icon: isSecondary ? '' : 'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png',
+			infoWindow: {
 				content: infowindow
-			}
+			},
+			click: clickFunc
 		});
 }
 

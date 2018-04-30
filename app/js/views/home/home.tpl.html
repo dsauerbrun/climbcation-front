@@ -22,10 +22,13 @@
 		<img class="pull-right hidden-xs" src="/images/hero-image-right.png" />
 	</div>
 </div>
-<filter id="filter"></filter>
+<filter id="filter" filter-map-disabled="largeMapEnabled"></filter>
 <div class="container-fluid fill-height">
 	<div class="row bottom-padding">
-		<div class="col-md-offset-8 col-md-4">
+		<div class="col-md-4 hidden-xs hidden-sm">
+			<a ng-click="toggleLargeMap();">Toggle Large Map</a>
+		</div>
+		<div class="col-md-offset-4 col-md-4">
 			<label class="inline right-margin">Sort By:</label>
 			<div class="text-button right-margin" ng-click="LocationsGetter.setSorting('grade',!LocationsGetter.filter.sort.grade.asc)" ng-if="0">Climbing Difficulty</div>
 			<div class="text-button" ng-click="LocationsGetter.setSorting('distance', true)">Distance From Me</div>
@@ -33,18 +36,37 @@
 	</div>
 
 	<div class="row">
-		<div class="locations-window" id="locations-window"
-			infinite-scroll='LocationsGetter.getNextPage()'
-			infinite-scroll-disabled='LocationsGetter.scrollEnded || LocationsGetter.scrollLock'
-			infinite-scroll-distance='1'
+		<div id="infinite-scroll-container" class="large-map" ng-if="largeMapEnabled">
+			<div class="locations-window " id="locations-window"
+				infinite-scroll="LocationsGetter.getNextPage()"
+				infinite-scroll-disabled="LocationsGetter.scrollEnded || LocationsGetter.scrollLock"
+				infinite-scroll-parent="true"
+				infinite-scroll-distance="1"
+			>
+				<location class="location-item" ng-repeat="locationData in locationData" id="location-item-{{locationData.id}}"></location>
+				<div class="bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
+					<h4><strong>No More Crags Available :(</strong></h4>
+					<h4><strong>Try broadening your filters</strong></h4>
+				</div>
+				<div class="bottom-padding text-center" ng-if="LocationsGetter.scrollLock">
+					<h4><img src="/images/climbcation-loading.gif" /><strong>Loading more crags!</strong></h4>
+				</div>
+			</div>
+		</div>
+		<map-filter ng-show="largeMapEnabled" filter-type="large">
+		</map-filter>
+		<div class="locations-window" id="locations-window" ng-if="!largeMapEnabled"
+			infinite-scroll="LocationsGetter.getNextPage()"
+			infinite-scroll-disabled="LocationsGetter.scrollEnded || LocationsGetter.scrollLock"
+			infinite-scroll-distance="1"
 		>
 			<location class="location-item" ng-repeat="locationData in locationData"></location>
 		</div>
-		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded">
+		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollEnded && !largeMapEnabled">
 			<h4><strong>No More Crags Available :(</strong></h4>
 			<h4><strong>Try broadening your filters</strong></h4>
 		</div>
-		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollLock">
+		<div class="col-md-12 bottom-padding text-center" ng-if="LocationsGetter.scrollLock && !largeMapEnabled">
 			<h4><img src="/images/climbcation-loading.gif" /><strong>Loading more crags!</strong></h4>
 		</div>
 	</div>

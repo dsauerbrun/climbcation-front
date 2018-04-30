@@ -7,7 +7,7 @@
 		</div>
 		<div class="col-xs-offset-3 col-xs-3" ng-if="!mapFilterShown && !filtersShown" ng-click="toggleMapFilter()">
 			<div class="btn btn-climbcation">
-				Open Map Filter
+				Open Map Filter {{mobile}}
 			</div>
 		</div>
 		<div class="col-xs-3" ng-if="filtersShown" ng-click="toggleFilters()">
@@ -122,10 +122,8 @@
 		</div>
 	</div>
 	<div ng-show="mapFilterShown">
-		<div ng-controller='MapFilterController' class="row" ng-if="mobile">
-			<div id="mapFilterMobile" class="mapFilter">
-			</div>
-		</div>
+		<map-filter class="row" filter-type="mobile" ng-if="mobile && !filterMapDisabled">
+		</map-filter>
 	</div>
 </section>
 
@@ -230,15 +228,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-3">
-			<div ng-controller='MapFilterController' class="row" ng-if="!mobile">
-				<label class="control control--checkbox" for="mapFilterEnabled" ng-class="{'active': mapFilterEnabled}">
-					<input type="checkbox" name="mapFilterEnabled" id="mapFilterEnabled" ng-model="mapFilterEnabled">
-					<div class="control__indicator"></div>
-					<span class="gray">Redo search when map moved</span>
-				</label>
-				<div id="mapFilter" class="mapFilter">
-				</div>
+		<div class="col-md-3" ng-if="!filterMapDisabled">
+			<map-filter ng-if="!mobile" filter-type="small">
+			</map-filter>
+			
 			</div>
 		</div>
 	</div>
