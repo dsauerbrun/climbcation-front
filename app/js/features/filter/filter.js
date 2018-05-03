@@ -8,7 +8,7 @@ filterDir.directive('filter', function(){
 			filterMapDisabled: '=',
 			getAirportPrices: '='
 		},
-		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService){
+		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService, localStorageService){
 			var filter = this;
 			$scope.LocationsGetter = LocationsGetter;
 			$scope.endMonth = 12;
@@ -17,6 +17,15 @@ filterDir.directive('filter', function(){
 			$scope.startMonthName = 'January';
 			$scope.gradeFilter = {};
 			$scope.helperService = helperService;
+
+			if (localStorageService.get('filter') || localStorageService.get('mapFilter')) {
+				LocationsGetter.setCachedFilter(localStorageService.get('filter'), localStorageService.get('mapFilter'));
+			}
+			
+			$scope.clearFilters = function() {
+				LocationsGetter.clearFilters();
+				LocationsGetter.setFilterTimer(0);
+			}
 
 			$scope.setGradeFilter = function(type, grade) {
 				if (grade == 'all') {

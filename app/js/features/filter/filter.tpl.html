@@ -7,12 +7,17 @@
 		</div>
 		<div class="col-xs-offset-3 col-xs-3" ng-if="!mapFilterShown && !filtersShown" ng-click="toggleMapFilter()">
 			<div class="btn btn-climbcation">
-				Open Map Filter {{mobile}}
+				Open Map Filter
 			</div>
 		</div>
 		<div class="col-xs-3" ng-if="filtersShown" ng-click="toggleFilters()">
 			<div class="btn btn-climbcation">
 				Close Filters
+			</div>
+		</div>
+		<div class="col-xs-offset-3 col-xs-3" ng-if="filtersShown" ng-click="clearFilters()">
+			<div class="btn btn-climbcation">
+				Clear Filters
 			</div>
 		</div>
 		<div class="col-xs-offset-6 col-xs-3" ng-if="mapFilterShown" ng-click="toggleMapFilter()">
@@ -131,13 +136,18 @@
 <section class="filter hidden-xs">
 	<div class="container-fluid">		
 		<div class="col-md-9">
-			<div class="row col-md-offset-4">
-				<h4 class="text-center">
-					Select the relevant criteria to find your perfect climbing trip
-				</h4>
-				<h5 class="text-center">
-					<strong>(results will update automatically based on your selection)</strong>
-				</h5>
+			<div class="row">
+				<div class="col-md-4">
+					<button class="btn btn-climbcation" ng-click="clearFilters()">Clear Filters</button>
+				</div>
+				<div class="row col-md-8">
+					<h4 class="text-center">
+						Select the relevant criteria to find your perfect climbing trip
+					</h4>
+					<h5 class="text-center">
+						<strong>(results will update automatically based on your selection)</strong>
+					</h5>
+				</div>
 			</div>
 			<div class="row bottom-padding">
 				<div class="col-md-5">

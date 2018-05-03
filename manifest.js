@@ -16,6 +16,9 @@ exports.javascript = [
 	'node_modules/ng-toast/dist/ngToast.min.js',
   'node_modules/angular-animate/angular-animate.js',
   'node_modules/angular-strap/dist/angular-strap.min.js',
+  'node_modules/angular-local-storage/dist/angular-local-storage.min.js',
+  'node_modules/moment/min/moment.min.js',
+  'node_modules/angular-moment/angular-moment.js',
 	'browserified.js'
 ];
 

@@ -1,6 +1,9 @@
-var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
 
-home.config( function($routeProvider, $locationProvider) {
+home.config( function($routeProvider, $locationProvider, localStorageServiceProvider) {
+	//localStorageServiceProvider.setStorageType('sessionStorage');
+	localStorageServiceProvider.setPrefix('climbcation');
+
 	$routeProvider
 	.when('/', {
 		redirectTo: function(current, path, search) {
@@ -531,7 +534,7 @@ home.directive('mapFilter', function() {
 	}
 });
 
-home.service('LocationsGetter',function($q,$http, $timeout, $rootScope){
+home.service('LocationsGetter',function($q,$http, $timeout, $rootScope, localStorageService, moment){
 	var LocationsGetter = this;
 	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	//var LocationsGetter = {};
@@ -627,9 +630,28 @@ home.service('LocationsGetter',function($q,$http, $timeout, $rootScope){
 		}
 	}
 
+	LocationsGetter.setCachedFilter = function(cachedFilter, cachedMapFilter) {
+		LocationsGetter.clearFilters();
+		console.log(moment(cachedFilter.date).diff(moment(), 'days'))
+		if (cachedFilter && moment(cachedFilter.date).diff(moment(), 'days') < 1) {
+			console.log(typeof cachedFilter, cachedFilter)
+			filter = cachedFilter;
+			LocationsGetter.filter = filter;
+		}
+
+		if (cachedMapFilter && moment(cachedMapFilter.date).diff(moment(), 'days') < 1) {
+			//LocationsGetter.mapFilter = cachedMapFilter;
+		}
+		LocationsGetter.setFilterTimer(0);
+	}
+
 	LocationsGetter.setFilterTimer = function(seconds) {
 		LocationsGetter.cancelFilterTimer();
 		LocationsGetter.filterTimer = $timeout(function() {
+			filter.date = moment().format('YYYY-MM-DD');
+			mapFilter.date = moment().format('YYYY-MM-DD');
+			localStorageService.set('filter', filter);
+			localStorageService.set('mapFilter', mapFilter);
 			LocationsGetter.pageNum = 1;
 			LocationsGetter.locations = [];
 			LocationsGetter.getNextPage();
