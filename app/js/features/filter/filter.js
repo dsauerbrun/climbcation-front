@@ -5,7 +5,8 @@ filterDir.directive('filter', function(){
 		restrict: 'E',
 		templateUrl: 'features/filter/filter.tpl.html',
 		scope: {
-			filterMapDisabled: '='
+			filterMapDisabled: '=',
+			getAirportPrices: '='
 		},
 		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService){
 			var filter = this;
