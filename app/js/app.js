@@ -1,6 +1,6 @@
 var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
 
-home.config( function($routeProvider, $locationProvider, localStorageServiceProvider) {
+home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider', function($routeProvider, $locationProvider, localStorageServiceProvider) {
 	//localStorageServiceProvider.setStorageType('sessionStorage');
 	localStorageServiceProvider.setPrefix('climbcation');
 
@@ -34,7 +34,7 @@ home.config( function($routeProvider, $locationProvider, localStorageServiceProv
 
 	$locationProvider.html5Mode(true);
 
-});
+}]);
 
 home.config(function(ezfbProvider){
 	ezfbProvider.setInitParams({
@@ -534,7 +534,7 @@ home.directive('mapFilter', function() {
 	}
 });
 
-home.service('LocationsGetter',function($q,$http, $timeout, $rootScope, localStorageService, moment){
+home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'localStorageService', 'moment', function($q,$http, $timeout, $rootScope, localStorageService, moment) {
 	var LocationsGetter = this;
 	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	//var LocationsGetter = {};
@@ -632,9 +632,7 @@ home.service('LocationsGetter',function($q,$http, $timeout, $rootScope, localSto
 
 	LocationsGetter.setCachedFilter = function(cachedFilter, cachedMapFilter) {
 		LocationsGetter.clearFilters();
-		console.log(moment(cachedFilter.date).diff(moment(), 'days'))
 		if (cachedFilter && moment(cachedFilter.date).diff(moment(), 'days') < 1) {
-			console.log(typeof cachedFilter, cachedFilter)
 			filter = cachedFilter;
 			LocationsGetter.filter = filter;
 		}
@@ -809,7 +807,7 @@ home.service('LocationsGetter',function($q,$http, $timeout, $rootScope, localSto
 	
 	//return LocationsGetter;
 
-});
+}]);
 
 function createMap(mapId,latitude,longitude,zoom){
 	var map = new GMaps({

@@ -8,7 +8,7 @@ filterDir.directive('filter', function(){
 			filterMapDisabled: '=',
 			getAirportPrices: '='
 		},
-		controller: function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService, localStorageService){
+		controller: ['$http', '$window', '$timeout', '$scope', '$rootScope', 'LocationsGetter', 'helperService', 'localStorageService', function($http, $window, $timeout, $scope, $rootScope, LocationsGetter, helperService, localStorageService) {
 			var filter = this;
 			$scope.LocationsGetter = LocationsGetter;
 			$scope.endMonth = 12;
@@ -73,7 +73,7 @@ filterDir.directive('filter', function(){
 			} else {
 				$scope.mobile = false;
 			}
-		},
+		}],
 		controllerAs: 'filter'
 	};
 });
