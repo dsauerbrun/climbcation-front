@@ -19,7 +19,10 @@ filterDir.directive('filter', function(){
 			$scope.helperService = helperService;
 
 			if (localStorageService.get('filter') || localStorageService.get('mapFilter')) {
-				LocationsGetter.setCachedFilter(localStorageService.get('filter'), localStorageService.get('mapFilter'));
+				if (LocationsGetter.setCachedFilter(localStorageService.get('filter'), localStorageService.get('mapFilter'))) {
+					$scope.searchQuery = LocationsGetter.filter.search;
+				}
+				
 			}
 			
 			$scope.clearFilters = function() {

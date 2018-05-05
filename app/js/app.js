@@ -632,15 +632,20 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 
 	LocationsGetter.setCachedFilter = function(cachedFilter, cachedMapFilter) {
 		LocationsGetter.clearFilters();
+		let retVal = false;
 		if (cachedFilter && moment(cachedFilter.date).diff(moment(), 'days') < 1) {
 			filter = cachedFilter;
 			LocationsGetter.filter = filter;
+			retVal = true;
 		}
 
 		if (cachedMapFilter && moment(cachedMapFilter.date).diff(moment(), 'days') < 1) {
 			//LocationsGetter.mapFilter = cachedMapFilter;
+			//retVal = true;
 		}
 		LocationsGetter.setFilterTimer(0);
+		
+		return true;
 	}
 
 	LocationsGetter.setFilterTimer = function(seconds) {
