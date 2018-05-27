@@ -593,7 +593,8 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 					var clickFunc = null;
 					if (key == 'large') {
 						clickFunc = async function(e) {
-							await LocationsGetter.addSingleLocation(unpagLocation.slug);
+							var exists = LocationsGetter.locations.find(x => x.id == unpagLocation.id);
+							!exists && await LocationsGetter.addSingleLocation(unpagLocation.slug);
 							$('#infinite-scroll-container').animate({
 				          scrollTop: $('#location-item-' + unpagLocation.id).offset().top - $('#infinite-scroll-container').offset().top  + $('#infinite-scroll-container').scrollTop()
 				      }, 1000);
