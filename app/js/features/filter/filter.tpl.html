@@ -105,6 +105,16 @@
 						<button ng-click="LocationsGetter.toggleFilterButton('climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" ng-class="{'active': LocationsGetter.isButtonActive('climbing_types', name)}" data="{{ name }}">{{name}}</button>
 					</div>
 				</div>
+				<div class="col-md-3">
+					<label>What is the hardest grade you're looking for?</label>
+					<div class="btn-group grade-filter-button" ng-repeat="type in filter.grades">
+						<button type="button" class="filter-button btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
+						<ul class="dropdown-menu" style="max-height: 130px; overflow-y: scroll">
+					    <li ng-click="setGradeFilter(type.type, 'all')"><a>All {{type.type.name}} Grades</a></li>
+					    <li ng-repeat="grade in type.grades" ng-click="setGradeFilter(type.type, grade)"><a>{{grade.grade}}</a></li>
+					  </ul>
+					</div>
+				</div>
 				<div class="col-md-4">
 					<label>Lodging Type</label>
 					<div class="btn-group btn-group-sm btn-group-filter" data="Lodging" role="group">
@@ -112,17 +122,7 @@
 						<button ng-click="LocationsGetter.toggleFilterButton('accommodations',id )" ng-repeat="(name,id) in filter.accommodations" type="button" class="filter-button btn btn-lg btn-default" ng-class="{'active': LocationsGetter.isButtonActive('accommodations', id)}" data="{{ name }}">{{name}}</button>
 					</div>
 				</div>
-				<div class="col-md-3">
-					<label>What is the hardest grade you're looking for?</label>
-					<div class="btn-group grade-filter-button" ng-repeat="type in filter.grades">
-						<button type="button" class="filter-button btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
-						<ul class="dropdown-menu">
-					    <li ng-click="setGradeFilter(type.type, 'all')"><a>All {{type.type.name}} Grades</a></li>
-					    <li ng-repeat="grade in type.grades" ng-click="setGradeFilter(type.type, grade)"><a>{{grade.grade}}</a></li>
-					  </ul>
-					</div>
-					
-				</div>
+				
 			</div>
 		</div>
 	</div>
