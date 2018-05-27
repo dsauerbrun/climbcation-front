@@ -50,7 +50,7 @@
 				</div>
 				<div class="col-md-4">
 					<label>Keyword Search</label>
-					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
+					<input type="text" class="form-control" ng-model="LocationsGetter.filter.search" ng-trim="true" ng-change="LocationsGetter.filterByQuery(LocationsGetter.filter.search)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
 				</div>
 				<div class="col-md-3">
 					<label>Time</label>
@@ -218,7 +218,7 @@
 				<div class="col-md-5">
 					<label>What is the hardest grade you're looking for?</label>
 					<div class="btn-group grade-filter-button" ng-repeat="type in filter.grades">
-						<button type="button" class="filter-button btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{gradeFilter[type.type.id].grade || type.type.name}} <span class="caret"></span></button>
+						<button type="button" class="filter-button btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{getSelectedGrade(type) || type.type.name}} <span class="caret"></span></button>
 						<ul class="dropdown-menu">
 					    <li ng-click="setGradeFilter(type.type, 'all')"><a>All {{type.type.name}} Grades</a></li>
 					    <li ng-repeat="grade in type.grades" ng-click="setGradeFilter(type.type, grade)"><a>{{grade.grade}}</a></li>
@@ -227,7 +227,7 @@
 				</div>
 				<div class="col-md-4">
 					<label>Keyword Search</label>
-					<input type="text" class="form-control" ng-model="searchQuery" ng-trim="true" ng-change="LocationsGetter.filterByQuery(searchQuery)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
+					<input type="text" class="form-control" ng-model="LocationsGetter.filter.search" ng-trim="true" ng-change="LocationsGetter.filterByQuery(LocationsGetter.filter.search)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
 				</div>
 				<div class="col-md-3">
 					<label>Where do you want to stay?</label>

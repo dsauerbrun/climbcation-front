@@ -31,6 +31,20 @@
 	}
 }
 
+.applied-filter {
+	color: #fff;
+	background-color: $light-blue;
+	padding: 5px;
+	border-radius: 5px;
+	width: fit-content;
+	display: inline-block;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	.close-button {
+		cursor: pointer;
+	}
+}
+
 .home-hero {
 	position: relative;
 	height: 20em;

@@ -549,6 +549,7 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 	LocationsGetter.markerMap = {};
 	LocationsGetter.filter = filter;
 	LocationsGetter.scrollLock = false;
+	LocationsGetter.appliedFilters = [];
 	filter['climbing_types'] = [];
 	filter.grades = {};
 	filter['accommodations'] = [];
@@ -571,6 +572,71 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 
 	var sort = {};
 	sort['grade'] = [];
+	let filterKeys = {}
+
+	
+
+	LocationsGetter.setAppliedFilters = async function() {
+		if (!filterKeys.climbTypes) {
+			await $http.get('/api/filters').then(function(resp){
+				var data = resp.data;
+				filterKeys.climbTypes = data.climbTypes;
+				filterKeys.accommodations = data.accommodations;
+				filterKeys.grades = data.grades;
+			});
+		}
+		let filterList = [];
+		let filter = LocationsGetter.filter;
+		filter.accommodations && filter.accommodations.forEach(function(accommodation) {
+			let title = _.findKey(filterKeys.accommodations, function(accommodationId) {return accommodationId == accommodation});
+			filterList.push({title: title, id: accommodation, type: 'accommodations'});
+		});
+
+		filter.climbing_types && filter.climbing_types.forEach(function(climbingType) {
+			filterList.push({title: climbingType, id: climbingType, type: 'climbing_types'});
+		});
+
+		if (filter.grades) {
+			for (let grade in filter.grades) {
+				let climbingType = _.findKey(filterKeys.grades, function(type) {return type.type.id == grade});
+				let climbingTypeObj = filterKeys.grades[climbingType];
+				let maxGradeId = filter.grades[grade].reduce(function(a, b) {
+				    return Math.max(a, b);
+				});
+				let maxGrade = climbingTypeObj.grades.find(x => x.id == maxGradeId);
+				filterList.push({title: `${climbingType}: ${maxGrade.grade}`, id: grade, type: 'grades'});
+			}
+		}
+
+		if (filter.search && filter.search != '') {
+			filterList.push({title: `Keyword: ${filter.search}`, id: 'search', type: 'search'});
+		}
+
+		if (filter.start_month != 1 || filter.end_month != 12) {
+			filterList.push({title: `${filter.start_month_name.substring(0, 3)} - ${filter.end_month_name.substring(0,3)}`, id: 'months', type: 'months'})
+		}
+
+		LocationsGetter.appliedFilters = filterList;
+	}
+
+	LocationsGetter.removeAppliedFilter = function(appliedFilter) {
+		if (appliedFilter.type == 'accommodations' || appliedFilter.type == 'climbing_types') {
+			LocationsGetter.filter[appliedFilter.type] = LocationsGetter.filter[appliedFilter.type].filter(x => x != appliedFilter.id);
+		} else if (appliedFilter.type == 'grades') {
+			delete LocationsGetter.filter.grades[appliedFilter.id];
+		} else if (appliedFilter.type == 'search') {
+			LocationsGetter.filter.search = '';
+		} else if (appliedFilter.type == 'months') {
+			LocationsGetter.filter.end_month = 12;
+			LocationsGetter.filter.start_month = 1;
+			LocationsGetter.filter.end_month_name = 'December';
+			LocationsGetter.filter.start_month_name = 'January';
+		}
+
+		let appliedFilterIndex = LocationsGetter.appliedFilters.findIndex(x => x.id == appliedFilter.id && x.type == appliedFilter.type);
+		LocationsGetter.appliedFilters.splice(appliedFilterIndex, 1);
+		LocationsGetter.setFilterTimer(0);
+	}
 
 	LocationsGetter.isButtonActive = function(filterArray, filterValue) {
 		if (filterValue == 'empty') {
@@ -645,7 +711,7 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 			//retVal = true;
 		}
 		LocationsGetter.setFilterTimer(0);
-		
+	
 		return true;
 	}
 
@@ -659,6 +725,7 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 			LocationsGetter.pageNum = 1;
 			LocationsGetter.locations = [];
 			LocationsGetter.getNextPage();
+			LocationsGetter.setAppliedFilters();
 		}, seconds*1000);
 	}
 

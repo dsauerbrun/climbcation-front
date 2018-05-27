@@ -19,15 +19,22 @@ filterDir.directive('filter', function(){
 			$scope.helperService = helperService;
 
 			if (localStorageService.get('filter') || localStorageService.get('mapFilter')) {
-				if (LocationsGetter.setCachedFilter(localStorageService.get('filter'), localStorageService.get('mapFilter'))) {
-					$scope.searchQuery = LocationsGetter.filter.search;
-				}
-				
+				LocationsGetter.setCachedFilter(localStorageService.get('filter'), localStorageService.get('mapFilter'));
 			}
 			
 			$scope.clearFilters = function() {
 				LocationsGetter.clearFilters();
 				LocationsGetter.setFilterTimer(0);
+			}
+
+			$scope.getSelectedGrade = function(type) {
+				let lastGradeIndex = LocationsGetter.filter.grades[type.type.id] && LocationsGetter.filter.grades[type.type.id].length - 1;
+				if (lastGradeIndex) {
+					let gradeId = LocationsGetter.filter.grades[type.type.id][lastGradeIndex];
+					return filter.grades[type.type.name].grades.find(x => x.id == gradeId).grade;
+				} else {
+					return null;
+				}
 			}
 
 			$scope.setGradeFilter = function(type, grade) {
