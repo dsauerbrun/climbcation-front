@@ -36,13 +36,6 @@ home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider
 
 }]);
 
-home.config(function(ezfbProvider){
-	ezfbProvider.setInitParams({
-		appId: '604556333018328',
-		version: 'v2.5'
-	})
-})
-
 home.filter('removeSpaces', function () {
 	return function (text) {
 		var str = text.replace(/\s+/g, '');
@@ -50,7 +43,7 @@ home.filter('removeSpaces', function () {
 	};
 });
 
-home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
+home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
 	slug = $routeParams.slug;
 	var editMessage = 'Your edit has been submitted and will be approved by a moderator shortly!';
 	$scope.name = 'hello';
@@ -321,9 +314,9 @@ home.controller('LocationPageController',function(ngToast,$scope,$rootScope,$q,h
 		$event.stopPropagation();
 	};
 
-});
+}]);
 
-home.controller('LocationsController',function($rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function($rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
@@ -469,7 +462,7 @@ home.controller('LocationsController',function($rootScope, $scope, $timeout,Loca
 		}
 	}
 
-});
+}]);
 
 home.directive('mapFilter', function() {
 	return {	
@@ -480,7 +473,7 @@ home.directive('mapFilter', function() {
 			filterType: '@',
 			//locationsGetter: '='
 		},
-		controller: function($rootScope,$scope, $timeout, $window, LocationsGetter) {
+		controller: ['$rootScope', '$scope', '$timeout', '$window', 'LocationsGetter', function($rootScope,$scope, $timeout, $window, LocationsGetter) {
 			var filterId;
 			var mapDefaults = {};
 			if ($window.innerWidth < 768) {
@@ -530,11 +523,11 @@ home.directive('mapFilter', function() {
 				}
 				
 			});
-		}
+		}]
 	}
 });
 
-home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'localStorageService', 'moment', function($q,$http, $timeout, $rootScope, localStorageService, moment) {
+home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorageService', 'moment', function($http, $timeout, $rootScope, localStorageService, moment) {
 	var LocationsGetter = this;
 	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	//var LocationsGetter = {};
@@ -617,6 +610,7 @@ home.service('LocationsGetter', ['$q', '$http', '$timeout', '$rootScope', 'local
 		}
 
 		LocationsGetter.appliedFilters = filterList;
+		$rootScope.$apply();
 	}
 
 	LocationsGetter.removeAppliedFilter = function(appliedFilter) {

@@ -55,10 +55,10 @@ gulp.task('scripts-prod', function() {
       ignore: '*.html'
     }))
     .pipe(addsrc.prepend(paths.vendorJavascript)) 
-    .pipe(plugins.if(/html$/, buildTemplates()))
+    .pipe(plugins.if(/html$/, buildTemplates())) 
     .pipe(plugins.concat('app.js'))
     .pipe(plugins.ngAnnotate())
-    .pipe(plugins.uglify())
+    .pipe(plugins.uglify({mangle: false}))
     .pipe(plugins.rev())
     .pipe(gulp.dest(paths.distJavascript))
     .pipe(plugins.rev.manifest({path: 'rev-manifest.json'}))

@@ -32,16 +32,25 @@ setTimeout(function() {
   <base href="/">
 </head>
 <body>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId            : '604556333018328',
+        autoLogAppEvents : true,
+        xfbml            : true,
+        version          : 'v3.0'
+      });
+    };
 
-  <!-- facebook like button script -->
-  <div id="fb-root"></div>
-  <script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=604556333018328";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
   <toast></toast>
   <nav class="navbar home navbar-inverse">
     <div class="container">
