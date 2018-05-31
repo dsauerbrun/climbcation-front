@@ -350,7 +350,7 @@
 			</div>
 			<div class="well-content">
 				<div class="misc-container">
-					<locationothersection class="misc-section" location-id="locationData.id" section="section" sections-length="locationObj.sections.length" ng-repeat="section in sections track by $index" index-iterator="$index" editable="true"></locationothersection>
+					<locationothersection class="misc-section" location-id="locationData.id" section="section" sections-length="locationObj.sections.length" save-callback="saveSection" ng-repeat="section in sections track by $index" index-iterator="$index" editable="true"></locationothersection>
 				</div>
 			</div>
 		</div>
@@ -361,7 +361,7 @@
 			<div class="col-md-8"><!--
 				<div id="comments" onrender="rendered()" class="fb-comments info-section" data-width="100%" ng-attr-data-href="http://www.climbcation.com/{{ locationData['name'] }}" data-numposts="5" ng-cloak></div>-->
 
-				<div class="fb-comments" data-href="https://www.climbcation.com/location/{{locationData.name}}" data-numposts="5" data-width="100%"></div>
+				<div id="comments" class="fb-comments" data-href="https://www.climbcation.com/location/{{locationData.name}}" data-numposts="5" data-width="100%"></div>
 			</div>
 			<div class="col-md-4">
 				<div class="info-container add-section">

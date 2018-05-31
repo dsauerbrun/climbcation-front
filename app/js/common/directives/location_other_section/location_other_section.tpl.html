@@ -17,9 +17,6 @@
 					<label ng-if="!editable">Section Description</label>
 					<textarea  placeholder="The best place to meet climbers is at the Fatolitis snack bar, this is a great bar for a post climbing spray session as well" class="form-control" rows="{{editable?3:6}}" ng-model="section.body"></textarea>
 				</div>
-				<div ng-if="!editable" class="btn btn-default btn-climbcation right-margin" ng-class="{'disabled': section.isSaving }" ng-if="indexIterator ==  sectionsLength - 1 || sectionsLength == -2" ng-click="saveSection()">Save section</div>
-				<div ng-if="!editable" class="text-button pad-top" ng-if="sectionsLength != -2 && (indexIterator != sectionsLength-1)" ng-click="removeSection(section)">remove section</div>
-
 				<div ng-if="editable" class="btn btn-default btn-climbcation pull-right" ng-class="{'disabled': section.isSaving }" ng-click="saveChanges()">
 					Save Changes
 				</div>

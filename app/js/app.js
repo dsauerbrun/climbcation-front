@@ -107,6 +107,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 						setLocationHighchart(promiseQuotes, helperService.originAirportCode);
 					});
 				});
+				$timeout(function() {FB.XFBML.parse()});
 			}
 		}
 	);
@@ -275,6 +276,13 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 
 	$scope.addSection = function() {
 		$scope.sections.new = {title: '', body: '', previewOff: true};
+	}
+
+	$scope.saveSection = function(section) {
+		if (!$scope.sections[section.id]) {
+			$scope.sections[section.id] = section;
+			delete $scope.sections.new;
+		}
 	}
 	
 	function populateEditables(location) {

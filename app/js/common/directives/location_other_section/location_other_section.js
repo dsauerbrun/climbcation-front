@@ -31,6 +31,7 @@ locationOtherSection.controller('locationOtherSectionController', function($scop
 						$scope.oldTitle = $scope.section.title;
 						$scope.togglePreview($scope.section);
 						$scope.section.isSaving = false;
+						$scope.saveCallback && $scope.saveCallback($scope.section);
 				}
 			});
 		}
@@ -48,8 +49,7 @@ locationOtherSection.directive('locationothersection', function(){
 			section: '=',
 			sectionsLength: '=',
 			indexIterator: '=',
-			saveSection: '&',
-			removeSection: '&'
+			saveCallback: '='
 		},
 		templateUrl: 'common/directives/location_other_section/location_other_section.tpl.html',
 		controller: 'locationOtherSectionController'
