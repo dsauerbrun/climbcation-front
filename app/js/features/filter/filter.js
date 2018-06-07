@@ -21,11 +21,6 @@ filterDir.directive('filter', function(){
 			if (localStorageService.get('filter') || localStorageService.get('mapFilter')) {
 				LocationsGetter.setCachedFilter(localStorageService.get('filter'), localStorageService.get('mapFilter'));
 			}
-			
-			$scope.clearFilters = function() {
-				LocationsGetter.clearFilters();
-				LocationsGetter.setFilterTimer(0);
-			}
 
 			$scope.getSelectedGrade = function(type) {
 				let lastGradeIndex = LocationsGetter.filter.grades[type.type.id] && LocationsGetter.filter.grades[type.type.id].length - 1;

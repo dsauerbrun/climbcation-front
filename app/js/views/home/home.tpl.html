@@ -27,6 +27,7 @@
 	<div class="row bottom-padding">
 		<div style="width: 90%; margin: 0 auto">
 			<div class="col-md-8">
+				<button class="applied-filter" ng-click="clearFilters()" ng-show="LocationsGetter.appliedFilters.length">Clear All</button>
 				<div class="applied-filter" ng-repeat="filterItem in LocationsGetter.appliedFilters">
 					<span class="bold">{{filterItem.title}} <span class="close-button" ng-click="LocationsGetter.removeAppliedFilter(filterItem)">&times;</span></span>
 				</div>

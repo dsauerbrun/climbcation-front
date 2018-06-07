@@ -357,6 +357,11 @@ home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'Loc
     });
 	}
 
+	$scope.clearFilters = function() {
+		LocationsGetter.clearFilters();
+		LocationsGetter.setFilterTimer(0);
+	}
+
 	$scope.getAirportPrices = function(item, model, label, event) {
 		helperService.originAirportCode = item.iata;
 		$rootScope.loadingQuotes = true;
