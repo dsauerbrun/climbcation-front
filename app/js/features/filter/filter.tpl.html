@@ -34,7 +34,7 @@
 				</h4>
 			</div>
 			<div class="row bottom-padding">
-				<div class="col-md-5">
+				<div class="col-md-5" ng-if="0">
 					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
 					<div class="airport-wrapper">
 						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-trim="true"
@@ -154,7 +154,7 @@
 						<button ng-click="LocationsGetter.toggleFilterButton('climbing_types',name )" ng-repeat="(name,climbType) in filter.climbTypes" type="button" class="filter-button btn btn-lg btn-default" ng-class="{'active': LocationsGetter.isButtonActive('climbing_types', name)}" data="{{ name }}">{{name}}</button>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-4" ng-if="0">
 					<label>Your Local Airport<span class="gray">(get flight prices!)</span></label>
 					<div class="airport-wrapper">
 						<input class="form-control" type="text" ng-model="helperService.originAirport" ng-click="clearPristine()" ng-trim="true" typeahead-min-length="3" 
