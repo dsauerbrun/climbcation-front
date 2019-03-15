@@ -895,7 +895,8 @@ function createMap(mapId,latitude,longitude,zoom){
 		lat: latitude,
 		lng: longitude,
 		zoom: zoom,
-		scrollwheel: false
+		scrollwheel: false,
+		gestureHandling: 'greedy',
 	});
 	$('body').on('click', function(element) {
 		map.setOptions({scrollwheel:false});
