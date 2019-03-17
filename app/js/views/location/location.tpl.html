@@ -89,8 +89,10 @@
 						<h3 class="inline">Getting In</h3>
 						<span class="text-button" ng-click="toggleEditGettingIn()">Edit Category</span>
 					</div>
-					<p class="text-gray info-text" ng-if="locationData.walking_distance === null">We're not sure if crags and other destinations(food, camping, etc...) are within walking distance... have you been here? Please edit this section if you can help us out!</p>
-					<p class="text-gray info-text" ng-if="locationData.walking_distance !== null">Crags and other destinations(food,camping, etc...) <strong>{{locationData.walking_distance?'are':'are not'}}</strong> within walking distance.</p>
+					<p class="text-gray info-text" ng-if="locationData.walking_distance === null">We're not sure if you need a car/motorbike upon arrival to get to where you need.(eg. crag, food, camping, etc...) Have you been here? Please edit this section if you can help us out!</p>
+					<p class="text-gray info-text" ng-if="locationData.walking_distance !== null">
+						Upon arrival, you <strong>{{locationData.walking_distance ? 'can' : 'cannot'}} <i ng-if="locationData.walking_distance" class="glyphicon glyphicon-info-sign" data-template-url="views/tooltips/startooltip.tpl.html" data-animation="am-flip-x" bs-tooltip="'May include alternative methods of transportation such as hitchhiking if there is a strong hitchhiking culture in the area.'"></i></strong> get to where you need without a car/motorbike. (eg. crag, shelter, food)
+					</p>
 					<div class="info-container">
 						<div>
 							<label class="text-center">Available Options</label>
@@ -117,10 +119,11 @@
 					</div>
 					<div class="row">
 						<div class="col-md-8">
-							<label>Are crags and other destinations(food, camping, etc...) within walking distance?</label>
+							<label>Upon arrival, can you reliably get to where you need without a car/motorbike?(eg. crag, camping, food, etc...)</label>
 						</div>
 						<div class="col-md-4">
-							<div class="btn-group btn-group-sm center-block">
+							<i class="glyphicon glyphicon-info-sign text-gray" data-template-url="views/tooltips/startooltip.tpl.html" data-animation="am-flip-x" bs-tooltip="'May include alternative methods of transportation such as hitchhiking if there is a strong hitchhiking culture in the area.'"></i>
+							<div class="btn-group btn-group-sm center-block" style="display: inline-block;padding-left: 10px">
 								<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.walkingDistance}"
 									ng-click="locationObj.walkingDistance = true">
 										Yes
