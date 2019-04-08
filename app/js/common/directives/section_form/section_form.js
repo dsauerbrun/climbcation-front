@@ -14,7 +14,7 @@ sectionForm.directive('sectionform', function($http){
 
 sectionForm.controller('SectionFormController', function($sce, $scope,$http,Upload,$location, helperService, $route, $timeout){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':{}, 'sections':[], closestAccommodation: ''};
-	var emptySection = {'previewOff':true, 'title':'','body':''}
+	var emptySection = {'previewOff':true, 'title':'','body':''};
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
 	$scope.helperService = helperService;
 	helperService.setAirportApiKey();
@@ -25,15 +25,14 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 	$scope.grades = [];
 	$scope.existingLocations = [];
 	$scope.currentPage = 1;
-	$scope.progressBar;
+	$scope.progressBar = null;
 	$scope.locationObj.foodOptionDetails = {};
 
 	$http.get('api/location/name/all').then(function(locationList){
 		locationNames = locationList.data;
 	});
 
-
-	$scope.DICE_THRESHOLD = .75;
+	$scope.DICE_THRESHOLD = 0.75;
 
 	$scope.diceCalc = function() {
 		$scope.diceDistanceNum = 0;
@@ -71,6 +70,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 			var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 			var name = $scope.locationObj.name != '';
 			var rating = $scope.locationObj.rating > 0 && $scope.locationObj.rating < 4;
+			var soloFriendly = $scope.locationObj.solo_friendly === true || $scope.locationObj.solo_friendly === false;
 			// check grades
 			var grade = true;
 			// TODO: FIXME: kind of done as a hack due to time constraint
@@ -101,6 +101,10 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 
 			if (!months) {
 				messages.push('Please choose the months this location is in season.');
+			}
+
+			if (!soloFriendly) {
+				messages.push('Please let us know if this is a solo friendly or not.')
 			}
 		} else {
 			messages.push('You\'re all done with the required information and can submit your location NOW! We appreciate any other info you can provide us on the other pages!');
@@ -145,6 +149,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 		var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 		var name = $scope.locationObj.name != '';
 		var rating = $scope.locationObj.rating > 0 && $scope.locationObj.rating < 4;
+		var soloFriendly = $scope.locationObj.solo_friendly === true || $scope.locationObj.solo_friendly === false;
 		// check grades
 		var grade = true;
 		// TODO: FIXME: kind of done as a hack due to time constraint
@@ -156,7 +161,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 		});
 		var types = _.size(cleanTypes) > 0;
 		var months = _.size(cleanMonths) > 0;
-		if(name && grade && types && months && rating) {
+		if(name && grade && types && months && rating && soloFriendly) {
 			return true;
 		} else {
 			return false;
