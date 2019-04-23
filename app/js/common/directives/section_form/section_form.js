@@ -70,7 +70,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 			var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 			var name = $scope.locationObj.name != '';
 			var rating = $scope.locationObj.rating > 0 && $scope.locationObj.rating < 4;
-			var soloFriendly = $scope.locationObj.solo_friendly === true || $scope.locationObj.solo_friendly === false;
+			var soloFriendly = $scope.locationObj.solo_friendly === true || $scope.locationObj.solo_friendly === false || $scope.locationObj.solo_friendly === null;
 			// check grades
 			var grade = true;
 			// TODO: FIXME: kind of done as a hack due to time constraint
@@ -149,7 +149,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 		var cleanMonths = helperService.cleanFalses($scope.locationObj.months);
 		var name = $scope.locationObj.name != '';
 		var rating = $scope.locationObj.rating > 0 && $scope.locationObj.rating < 4;
-		var soloFriendly = $scope.locationObj.solo_friendly === true || $scope.locationObj.solo_friendly === false;
+		var soloFriendly = $scope.locationObj.solo_friendly === true || $scope.locationObj.solo_friendly === false || $scope.locationObj.solo_friendly === null;
 		// check grades
 		var grade = true;
 		// TODO: FIXME: kind of done as a hack due to time constraint

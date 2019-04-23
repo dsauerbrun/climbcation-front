@@ -98,9 +98,13 @@
 													ng-click="locationObj.solo_friendly = true">
 														Yes
 												</button>
-												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.solo_friendly == false}"
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.solo_friendly === false}"
 													ng-click="locationObj.solo_friendly = false">
 														No
+												</button>
+												<button class="btn btn-sm btn-default" ng-class="{'active': locationObj.solo_friendly === null}"
+													ng-click="locationObj.solo_friendly = null">
+														Not Sure
 												</button>
 											</div>
 										</span>
