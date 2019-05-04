@@ -112,7 +112,7 @@
 						</div>
 					</div>
 					<label>Any additional tips about getting around {{locationData.name}}?</label>
-					<p class="text-gray info-text" ng-bind-html="(locationData.getting_in_notes || 'No Details Available') | linky"></p>
+					<p class="text-gray info-text preserve-line-breaks" ng-bind-html="(locationData.getting_in_notes || 'No Details Available') | linky"></p>
 				</div>
 				<div class="well climbcation-well" ng-if="editingGettingIn">
 					<div class="row section-title">
@@ -202,7 +202,7 @@
 						</div>
 					</div>
 					<label>Any additional tips for staying in {{locationData.name}}?</label>
-					<p class="text-gray info-text" ng-bind-html="(locationData.accommodation_notes || 'No Details Available') | linky"></p>
+					<p class="text-gray info-text preserve-line-breaks" ng-bind-html="(locationData.accommodation_notes || 'No Details Available') | linky"></p>
 				</div>
 				<div class="well climbcation-well" ng-if="editingAccommodation">
 					<div class="row section-title">
@@ -290,9 +290,9 @@
 						</div>
 					</div>
 					<label>Any other common expenses in {{locationData.name}}?</label>
-					<p class="text-gray info-text" ng-bind-html="(locationData.common_expenses_notes || 'No Details Available') | linky"></p>
+					<p class="text-gray info-text preserve-line-breaks" ng-bind-html="(locationData.common_expenses_notes || 'No Details Available') | linky"></p>
 					<label>Any tips on saving money around {{locationData.name}}?</label>
-					<p class="text-gray info-text" ng-bind-html="(locationData.saving_money_tip || 'No Details Available') | linky"></p>
+					<p class="text-gray info-text preserve-line-breaks" ng-bind-html="(locationData.saving_money_tip || 'No Details Available') | linky"></p>
 				</div>
 				<div class="well climbcation-well" ng-if="editingFoodOptions">
 					<div class="row section-title">

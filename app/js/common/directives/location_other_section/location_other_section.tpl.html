@@ -31,5 +31,5 @@
 
 <div ng-if="!section.previewOff">
 	<h3 class="inline">{{oldTitle}}</h3> <span class="text-button" ng-click="togglePreview(section)">Edit</span>
-	<p class="text-gray info-text" ng-bind-html="oldBody | linky"></p>
+	<p class="text-gray info-text preserve-line-breaks" ng-bind-html="oldBody | linky"></p>
 </div>
