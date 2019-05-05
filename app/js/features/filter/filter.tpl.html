@@ -116,11 +116,11 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					<label>Lodging Type</label>
-					<div class="btn-group btn-group-sm btn-group-filter" data="Lodging" role="group">
-						<button ng-click="LocationsGetter.toggleFilterButton('accommodations','All' )" type="button" class="filter-button btn btn-lg btn-default all" data="all" ng-class="{'active': LocationsGetter.isButtonActive('accommodations', 'empty')}">All</button>
-						<button ng-click="LocationsGetter.toggleFilterButton('accommodations',id )" ng-repeat="(name,id) in filter.accommodations" type="button" class="filter-button btn btn-lg btn-default" ng-class="{'active': LocationsGetter.isButtonActive('accommodations', id)}" data="{{ name }}">{{name}}</button>
-					</div>
+					<label>Solo Friendly</label>
+					<label class="control control--checkbox" for="soloFriendlyEnabled" ng-class="{'active': LocationsGetter.filter.solo_friendly}">
+						<input type="checkbox" name="soloFriendlyEnabled" id="soloFriendlyEnabled" ng-model="LocationsGetter.filter.solo_friendly" ng-change="LocationsGetter.setFilterTimer(1)">
+						<div class="control__indicator"></div>
+					</label>
 				</div>
 				
 			</div>
@@ -227,11 +227,11 @@
 					<input type="text" class="form-control" ng-model="LocationsGetter.filter.search" ng-trim="true" ng-change="LocationsGetter.filterByQuery(LocationsGetter.filter.search)" ng-model-options="{ debounce: 500 }" placeholder="ex. beach"/>
 				</div>
 				<div class="col-md-3">
-					<label>Where do you want to stay?</label>
-					<div class="btn-group btn-group-sm btn-group-filter" data="Lodging" role="group">
-						<button ng-click="LocationsGetter.toggleFilterButton('accommodations','All' )" type="button" class="filter-button btn btn-lg btn-default all" ng-class="{'active': LocationsGetter.isButtonActive('accommodations', 'empty')}" data="all">All</button>
-						<button ng-click="LocationsGetter.toggleFilterButton('accommodations',id )" ng-repeat="(name,id) in filter.accommodations" type="button" class="filter-button btn btn-lg btn-default" ng-class="{'active': LocationsGetter.isButtonActive('accommodations', id)}" data="{{ name }}">{{name}}</button>
-					</div>
+					<label>Solo Friendly</label>
+					<label class="control control--checkbox" for="soloFriendlyEnabled" ng-class="{'active': LocationsGetter.filter.solo_friendly}">
+						<input type="checkbox" name="soloFriendlyEnabled" id="soloFriendlyEnabled" ng-model="LocationsGetter.filter.solo_friendly" ng-change="LocationsGetter.setFilterTimer(1)">
+						<div class="control__indicator"></div>
+					</label>
 				</div>
 			</div>
 		</div>

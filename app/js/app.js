@@ -549,6 +549,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 	filter['continents'] = [];
 	filter['sort'] = [];
 	filter['search'] = '';
+	filter.solo_friendly = null;
 	filter.start_month = 1;
 	filter.end_month = 12;
 
@@ -608,6 +609,10 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			filterList.push({title: `${filter.start_month_name.substring(0, 3)} - ${filter.end_month_name.substring(0,3)}`, id: 'months', type: 'months'})
 		}
 
+		if (filter.solo_friendly && filter.solo_friendly === true) {
+			filterList.push({title: `Solo Traveler Friendly`, id: 'solo_friendly', type: 'solo_friendly'});
+		}
+
 		LocationsGetter.appliedFilters = filterList;
 		$rootScope.$apply();
 	}
@@ -624,6 +629,8 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			LocationsGetter.filter.start_month = 1;
 			LocationsGetter.filter.end_month_name = 'December';
 			LocationsGetter.filter.start_month_name = 'January';
+		} else if (appliedFilter.type == 'solo_friendly') {
+			LocationsGetter.filter.solo_friendly = null;
 		}
 
 		let appliedFilterIndex = LocationsGetter.appliedFilters.findIndex(x => x.id == appliedFilter.id && x.type == appliedFilter.type);
@@ -743,6 +750,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 		filter['search'] = '';
 		filter['start_month'] = 1;
 		filter['end_month'] = 12;
+		filter.solo_friendly = null;
 		filter.start_month_name = monthNames[filter.start_month - 1];
 		filter.end_month_name = monthNames[filter.end_month - 1];;
 		this.mapFilter['northeast'] = {};
