@@ -99,7 +99,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 				$scope.nearby = success['nearby'];
 				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,4);
 				addCloseLocations($scope.gmap,success['nearby']);
-				addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location']['title'],'<p>'+success['location']['title']+'</p>',false);
+				addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location'],'<p>'+success['location']['title']+'</p>',false);
 
 				populateEditables($scope.locationData);
 
@@ -646,9 +646,9 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			LocationsGetter.markerMap = {};
 			for (let key in LocationsGetter.maps) {
 				let currentMap = LocationsGetter.maps[key];
-				currentMap.map.removeMarkers();
-			
-				LocationsGetter.unpaginatedLocations.forEach(function(unpagLocation) {
+				
+				let existingMarkerIds = currentMap.map.markers.map(x => x.details.id);
+				LocationsGetter.unpaginatedLocations.filter(x => existingMarkerIds.indexOf(x.id) == -1).forEach(function(unpagLocation) {
 					var clickFunc = null;
 					if (key == 'large') {
 						clickFunc = async function(e) {
@@ -659,13 +659,17 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 				      }, 1000);
 						}
 					}
-					LocationsGetter.markerMap[unpagLocation['slug'] + key] = addMarker(currentMap.map, unpagLocation['latitude'], unpagLocation['longitude'], unpagLocation['name'], '<p><a href="/location/'+unpagLocation['slug']+'">'+unpagLocation['name']+'</a></p>',true, clickFunc);
+					LocationsGetter.markerMap[unpagLocation['slug'] + key] = addMarker(currentMap.map, unpagLocation['latitude'], unpagLocation['longitude'], unpagLocation, '<p><a href="/location/'+unpagLocation['slug']+'">'+unpagLocation['name']+'</a></p>',true, clickFunc);
 					
 					let options = {opacity: .5};
 					
 
 					LocationsGetter.markerMap[unpagLocation['slug'] + key].setOptions(options);
 				});
+
+				currentMap.map.markers.filter(x => LocationsGetter.unpaginatedLocations.map(y => y.id).indexOf(x.details.id) == -1).forEach(function(marker) {
+					currentMap.map.removeMarker(marker);
+				})
 
 				// we set firstMapLoad to false when the zoom_changed watch catches the fitBounds call 
 				if (currentMap.firstMapLoad && key == 'small') {
@@ -899,20 +903,21 @@ function createMap(mapId,latitude,longitude,zoom){
 
 function addCloseLocations(map,locationMap){
 	$.each(locationMap,function(){
-		addMarker(map, this['lat'], this['lng'], this['name'], '<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>', true);
+		addMarker(map, this['lat'], this['lng'], this, '<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>', true);
 	});
 }
 
-function addMarker(map,lat,lng,title,infowindow,isSecondary, clickFunc = null){
+function addMarker(map,lat,lng,location,infowindow,isSecondary, clickFunc = null){
 		return map.addMarker({
 			lat: lat,
 			lng: lng,
-			title: title,
+			title: location.title || location.name,
+			details: {id: location.id},
 			icon: isSecondary ? '' : 'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png',
 			infoWindow: {
 				content: infowindow
 			},
-			click: clickFunc
+			click: clickFunc,
 		});
 }
 
