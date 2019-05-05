@@ -43,7 +43,7 @@ home.filter('removeSpaces', function () {
 	};
 });
 
-home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter){
+home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', 'localStorageService', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter, localStorageService){
 	slug = $routeParams.slug;
 	var editMessage = 'Your edit has been submitted and will be approved by a moderator shortly!';
 	$scope.name = 'hello';
@@ -58,6 +58,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	$scope.getAirport = function(item, model, label, event) {
 		helperService.originAirportCode = item.iata;
 		helperService.originAirport = item.name;
+		localStorageService.set('airport', item);
 		LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
 			$timeout(function(){
 				setLocationHighchart(promiseQuotes, helperService.originAirportCode);
@@ -372,21 +373,6 @@ home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'Loc
 		LocationsGetter.getFlightQuotes($scope.slugArray, item.iata, function(){
 			$scope.loadingQuotes = false;
 		});
-	}
-
-	$scope.getAirportPricesCode = function(code) {
-		if (code.length == 3 || code.length == 4) {
-			helperService.originAirportCode = code;
-			$rootScope.loadingQuotes = true;
-			// clear out lowest price so we show loading symbol
-			_.forEach($scope.locationData,function(location) {
-				location.lowestPrice = {};
-			});
-			LocationsGetter.getFlightQuotes($scope.slugArray, code, function(){
-				$scope.loadingQuotes = false;
-			});
-		}
-		
 	}
 
 	$scope.$watch('LocationsGetter.flightQuotes', function(){

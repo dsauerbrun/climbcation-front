@@ -67,6 +67,11 @@ filterDir.directive('filter', function(){
 				$scope.filtersShown = !$scope.filtersShown;
 			};
 
+			$scope.selectAirport = function($item, $model, $label, $event) {
+				$scope.getAirportPrices($item, $model, $label, $event);
+				localStorageService.set('airport', $item);
+			}
+
 			$scope.clearPristine = function() {
 				if (helperService.originAirport == 'Denver International Airport') {
 					helperService.originAirport = '';

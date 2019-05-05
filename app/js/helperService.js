@@ -1,6 +1,6 @@
 var helperService = angular.module('helperService', []);
 
-helperService.service('helperService', function($rootScope, $http, $sce) {
+helperService.service('helperService', function($rootScope, $http, $sce, localStorageService) {
 
 	this.setAirportApiKey = function() {
 		var that = this;
@@ -57,6 +57,7 @@ helperService.service('helperService', function($rootScope, $http, $sce) {
 		}
 	}
 
-	this.originAirport = 'Denver International Airport';
-	this.originAirportCode = 'DEN';
+	let originAirport = localStorageService.get('airport') || {name: 'Denver International Airport', iata: 'DEN'};
+	this.originAirport = originAirport.name;
+	this.originAirportCode = originAirport.iata;
 });
