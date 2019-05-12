@@ -1006,7 +1006,7 @@ function addMarker(map,lat,lng,location,isSecondary, clickFunc = null){
 			map.$apply();
 		},
 		mouseout: function() {
-			//$('.map-info-window').hide();
+			$('.map-info-window').hide();
 		}
 	});
 }
