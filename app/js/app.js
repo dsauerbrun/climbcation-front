@@ -97,9 +97,9 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 				$scope.tableOfContents = processTableContents($scope.sections);
 				$scope.locationData = success['location']
 				$scope.nearby = success['nearby'];
-				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,4);
-				addCloseLocations($scope.gmap,success['nearby']);
-				addMarker($scope.gmap,$scope.latitude,$scope.longitude,success['location'],'<p>'+success['location']['title']+'</p>',false);
+				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,4, $rootScope);
+				addCloseLocations($scope.gmap, success['nearby']);
+				addMarker($scope.gmap, $scope.latitude, $scope.longitude, success['location'], false);
 
 				populateEditables($scope.locationData);
 
@@ -334,6 +334,7 @@ home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'Loc
 	$scope.largeMapEnabled = false;
 	LocationsGetter.locations = LocationsGetter.locations || [];
 	helperService.setAirportApiKey();
+	$rootScope.hoveredLocation = {location: null};
 	
 	// if we are returning to the front page we want to reset the locations and clear the filters
 	if(LocationsGetter.locations.length > 0) {
@@ -470,11 +471,11 @@ home.directive('mapFilter', function() {
 		//transclude: true,
 		scope: {
 			filterType: '@',
-			//locationsGetter: '='
 		},
 		controller: ['$rootScope', '$scope', '$timeout', '$window', 'LocationsGetter', function($rootScope,$scope, $timeout, $window, LocationsGetter) {
 			var filterId;
 			var mapDefaults = {};
+			$scope.hoveredLocation = $rootScope.hoveredLocation;
 			if ($window.innerWidth < 768) {
 				filterId = 'mapFilterMobile';
 				mapDefaults.latitude = 70;
@@ -495,7 +496,7 @@ home.directive('mapFilter', function() {
 				
 			}
 			$scope.mapFilterEnabled = true;
-			LocationsGetter.maps[$scope.filterType] = {map: createMap(filterId, mapDefaults.latitude, mapDefaults.longitude, mapDefaults.zoom), firstMapLoad: true};
+			LocationsGetter.maps[$scope.filterType] = {map: createMap(filterId, mapDefaults.latitude, mapDefaults.longitude, mapDefaults.zoom, $rootScope), firstMapLoad: true};
 
 			LocationsGetter.markerMap = {};
 
@@ -526,7 +527,7 @@ home.directive('mapFilter', function() {
 	}
 });
 
-home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorageService', 'moment', function($http, $timeout, $rootScope, localStorageService, moment) {
+home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorageService', 'moment', '$location', function($http, $timeout, $rootScope, localStorageService, moment, $location) {
 	var LocationsGetter = this;
 	var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	//var LocationsGetter = {};
@@ -654,7 +655,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			for (let key in LocationsGetter.maps) {
 				let currentMap = LocationsGetter.maps[key];
 				
-				let existingMarkerIds = currentMap.map.markers.map(x => x.details.id);
+				let existingMarkerIds = currentMap.map.markers.map(x => x.details.location.id);
 				LocationsGetter.unpaginatedLocations.filter(x => existingMarkerIds.indexOf(x.id) == -1).forEach(function(unpagLocation) {
 					var clickFunc = null;
 					if (key == 'large') {
@@ -665,8 +666,13 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 				          scrollTop: $('#location-item-' + unpagLocation.id).offset().top - $('#infinite-scroll-container').offset().top  + $('#infinite-scroll-container').scrollTop()
 				      }, 1000);
 						}
+					} else {
+						clickFunc = async function(e) {
+							$location.path('/location/' + e.details.location.slug);
+							$rootScope.$apply();
+						}
 					}
-					LocationsGetter.markerMap[unpagLocation['slug'] + key] = addMarker(currentMap.map, unpagLocation['latitude'], unpagLocation['longitude'], unpagLocation, '<p><a href="/location/'+unpagLocation['slug']+'">'+unpagLocation['name']+'</a></p>',true, clickFunc);
+					LocationsGetter.markerMap[unpagLocation['slug'] + key] = addMarker(currentMap.map, unpagLocation['latitude'], unpagLocation['longitude'], unpagLocation, true, clickFunc);
 					
 					let options = {opacity: .5};
 					
@@ -674,7 +680,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 					LocationsGetter.markerMap[unpagLocation['slug'] + key].setOptions(options);
 				});
 
-				currentMap.map.markers.filter(x => LocationsGetter.unpaginatedLocations.map(y => y.id).indexOf(x.details.id) == -1).forEach(function(marker) {
+				currentMap.map.markers.filter(x => LocationsGetter.unpaginatedLocations.map(y => y.id).indexOf(x.details.location.id) == -1).forEach(function(marker) {
 					currentMap.map.removeMarker(marker);
 				})
 
@@ -887,7 +893,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 
 }]);
 
-function createMap(mapId,latitude,longitude,zoom){
+function createMap(mapId,latitude,longitude,zoom, $rootScope){
 	var map = new GMaps({
 		div: '#'+mapId,
 		lat: latitude,
@@ -896,6 +902,13 @@ function createMap(mapId,latitude,longitude,zoom){
 		scrollwheel: false,
 		gestureHandling: 'greedy',
 	});
+
+	let overlay = new google.maps.OverlayView();
+	overlay.draw = function () {};
+	overlay.setMap(map.map);
+	map.overlay = overlay;
+	map.hoveredLocation = $rootScope.hoveredLocation;
+	map.$apply = $rootScope.$apply;
 	$('body').on('click', function(element) {
 		map.setOptions({scrollwheel:false});
 	});
@@ -911,21 +924,75 @@ function createMap(mapId,latitude,longitude,zoom){
 
 function addCloseLocations(map,locationMap){
 	$.each(locationMap,function(){
-		addMarker(map, this['lat'], this['lng'], this, '<p><a href="/location/'+this['slug']+'">'+this['name']+'</a></p>', true);
+		addMarker(map, this['lat'], this['lng'], this, true);
 	});
 }
 
-function addMarker(map,lat,lng,location,infowindow,isSecondary, clickFunc = null){
+function getPixelLocation(currentLatLng, map) {
+
+    var scale = Math.pow(2, map.getZoom());
+    // The NorthWest corner of the current viewport corresponds
+    // to the upper left corner of the map.
+    // The script translates the coordinates of the map's center point
+    // to screen coordinates. Then it subtracts the coordinates of the
+    // coordinates of the map's upper left corner to translate the 
+    // currentLatLng location into pixel values in the <div> element that hosts the map.
+    var nw = new google.maps.LatLng(
+        map.getBounds().getNorthEast().lat(),
+        map.getBounds().getSouthWest().lng()
+    );
+    // Convert the nw location from geo-coordinates to screen coordinates
+    var worldCoordinateNW = map.getProjection().fromLatLngToPoint(nw);
+    // Convert the location that was clicked to screen coordinates also
+    var worldCoordinate = map.getProjection().fromLatLngToPoint(currentLatLng);
+    var currentLocation = new google.maps.Point(
+        Math.floor((worldCoordinate.x - worldCoordinateNW.x) * scale),
+        Math.floor((worldCoordinate.y - worldCoordinateNW.y) * scale)
+    );
+
+    return currentLocation;
+}
+
+function addMarker(map,lat,lng,location,isSecondary, clickFunc = null){
 		return map.addMarker({
 			lat: lat,
 			lng: lng,
 			title: location.title || location.name,
-			details: {id: location.id},
+			details: {location: location},
 			icon: isSecondary ? '' : 'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png',
-			infoWindow: {
-				content: infowindow
-			},
 			click: clickFunc,
+			mouseover: function(event) {
+				let point = map.overlay.getProjection().fromLatLngToContainerPixel(this.position);
+				
+				var offsetCalcY = 0;
+				var offsetCalcX = 0;
+				if (map.getDiv().id == 'mapFilterLarge') {
+					offsetCalcY = 50;
+					offsetCalcX = 24;
+				} else if (map.getDiv().id == 'mapFilter') {
+					offsetCalcY = 30;
+					offsetCalcX = 10;
+				}
+				
+				let infoWindowWidth = $('.map-info-window').outerWidth();
+				let infoWindowHeight = $('.map-info-window').outerHeight();
+
+				$('.map-info-window').show();
+				$('.map-info-window > .location-card').addClass('map-info-window-arrow-bottom');
+				$('.map-info-window > .location-card').removeClass('map-info-window-arrow-top');
+				$('.map-info-window').css('top', (point.y - infoWindowHeight - offsetCalcY) + 'px');
+				$('.map-info-window').css('left', (point.x - infoWindowWidth + offsetCalcX) + 'px');
+				if (!$('.map-info-window').visible()) {
+					$('.map-info-window').css('top', (point.y - infoWindowHeight - offsetCalcY + (infoWindowHeight + 50)) + 'px');
+					$('.map-info-window > .location-card').removeClass('map-info-window-arrow-bottom');
+					$('.map-info-window > .location-card').addClass('map-info-window-arrow-top');
+				}
+				map.hoveredLocation.location = this.details.location;
+				map.$apply();
+			},
+			mouseout: function() {
+				$('.map-info-window').hide();
+			}
 		});
 }
 

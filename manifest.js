@@ -1,6 +1,7 @@
 exports.javascript = [
   'node_modules/babel-polyfill/dist/polyfill.min.js',
 	'vendor/jquery/dist/jquery.min.js',
+  'node_modules/jquery-visible/jquery.visible.min.js',
   'node_modules/bootstrap3/dist/js/bootstrap.min.js',
   'node_modules/angular/angular.min.js',
 	'vendor/ng-file-upload/ng-file-upload.min.js',

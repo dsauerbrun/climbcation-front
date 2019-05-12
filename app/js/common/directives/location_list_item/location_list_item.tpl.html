@@ -18,7 +18,7 @@
 				</div>
 				<div class="col-xs-6 col-md-12">
 					<label>Climbing Types</label>
-					<img ng-repeat="type in locationData['climbing_types']" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">
+					<img ng-repeat="type in locationData.climbing_types" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">
 				</div>
 				<div class="col-xs-6 col-md-12">
 					<label>Best Seasons</label>
@@ -38,7 +38,7 @@
 					<span data-template-url="views/tooltips/startooltip.tpl.html" data-animation="am-flip-x" bs-tooltip="helperService.getRatingName(locationData.rating)">
 						<span class="glyphicon glyphicon-star" ></span>
 						<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': locationData.rating < 2}"></span>
-						<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': locationData.rating < 3}">
+						<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': locationData.rating < 3}"></span>
 					</span>
 				</div>
 				<div class="col-xs-6 col-md-6">

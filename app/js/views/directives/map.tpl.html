@@ -1,15 +1,55 @@
-<div class="row" ng-show="filterType == 'small'">
-	<label class="control control--checkbox" for="mapFilterEnabled" ng-class="{'active': mapFilterEnabled}">
-		<input type="checkbox" name="mapFilterEnabled" id="mapFilterEnabled" ng-model="mapFilterEnabled">
-		<div class="control__indicator"></div>
-		<span class="gray">Redo search when map moved</span>
-	</label>
-	<div id="mapFilter" class="mapFilter">
+<div style="position: relative" ng-class="{'large-map-filter-container': filterType == 'large'}">
+	<div class="row" ng-show="filterType == 'small'">
+		<label class="control control--checkbox" for="mapFilterEnabled" ng-class="{'active': mapFilterEnabled}">
+			<input type="checkbox" name="mapFilterEnabled" id="mapFilterEnabled" ng-model="mapFilterEnabled">
+			<div class="control__indicator"></div>
+			<span class="gray">Redo search when map moved</span>
+		</label>
+		<div id="mapFilter" class="mapFilter">
+		</div>
+	</div>
+
+	<div id="mapFilterMobile" class="mapFilter mobile-filter" ng-show="filterType == 'mobile'">
+	</div>
+
+	<div id="mapFilterLarge" class="mapFilter large-filter" ng-show="filterType == 'large'">
+	</div>
+
+	<div class="map-info-window " id="showMapInfoWindow" style="display: none">
+	  <div class="location-card map-info-window-arrow-bottom">
+			<div class="location-card-info">
+				<div class="row">
+					<div class="col-md-8 location-list-thumb-container">
+						<a ng-href="/location/{{ hoveredLocation.location.slug }}">
+							<img class="location-list-thumb" ng-src="{{ hoveredLocation.location['home_thumb'] }}">	
+							<div class="location-list-thumb-title">
+								<h3 class="text-gray">{{ hoveredLocation.location['name'] }}</h3>
+							</div>
+						</a>
+
+					</div>
+					<div class="col-md-4 location-card-attributes">
+						<div class="col-xs-12 col-md-12">
+							<label>Climbing Types</label>
+							<img ng-repeat="type in hoveredLocation.location['climbing_types']" ng-src="{{ type['url'] }}" class='icon' title="{{ type['name'] }}">
+						</div>
+						<div class="col-xs-12 col-md-12">
+							<label>Best Seasons</label>
+							<p class="text-gray info-text">{{ hoveredLocation.location['date_range']}}</p>
+						</div>
+						<div class="col-xs-12 col-md-12">
+							<label>Rating</label>
+							<span data-template-url="views/tooltips/startooltip.tpl.html" data-animation="am-flip-x" bs-tooltip="helperService.getRatingName(hoveredLocation.location.rating)">
+								<span class="glyphicon glyphicon-star" ></span>
+								<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': hoveredLocation.location.rating < 2}"></span>
+								<span class="glyphicon glyphicon-star" ng-class="{'glyphicon-star-empty': hoveredLocation.location.rating < 3}"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
-<div id="mapFilterMobile" class="mapFilter mobile-filter" ng-show="filterType == 'mobile'">
-</div>
 
-<div id="mapFilterLarge" class="mapFilter large-filter" ng-show="filterType == 'large'">
-</div>
