@@ -53,6 +53,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	$scope.editingGettingIn = false;
 	$scope.editingFoodOptions = false;
 	$scope.helperService = helperService;
+	$rootScope.hoveredLocation = {location: null};
 	helperService.setAirportApiKey();
 
 	$scope.getAirport = function(item, model, label, event) {
@@ -97,8 +98,8 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 				$scope.tableOfContents = processTableContents($scope.sections);
 				$scope.locationData = success['location']
 				$scope.nearby = success['nearby'];
-				$scope.gmap = createMap('map-canvas',$scope.latitude,$scope.longitude,4, $rootScope);
-				addCloseLocations($scope.gmap, success['nearby']);
+				$scope.gmap = createMap('nearby-map',$scope.latitude,$scope.longitude,4, $rootScope);
+				addCloseLocations($scope.gmap, success['nearby'], $location, $rootScope);
 				addMarker($scope.gmap, $scope.latitude, $scope.longitude, success['location'], false);
 
 				populateEditables($scope.locationData);
@@ -922,9 +923,14 @@ function createMap(mapId,latitude,longitude,zoom, $rootScope){
 	return map;
 }
 
-function addCloseLocations(map,locationMap){
+function addCloseLocations(map, locationMap, $location, $rootScope){
 	$.each(locationMap,function(){
-		addMarker(map, this['lat'], this['lng'], this, true);
+		let clickFunc = function(e) {
+			console.log('here i am')
+			$location.path('/location/' + e.details.location.slug);
+			$rootScope.$apply();
+		}
+		addMarker(map, this['lat'], this['lng'], this, true, clickFunc);
 	});
 }
 
@@ -954,46 +960,55 @@ function getPixelLocation(currentLatLng, map) {
 }
 
 function addMarker(map,lat,lng,location,isSecondary, clickFunc = null){
-		return map.addMarker({
-			lat: lat,
-			lng: lng,
-			title: location.title || location.name,
-			details: {location: location},
-			icon: isSecondary ? '' : 'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png',
-			click: clickFunc,
-			mouseover: function(event) {
-				let point = map.overlay.getProjection().fromLatLngToContainerPixel(this.position);
-				
-				var offsetCalcY = 0;
-				var offsetCalcX = 0;
-				if (map.getDiv().id == 'mapFilterLarge') {
-					offsetCalcY = 50;
-					offsetCalcX = 24;
-				} else if (map.getDiv().id == 'mapFilter') {
-					offsetCalcY = 30;
-					offsetCalcX = 10;
-				}
-				
-				let infoWindowWidth = $('.map-info-window').outerWidth();
-				let infoWindowHeight = $('.map-info-window').outerHeight();
-
-				$('.map-info-window').show();
-				$('.map-info-window > .location-card').addClass('map-info-window-arrow-bottom');
-				$('.map-info-window > .location-card').removeClass('map-info-window-arrow-top');
-				$('.map-info-window').css('top', (point.y - infoWindowHeight - offsetCalcY) + 'px');
-				$('.map-info-window').css('left', (point.x - infoWindowWidth + offsetCalcX) + 'px');
-				if (!$('.map-info-window').visible()) {
-					$('.map-info-window').css('top', (point.y - infoWindowHeight - offsetCalcY + (infoWindowHeight + 50)) + 'px');
-					$('.map-info-window > .location-card').removeClass('map-info-window-arrow-bottom');
-					$('.map-info-window > .location-card').addClass('map-info-window-arrow-top');
-				}
-				map.hoveredLocation.location = this.details.location;
-				map.$apply();
-			},
-			mouseout: function() {
-				$('.map-info-window').hide();
+	return map.addMarker({
+		lat: lat,
+		lng: lng,
+		title: location.title || location.name,
+		details: {location: location},
+		icon: isSecondary ? '' : 'https://s3-us-west-2.amazonaws.com/climbcation-front/assets/primary.png',
+		click: clickFunc,
+		mouseover: function(event) {
+			let point = map.overlay.getProjection().fromLatLngToContainerPixel(this.position);
+			
+			var offsetCalcY = 0;
+			var offsetCalcX = 0;
+			var bottomOffset = 0;
+			if (map.getDiv().id == 'mapFilterLarge') {
+				offsetCalcY = 50;
+				offsetCalcX = 24;
+				bottomOffset = 50;
+			} else if (map.getDiv().id == 'mapFilter') {
+				offsetCalcY = 30;
+				offsetCalcX = 10;
+				bottomOffset = 50;
+			} else if (map.getDiv().id == 'nearby-map') {
+				offsetCalcY = 60;
+				offsetCalcX = 425;
+				bottomOffset = 50;
+				$('.map-info-window > .location-card').addClass('left-arrow');
 			}
-		});
+			
+			let infoWindowWidth = $('.map-info-window').outerWidth();
+			let infoWindowHeight = $('.map-info-window').outerHeight();
+
+			$('.map-info-window').show();
+			$('.map-info-window > .location-card').addClass('map-info-window-arrow-bottom');
+			$('.map-info-window > .location-card').removeClass('map-info-window-arrow-top');
+			$('.map-info-window').css('top', (point.y - infoWindowHeight - offsetCalcY) + 'px');
+			$('.map-info-window').css('left', (point.x - infoWindowWidth + offsetCalcX) + 'px');
+
+			if (!$('.map-info-window').visible()) {
+				$('.map-info-window').css('top', (point.y - infoWindowHeight - offsetCalcY + (infoWindowHeight + bottomOffset)) + 'px');
+				$('.map-info-window > .location-card').removeClass('map-info-window-arrow-bottom');
+				$('.map-info-window > .location-card').addClass('map-info-window-arrow-top');
+			}
+			map.hoveredLocation.location = this.details.location;
+			map.$apply();
+		},
+		mouseout: function() {
+			//$('.map-info-window').hide();
+		}
+	});
 }
 
 function processTableContents(sectionMap){

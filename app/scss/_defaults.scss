@@ -136,6 +136,10 @@ label {
 			border-width: 14px;
 			margin-left: -14px;
 		}
+
+		&.left-arrow:after, &.left-arrow:before {
+			left: 5%;
+		}
 	}
 }
 
