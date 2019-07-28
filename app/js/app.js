@@ -650,7 +650,6 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 	LocationsGetter.reloadMapMarkers = function() {
 		if (LocationsGetter.unpaginatedLocations.length != 0) {
 			//redo map points
-			LocationsGetter.markerMap = {};
 			for (let key in LocationsGetter.maps) {
 				let currentMap = LocationsGetter.maps[key];
 				
