@@ -111,7 +111,10 @@
 	&.fixed {
 	position: fixed;
 	bottom: initial;
-	top: 0;
+	top: -3px;
+		.filter-banner {
+			padding-top: 2.5em;
+		}
 	}	
 
 	h4:first-child {
