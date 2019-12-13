@@ -1,4 +1,4 @@
-var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','authService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
 
 home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider', function($routeProvider, $locationProvider, localStorageServiceProvider) {
 	//localStorageServiceProvider.setStorageType('sessionStorage');
@@ -325,7 +325,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 
 }]);
 
-home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function($rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+home.controller('LocationsController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
@@ -459,7 +459,13 @@ home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'Loc
 				})
 			}
 		}
+	};
+
+	async function init() {
+		await authService.getUser();
 	}
+
+	init();
 
 }]);
 
