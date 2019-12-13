@@ -5,3 +5,5 @@ vendor/*
 !vendor/gmapsjs/
 !vendor/highcharts/
 *.DS_Store
+*.crt
+*.key
