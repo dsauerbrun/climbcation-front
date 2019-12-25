@@ -42,8 +42,8 @@
   </script>
 
   <toast></toast>
-  <nav class="navbar home navbar-inverse">
-    <div class="container">
+  <nav class="navbar home navbar-inverse" ng-controller="HeaderController">
+    <div class="container" style="width: 90%; margin: 0 auto">
       <div class="col-md-2 nav-link text">
         <a href="new-location">Submit a New Location</a>
       </div>
@@ -55,13 +55,15 @@
           <img src="/images/climbcation-header-logo.png">
         </a>
       </div>
-      <div class="col-md-4 nav-link text">
-        <a href="mailto:info@climbcation.com">Email me at info@climbcation.com</a>
+      <div class="col-md-3 nav-link text">
+        <div ng-if="authService.user">Welcome {{authService.user.username}} <a href="/api/user/logout">Logout</a></div>
+        <div ng-if="!authService.user"><a data-toggle="modal" data-target="#loginModal">Login/Signup</a></div>
+      </div>
+      <div class="col-md-1 nav-link text">
+        <a href="mailto:info@climbcation.com">Email me!</a>
         <!-- instagram badge script -->
         <a href="https://www.instagram.com/climbcation/?ref=badge" class="contact-link"><img class="instagram-badge" src="//badges.instagram.com/static/images/ig-badge-24.png" alt="Instagram" /></a>
         <div class="fb-like display-inline-block contact-link" data-href="https://www.facebook.com/climbcation" data-width="20" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
-        <a href="https://localhost:3000/auth/facebook"> facebook auth</a>
-        <a href="https://localhost:3000/auth/google_oauth2"> google auth</a>
       </div>
     </div>
   </nav>
@@ -111,6 +113,94 @@
           <p>
             I also want to give a thank you to Bryan Zavestoski for lending a hand on the UI. If you like the look and feel of Climbcation and you're looking for a UI/UX guy, you can find his information at <a href="http://zavzen.com/" target="_blank">www.zavzen.com</a>
           </p>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <div id="loginModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">{{ signUpEnabled ? 'Sign Up': 'Log In' }}</h4>
+        </div>
+        <div class="modal-body login-modal" ng-controller="AuthController">
+          <div class="alert alert-warning alert-dismissable" ng-if="authError">
+            <button type="button" class="close" ng-click="authError = null">&times;</button>
+            <div ng-bind-html="authError"></div>
+          </div>
+          <div ng-show="!signUpEnabled">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="external-sign-in">
+                  <div class="btn btn-primary">
+                    <a href="https://localhost:3000/auth/facebook">Sign In With Facebook</a>
+                  </div>
+                  <div class="btn btn-primary">
+                    <a href="https://localhost:3000/auth/google_oauth2">Sign In With Google</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-md-12">
+                <label>Username/Email</label>
+                <input class="form-control" type="text" ng-model="username" />
+                <div class="password-label">
+                  <label>Password</label>
+                  <a>Forgot password?</a>
+                </div>
+                <input class="form-control" type="password" ng-model="password" />
+                <div class="go-row">
+                  <div>
+                    Don't have an account? <a href="" ng-click="signUpEnabled = true">Sign Up!</a>
+                  </div>
+                  <div>
+                    <div class="btn btn-primary pull-right" ng-click="signin()" ng-disabled="signingIn">
+                      Go!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="" ng-show="signUpEnabled">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="external-sign-in">
+                  <div class="btn btn-primary">
+                    <a href="https://localhost:3000/auth/facebook">Sign Up With Facebook</a>
+                  </div>
+                  <div class="btn btn-primary">
+                    <a href="https://localhost:3000/auth/google_oauth2">Sign Up With Google</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-md-12">
+                <label>Email</label>
+                <input class="form-control" type="text" ng-model="email" />
+                <label>Username</label>
+                <input class="form-control" type="text" ng-model="username" />
+                <label>Password</label>
+                <input class="form-control" type="password" ng-model="password" />
+                <div class="go-row">
+                  <div>
+                    Already have an account? <a href="" ng-click="signUpEnabled = false">Sign In!</a>
+                  </div>
+                  <div>
+                    <div class="btn btn-primary pull-right" ng-click="signUp()" ng-disabled="signingIn">
+                      Go!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

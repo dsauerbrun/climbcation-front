@@ -461,12 +461,86 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 		}
 	};
 
+}]);
+
+home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+	$scope.authService = authService;
+}]);
+
+home.controller('AuthController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+	$scope.username = null;
+	$scope.password = null;
+	$scope.signUpEnabled = false;
+	$scope.authError = null;
+	$scope.signingIn = false;
+
+	$scope.signin = async function() {
+		$scope.signingIn = true;
+		this.authError = null;
+		try {
+			await authService.login($scope.username, $scope.password);
+			$scope.signingIn = false;
+		} catch (err) {
+			if (err.status == 400) {
+				$scope.authError = 'Invalid Username or Password';
+				$scope.signingIn = false;
+				$scope.$apply();
+			} else {
+				$scope.authError = `Unknown Error: ${err.data}`;
+			}
+		}
+		
+	}
+
+	$scope.signUpValid = function() {
+		function emailIsValid (email) {
+		  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+		}
+
+		let invalidString = '';
+		if (!$scope.password || $scope.password.length < 6) {
+			invalidString += `Password must be at least 6 characters <br />`;
+		}
+		if (!$scope.username || $scope.username.length < 3) {
+			invalidString += `Username must be at least 3 characters <br />`;
+		}
+
+		if (!$scope.email || !emailIsValid($scope.email)) {
+			invalidString += `Must enter a valid email <br />`;
+		}
+
+		if (invalidString == '') {
+			return true;
+		} else {
+			return invalidString;
+		}
+	}
+
+	$scope.signUp = async function() {
+		$scope.authError = null;
+		$scope.signingIn = true;
+		let signUpValid = $scope.signUpValid();
+		if (signUpValid === true) {
+			try {
+				await authService.signUp($scope.email, $scope.username, $scope.password);
+			} catch (err) {
+				$scope.authError = err;
+			}
+			
+			$scope.signingIn = false;
+		} else {
+			// form not valid
+			$scope.authError = signUpValid;
+			$scope.signingIn = false;
+		}
+		
+	}
+
 	async function init() {
 		await authService.getUser();
 	}
 
 	init();
-
 }]);
 
 home.directive('mapFilter', function() {
