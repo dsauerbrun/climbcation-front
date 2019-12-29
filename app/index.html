@@ -130,7 +130,7 @@
             <button type="button" class="close" ng-click="authError = null">&times;</button>
             <div ng-bind-html="authError"></div>
           </div>
-          <div ng-show="!signUpEnabled">
+          <div ng-show="!signUpEnabled && !forgotPasswordEnabled">
             <div class="row">
               <div class="col-md-12">
                 <div class="external-sign-in">
@@ -146,11 +146,11 @@
             <hr />
             <div class="row">
               <div class="col-md-12">
-                <label>Username/Email</label>
+                <label>Email</label>
                 <input class="form-control" type="text" ng-model="username" />
                 <div class="password-label">
                   <label>Password</label>
-                  <a>Forgot password?</a>
+                  <a ng-click="forgotPasswordEnabled = true">Forgot password?</a>
                 </div>
                 <input class="form-control" type="password" ng-model="password" />
                 <div class="go-row">
@@ -166,7 +166,26 @@
               </div>
             </div>
           </div>
-          <div class="" ng-show="signUpEnabled">
+          <div ng-show="forgotPasswordEnabled">
+            <div class="row">
+              <div class="col-md-12">
+                <label>Email</label>
+                <input class="form-control" type="text" ng-model="username" />
+
+                <div class="go-row">
+                  <div>
+                    <div class="btn btn-primary pull-right" ng-click="resetPassword()" ng-disabled="signingIn">
+                      Reset Password
+                    </div>
+                    <div class="btn btn-default pull-right" ng-click="forgotPasswordEnabled = false" ng-disabled="signingIn" style="margin-right:10px">
+                      Cancel
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-show="signUpEnabled && !forgotPasswordEnabled">
             <div class="row">
               <div class="col-md-12">
                 <div class="external-sign-in">

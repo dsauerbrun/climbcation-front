@@ -1,4 +1,4 @@
-var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','authService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','authService','filter-directives','location-list-item-directives','section-form-directive', 'UserManagement', 'ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
 
 home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider', function($routeProvider, $locationProvider, localStorageServiceProvider) {
 	//localStorageServiceProvider.setStorageType('sessionStorage');
@@ -20,6 +20,9 @@ home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider
 	})
 	.when('/home', {
 		templateUrl: 'views/home/home.tpl.html',
+	})
+	.when('/resetpass', {
+		templateUrl: 'views/user_management/reset_password.tpl.html',
 	})
 	.when('/new-location', {
 		templateUrl: 'views/new_location/submitpage.tpl.html',
@@ -467,7 +470,7 @@ home.controller('HeaderController', ['authService','$rootScope', '$scope', '$tim
 	$scope.authService = authService;
 }]);
 
-home.controller('AuthController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+home.controller('AuthController', ['ngToast', 'authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(ngToast, authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	$scope.username = null;
 	$scope.password = null;
 	$scope.signUpEnabled = false;
@@ -480,6 +483,8 @@ home.controller('AuthController', ['authService','$rootScope', '$scope', '$timeo
 		try {
 			await authService.login($scope.username, $scope.password);
 			$scope.signingIn = false;
+			$('#loginModal').modal('hide');
+			$scope.$apply();
 		} catch (err) {
 			if (err.status == 400) {
 				$scope.authError = 'Invalid Username or Password';
@@ -523,6 +528,11 @@ home.controller('AuthController', ['authService','$rootScope', '$scope', '$timeo
 		if (signUpValid === true) {
 			try {
 				await authService.signUp($scope.email, $scope.username, $scope.password);
+				ngToast.create({
+					additionalClasses: 'climbcation-toast',
+					content: 'A link to verify your account has been sent to your email!'
+				});
+				$('#loginModal').modal('hide');
 			} catch (err) {
 				$scope.authError = err;
 			}
@@ -534,6 +544,24 @@ home.controller('AuthController', ['authService','$rootScope', '$scope', '$timeo
 			$scope.signingIn = false;
 		}
 		
+		$scope.$apply();
+	}
+
+	$scope.resetPassword = async function() {
+		$scope.authError = null;
+		$scope.signingIn = true;
+		try {
+			await authService.resetPassword($scope.username);
+			ngToast.create({
+				additionalClasses: 'climbcation-toast',
+				content: 'A link to reset your password has been sent to your email!'
+			});
+			$('#loginModal').modal('hide');
+		} catch (err) {
+			$scope.authError = err;
+		}
+		$scope.signingIn = false;
+		$scope.$apply();
 	}
 
 	async function init() {
