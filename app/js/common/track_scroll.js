@@ -3,7 +3,9 @@ angular.module('trackScroll', [])
     var body = document.body;
 
     function updateScroll(element, attr) {
-      if (body.scrollTop >= attr.trackScroll) {
+      var doc = document.documentElement;
+      let scrollTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+      if (scrollTop >= attr.trackScroll) {
         element.addClass('fixed');
       } else {
         element.removeClass('fixed');
