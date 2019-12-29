@@ -468,14 +468,26 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 
 home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	$scope.authService = authService;
+	$scope.showSignUp = function() {
+		console.log('showing')
+		$('#loginModal').modal('show');
+		$rootScope.signUpEnabled = true;
+	}
+
+	$scope.showLogin = function() {
+		$rootScope.signUpEnabled = false;
+		$('#loginModal').modal('show');
+	}
 }]);
 
 home.controller('AuthController', ['ngToast', 'authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(ngToast, authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	$scope.username = null;
 	$scope.password = null;
-	$scope.signUpEnabled = false;
+	$rootScope.signUpEnabled = false;
 	$scope.authError = null;
 	$scope.signingIn = false;
+
+
 
 	$scope.signin = async function() {
 		$scope.signingIn = true;
