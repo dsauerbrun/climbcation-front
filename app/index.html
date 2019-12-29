@@ -56,8 +56,8 @@
         </a>
       </div>
       <div class="col-md-3 nav-link text">
-        <div ng-if="authService.user">Welcome {{authService.user.username}} <a href="/api/user/logout" target="_self">Logout</a></div>
-        <div ng-if="!authService.user"><a ng-click="showLogin()">Login</a> / <a ng-click="showSignUp()">Signup</a></div>
+        <div ng-cloak ng-if="authService.user">Welcome {{authService.user.username}} <a href="/api/user/logout" target="_self">Logout</a></div>
+        <div ng-cloak ng-if="!authService.user"><a ng-click="showLogin()">Login</a> / <a ng-click="showSignUp()">Signup</a></div>
       </div>
       <div class="col-md-1 nav-link text">
         <a href="mailto:info@climbcation.com">Email me!</a>
