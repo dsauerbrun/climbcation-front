@@ -466,7 +466,7 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 
 }]);
 
-home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', '$routeParams', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService, $routeParams){
 	$scope.authService = authService;
 	$scope.showSignUp = function() {
 		console.log('showing')
@@ -487,7 +487,9 @@ home.controller('AuthController', ['ngToast', 'authService','$rootScope', '$scop
 	$scope.authError = null;
 	$scope.signingIn = false;
 
-
+	$scope.getState = function() {
+		return encodeURIComponent($location.url());
+	}
 
 	$scope.signin = async function() {
 		$scope.signingIn = true;
