@@ -56,7 +56,17 @@
         </a>
       </div>
       <div class="col-md-3 nav-link text">
-        <div ng-cloak ng-if="authService.user">Welcome {{authService.user.username}} <a href="/api/user/logout" target="_self">Logout</a></div>
+        <div class="dropdown" ng-cloak ng-if="authService.user">
+          <div class="dropdown-toggle" type="button" id="dropdownMenu12" data-toggle="dropdown" style="cursor: pointer;">
+            Welcome {{authService.user.username}}
+            <span class="caret"></span>
+          </div>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu12" style="left: 60%">
+            <li role="presentation"><a role="menuitem" style="color: inherit" ng-click="resetPassword(authService.user.email)">Change Password</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" style="color: inherit" href="/profile">Change Username</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" style="color: inherit" href="/api/user/logout" target="_self">Logout</a></li>
+          </ul>
+        </div>
         <div ng-cloak ng-if="!authService.user"><a ng-click="showLogin()">Login</a> / <a ng-click="showSignUp()">Signup</a></div>
       </div>
       <div class="col-md-1 nav-link text">

@@ -24,6 +24,9 @@ home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider
 	.when('/resetpass', {
 		templateUrl: 'views/user_management/reset_password.tpl.html',
 	})
+	.when('/profile', {
+		templateUrl: 'views/user_management/profile.tpl.html',
+	})
 	.when('/new-location', {
 		templateUrl: 'views/new_location/submitpage.tpl.html',
 	})
@@ -466,7 +469,7 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 
 }]);
 
-home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', '$routeParams', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService, $routeParams){
+home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', '$routeParams', 'ngToast', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService, $routeParams, ngToast){
 	$scope.authService = authService;
 	$scope.showSignUp = function() {
 		console.log('showing')
@@ -477,6 +480,18 @@ home.controller('HeaderController', ['authService','$rootScope', '$scope', '$tim
 	$scope.showLogin = function() {
 		$rootScope.signUpEnabled = false;
 		$('#loginModal').modal('show');
+	}
+
+	$scope.resetPassword = async function(email) {
+		try {
+			await authService.resetPassword(email);
+			ngToast.create({
+				additionalClasses: 'climbcation-toast',
+				content: 'A link to reset your password has been sent to your email!'
+			});
+		} catch (err) {
+		}
+		$scope.$apply();
 	}
 }]);
 

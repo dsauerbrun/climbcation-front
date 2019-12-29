@@ -1,0 +1,24 @@
+<div ng-controller="ProfileController" class="profile-form">
+
+	<div class="climbcation-well well reset-form">
+		<h1>Choose a new username</h1>
+		<div class="alert alert-warning alert-dismissable" ng-if="submitError">
+      <button type="button" class="close" ng-click="submitError = null">&times;</button>
+      <div ng-bind-html="submitError"></div>
+    </div>
+    <div class="alert alert-success alert-dismissable" ng-if="submitSuccess">
+      <button type="button" class="close" ng-click="submitSuccess = null">&times;</button>
+      <div>Your information has been saved!</div>
+    </div>
+		<div>
+			<label>Username</label>
+	    <input class="form-control" type="text" ng-model="username" />
+	    <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 10px">
+		    <div class="btn btn-primary" ng-click="changeUsername()" ng-disabled="submitting">
+		      Submit!
+		    </div>
+		  </div>
+		</div>
+		
+	</div>
+</div>

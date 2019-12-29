@@ -45,6 +45,15 @@ authService.service('authService', function($rootScope, $http) {
 		
 	}
 
+	this.changeUsername = async function(username) {
+		try {
+			await $http.post('/api/changeusername', {username: username});
+		} catch (err) {
+			throw err.data || 'Error changing username';
+		}
+		
+	}
+
 	this.logout = function() {
 		
 	}

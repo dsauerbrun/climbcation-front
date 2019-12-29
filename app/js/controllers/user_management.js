@@ -23,3 +23,32 @@ userManagement.controller('ResetPasswordController',['ngToast', '$scope', '$root
 	}
 
 }]);
+
+userManagement.controller('ProfileController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', 'authService', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location, authService){
+	$scope.username = null;
+	$scope.submitSuccess = false;
+	$scope.submitError = null;
+	$scope.submitting = false;
+
+	$scope.changeUsername = async function() {
+		$scope.submitting = true;
+		$scope.submitError = null;
+		try {
+			await authService.changeUsername($scope.username);
+			$scope.submitSuccess = true;
+			authService.user.username = $scope.username;
+		} catch (err) {
+			$scope.submitError = err;
+		}
+		
+		$scope.submitting = false;
+		$scope.$apply();
+	}
+
+	this.$onInit = async () => {
+    let user = await authService.getUser();
+    $scope.username = user.username;
+    $scope.$apply();
+  }
+
+}]);
