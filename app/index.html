@@ -147,12 +147,12 @@
             <div class="row">
               <div class="col-md-12">
                 <label>Email</label>
-                <input class="form-control" type="text" ng-model="username" />
+                <input class="form-control" type="text" ng-model="username" ng-keydown="$event.keyCode === 13 && signin()"/>
                 <div class="password-label">
                   <label>Password</label>
                   <a ng-click="forgotPasswordEnabled = true">Forgot password?</a>
                 </div>
-                <input class="form-control" type="password" ng-model="password" />
+                <input class="form-control" type="password" ng-model="password" ng-keydown="$event.keyCode === 13 && signin()"/>
                 <div class="go-row">
                   <div>
                     Don't have an account? <a href="" ng-click="signUpEnabled = true">Sign Up!</a>
@@ -170,7 +170,7 @@
             <div class="row">
               <div class="col-md-12">
                 <label>Email</label>
-                <input class="form-control" type="text" ng-model="username" />
+                <input class="form-control" type="text" ng-model="username" ng-keydown="$event.keyCode === 13 && resetPassword()"/>
 
                 <div class="go-row">
                   <div>
@@ -202,11 +202,11 @@
             <div class="row">
               <div class="col-md-12">
                 <label>Email</label>
-                <input class="form-control" type="text" ng-model="email" />
+                <input class="form-control" type="text" ng-model="email" ng-keydown="$event.keyCode === 13 && signUp()"/>
                 <label>Username</label>
-                <input class="form-control" type="text" ng-model="username" />
+                <input class="form-control" type="text" ng-model="username" ng-keydown="$event.keyCode === 13 && signUp()"/>
                 <label>Password</label>
-                <input class="form-control" type="password" ng-model="password" />
+                <input class="form-control" type="password" ng-model="password" ng-keydown="$event.keyCode === 13 && signUp()"/>
                 <div class="go-row">
                   <div>
                     Already have an account? <a href="" ng-click="signUpEnabled = false">Sign In!</a>
