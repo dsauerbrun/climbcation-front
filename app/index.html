@@ -56,7 +56,7 @@
         </a>
       </div>
       <div class="col-md-3 nav-link text">
-        <div ng-if="authService.user">Welcome {{authService.user.username}} <a href="/api/user/logout">Logout</a></div>
+        <div ng-if="authService.user">Welcome {{authService.user.username}} <a href="/api/user/logout" target="_self">Logout</a></div>
         <div ng-if="!authService.user"><a ng-click="showLogin()">Login</a> / <a ng-click="showSignUp()">Signup</a></div>
       </div>
       <div class="col-md-1 nav-link text">
@@ -134,10 +134,10 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="external-sign-in">
-                  <a href="https://www.climbcation.com/auth/facebook?state={{getState()}}" class="fb connect">
+                  <a href='https://www.climbcation.com/auth/facebook?state={{getState()}}' class="fb connect" target="_self">
                     Sign In with Facebook
                   </a>
-                  <a ng-href="https://www.climbcation.com/auth/google_oauth2?state={{getState()}}">
+                  <a ng-href="https://www.climbcation.com/auth/google_oauth2?state={{getState()}}" target="_self">
                     <div class="google-btn">
                       <div class="google-icon-wrapper">
                         <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
@@ -194,10 +194,10 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="external-sign-in">
-                  <a href="https://www.climbcation.com/auth/facebook?state={{getState()}}" class="fb connect">
+                  <a href='https://www.climbcation.com/auth/facebook?state={{getState()}}' class="fb connect" target="_self">
                     Sign Up with Facebook
                   </a>
-                  <a href="https://www.climbcation.com/auth/google_oauth2?state={{getState()}}">
+                  <a href="https://www.climbcation.com/auth/google_oauth2?state={{getState()}}" target="_self">
                     <div class="google-btn">
                       <div class="google-icon-wrapper">
                         <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
