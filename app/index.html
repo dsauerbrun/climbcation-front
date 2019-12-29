@@ -64,7 +64,38 @@
 
   <toast></toast>
   <nav class="navbar home navbar-inverse" ng-controller="HeaderController">
-    <div class="container" style="width: 90%; margin: 0 auto">
+    <div class="visible-sm visible-xs">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" style="width: 80%; padding: 5px 15px; cursor: pointer;" href="home">
+          <img src="/images/climbcation-header-logo.png" style="width: inherit">
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li ng-if="authService.user"><a>Welcome {{authService.user.username}}</a></li>
+          <li role="separator" class="divider" ng-if="authService.user"></li>
+          <li role="presentation" ng-if="authService.user"><a role="menuitem" ng-click="resetPassword(authService.user.email)">Change Password</a></li>
+          <li role="presentation" ng-if="authService.user"><a role="menuitem" tabindex="-1" href="/profile">Change Username</a></li>
+          <li role="presentation" ng-if="authService.user"><a role="menuitem" tabindex="-1" href="/api/user/logout" target="_self">Logout</a></li>
+          <li ng-cloak ng-if="!authService.user"><a ng-click="showLogin()" style="display: inline">Login</a> / <a ng-click="showSignUp()" style="display: inline">Signup</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="new-location">Submit a New Location</a></li>
+          <li><a data-toggle="modal" data-target="#aboutModal">What is Climbcation?</a></li>
+          <li><a href="mailto:info@climbcation.com">Email me!</a></li>
+          <li><a href="https://www.instagram.com/climbcation/?ref=badge" class="contact-link"><img class="instagram-badge" src="//badges.instagram.com/static/images/ig-badge-24.png" alt="Instagram" /></a></li>
+          <li><a><div class="fb-like display-inline-block contact-link" data-href="https://www.facebook.com/climbcation" data-width="20" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
+          
+        </ul>
+        
+      </div>
+    </div>
+    <div class="container visible-md visible-lg" style="width: 90%; margin: 0 auto">
       <div class="col-md-2 nav-link text">
         <a href="new-location">Submit a New Location</a>
       </div>
@@ -191,7 +222,7 @@
                 <input class="form-control" type="password" ng-model="password" ng-keydown="$event.keyCode === 13 && signin()"/>
                 <div class="go-row">
                   <div>
-                    Don't have an account? <a href="" ng-click="signUpEnabled = true">Sign Up!</a>
+                    Don't have an account? <a href="" ng-click="showSignUp()">Sign Up!</a>
                   </div>
                   <div>
                     <div class="btn btn-primary pull-right" ng-click="signin()" ng-disabled="signingIn">
@@ -250,7 +281,7 @@
                 <input class="form-control" type="password" ng-model="password" ng-keydown="$event.keyCode === 13 && signUp()"/>
                 <div class="go-row">
                   <div>
-                    Already have an account? <a href="" ng-click="signUpEnabled = false">Sign In!</a>
+                    Already have an account? <a href="" ng-click="showLogin()">Sign In!</a>
                   </div>
                   <div>
                     <div class="btn btn-primary pull-right" ng-click="signUp()" ng-disabled="signingIn">

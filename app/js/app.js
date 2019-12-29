@@ -506,6 +506,14 @@ home.controller('AuthController', ['ngToast', 'authService','$rootScope', '$scop
 		return encodeURIComponent($location.url());
 	}
 
+	$scope.showSignUp = function() {
+		$rootScope.signUpEnabled = true;
+	}
+
+	$scope.showLogin = function() {
+		$rootScope.signUpEnabled = false;
+	}
+
 	$scope.signin = async function() {
 		$scope.signingIn = true;
 		this.authError = null;
