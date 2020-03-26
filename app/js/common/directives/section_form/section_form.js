@@ -12,7 +12,7 @@ sectionForm.directive('sectionform', function($http){
 });
 
 
-sectionForm.controller('SectionFormController', function($sce, $scope,$http,Upload,$location, helperService, $route, $timeout){
+sectionForm.controller('SectionFormController', function($sce, $scope,$http,Upload,$location, helperService, $route, $timeout, authService){
 	$scope.locationObj = {'submitter_email':'','name':'','country':'','continent':'','airport':'','price_floor':'','price_ceiling':'','months':{},'accommodations':{},'climbingTypes':{},'grade':{}, 'sections':[], closestAccommodation: ''};
 	var emptySection = {'previewOff':true, 'title':'','body':''};
 	$scope.existMessage= 'This location already exists. If you would like to edit it, please find it on the home page and edit it there';
@@ -26,6 +26,7 @@ sectionForm.controller('SectionFormController', function($sce, $scope,$http,Uplo
 	$scope.currentPage = 1;
 	$scope.progressBar = null;
 	$scope.locationObj.foodOptionDetails = {};
+	$scope.authService = authService;
 
 	$http.get('api/location/name/all').then(function(locationList){
 		locationNames = locationList.data;

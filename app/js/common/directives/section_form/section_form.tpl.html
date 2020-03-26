@@ -347,7 +347,7 @@
 									<h4 class="bottom-padding">You should see your location available in a day after an admin reviews the content</h4>
 									<img ng-src="/images/success-icon.png" />
 								</div>
-								<div class="row bottom-padding">
+								<div class="row bottom-padding" ng-show="!authService.user">
 									<label class="col-md-8 email-prompt">
 										Thanks for contributing! An admin might have questions, mind lending us your email?
 									</label>
