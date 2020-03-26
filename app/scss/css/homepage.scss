@@ -159,6 +159,12 @@
 	h4:first-child {
 		margin-top: 0;
 	}
+
+	.small-toggles-flex {
+		display: flex;
+		justify-content: space-between;
+		max-width: 300px;
+	}
 }
 
 .location-row:nth-of-type(odd) {

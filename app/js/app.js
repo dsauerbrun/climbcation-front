@@ -736,6 +736,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 	filter['accommodations'] = [];
 
 	filter['continents'] = [];
+	filter.rating = [];
 	filter['sort'] = [];
 	filter['search'] = '';
 	filter.solo_friendly = null;
@@ -939,6 +940,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 		filter['accommodations'] = [];
 
 		filter['continents'] = [];
+		filter.rating = [];
 		filter['sort'] = [];
 		filter['search'] = '';
 		filter['start_month'] = 1;
@@ -966,6 +968,9 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			filter[filterArray] = [];
 		}
 		else{
+			if (!filter[filterArray]) {
+				filter[filterArray] = [];
+			}
 			filter[filterArray].push(filterValue);
 		}
 		LocationsGetter.setFilterTimer(1);
