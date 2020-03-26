@@ -431,7 +431,7 @@
 							<div class="user">{{post.username}}</div>
 							<div class="time">{{moment().diff(moment(post.created_at), 'days') > 6 ? moment(post.created_at).format('MMM D, YYYY') : moment(post.created_at).fromNow()}}</div>
 						</div>
-						<p class="post-content"ng-bind-html="post.content | linky">
+						<p class="post-content preserve-line-breaks" ng-bind-html="post.content | linky">
 						</p>
 					</div>
 				</div>
