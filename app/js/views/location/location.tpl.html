@@ -405,10 +405,10 @@
 		<div class="row">
 			<div class="col-md-8">
 				<div class="well location-posts-container">
-					<div ng-show="!user" class="text-gray">
+					<div ng-show="!authService.user" class="text-gray">
 						Please <a ng-click="showLogin()" style="display: inline; cursor: pointer">Login</a> to post a comment. Don't have an account? <a ng-click="showSignUp()" style="display: inline; cursor: pointer">Signup</a> here
 					</div>
-					<div class="new-post-container" ng-show="user">
+					<div class="new-post-container" ng-show="authService.user">
 						<div class="alert alert-danger alert-dismissable" ng-show="commentError">
 						  <button type="button" class="close" ng-click="commentError = null">&times;</button>
 						  {{commentError}}

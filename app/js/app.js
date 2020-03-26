@@ -64,7 +64,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	$scope.posts = [];
 	$scope.newPost = null;
 	$scope.postingComment = false;
-	$scope.user;
+	$scope.authService = authService;
 
 	$scope.showSignUp = $rootScope.showSignUp;
 	
@@ -103,8 +103,6 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	};
 
 	init = async () => {
-		$scope.user = await authService.getUser();
-		console.log($scope.user);
 		$http.get('api/location/'+slug).then(
 			function(success){
 				if (success.status == 200) {
