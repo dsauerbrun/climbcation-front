@@ -403,16 +403,44 @@
 
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-8"><!--
-				<div id="comments" onrender="rendered()" class="fb-comments info-section" data-width="100%" ng-attr-data-href="http://www.climbcation.com/{{ locationData['name'] }}" data-numposts="5" ng-cloak></div>-->
-
-				<div id="comments" class="fb-comments" data-href="https://www.climbcation.com/location/{{locationData.name}}" data-numposts="5" data-width="100%"></div>
+			<div class="col-md-8">
+				<div class="well location-posts-container">
+					<div ng-show="!user" class="text-gray">
+						Please <a ng-click="showLogin()" style="display: inline; cursor: pointer">Login</a> to post a comment. Don't have an account? <a ng-click="showSignUp()" style="display: inline; cursor: pointer">Signup</a> here
+					</div>
+					<div class="new-post-container" ng-show="user">
+						<div class="alert alert-danger alert-dismissable" ng-show="commentError">
+						  <button type="button" class="close" ng-click="commentError = null">&times;</button>
+						  {{commentError}}
+						</div>
+						
+						<textarea 
+							ng-model="newPost" 
+							class="form-control"
+							placeholder="Write a comment..." 
+							ng-focus="(newPost && newPost.length) ? false : newPost = ''" ng-blur="newPost == '' ? newPost = null : false"
+						></textarea>
+						<div class="submit-buttons" ng-show="newPost != null">
+							<div class="btn btn-default" ng-click="newPost = null" ng-if="!postingComment">Cancel</div>
+							<div class="btn btn-climbcation" ng-click="submitComment()" ng-if="!postingComment">Submit</div>
+							<div ng-if="postingComment"><img src="/images/climbcation-loading.gif" /></div>
+						</div>
+					</div>
+					<div class="post" ng-repeat="post in posts">
+						<div class="post-title">
+							<div class="user">{{post.username}}</div>
+							<div class="time">{{moment().diff(moment(post.created_at), 'days') > 6 ? moment(post.created_at).format('MMM D, YYYY') : moment(post.created_at).fromNow()}}</div>
+						</div>
+						<p class="post-content"ng-bind-html="post.content | linky">
+						</p>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="info-container add-section">
 					<div class="text-center">
 						<h3 class="text-center">Is something about {{locationData.name}} missing?</h3>
-						<div class="btn btn-climbcation text-center" ng-click="addSection()">Add New Category</div>
+						<div class="btn btn-climbcation text-center" ng-click="addSection()">Add New Misc Category</div>
 					</div>
 				</div>
 			</div>

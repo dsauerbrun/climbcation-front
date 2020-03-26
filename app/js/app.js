@@ -49,7 +49,7 @@ home.filter('removeSpaces', function () {
 	};
 });
 
-home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', 'localStorageService', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter, localStorageService){
+home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', 'localStorageService', 'moment', 'authService', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter, localStorageService, moment, authService){
 	slug = $routeParams.slug;
 	var editMessage = 'Your edit has been submitted and will be approved by a moderator shortly!';
 	$scope.name = 'hello';
@@ -60,6 +60,14 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	$scope.editingFoodOptions = false;
 	$scope.helperService = helperService;
 	$rootScope.hoveredLocation = {location: null};
+	$scope.moment = moment;
+	$scope.posts = [];
+	$scope.newPost = null;
+	$scope.postingComment = false;
+	$scope.user;
+
+	$scope.showSignUp = $rootScope.showSignUp;
+	
 
 	$scope.getAirport = function(item, model, label, event) {
 		helperService.originAirportCode = item.iata;
@@ -93,34 +101,73 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 			scrollTop: $('#'+id.replace(/\s+/g, '')).offset().top
 		}, 1000);
 	};
-	$http.get('api/location/'+slug).then(
-		function(success){
-			if (success.status == 200) {
-				success = success.data;
-				$scope.longitude = success['location']['longitude'];
-				$scope.latitude = success['location']['latitude'];
-				$scope.sections = success['sections'];
-				$scope.tableOfContents = processTableContents($scope.sections);
-				$scope.locationData = success['location']
-				$scope.nearby = success['nearby'];
-				$scope.gmap = createMap('nearby-map',$scope.latitude,$scope.longitude,4, $rootScope);
-				addCloseLocations($scope.gmap, success['nearby'], $location, $rootScope);
-				addMarker($scope.gmap, $scope.latitude, $scope.longitude, success['location'], false);
 
-				populateEditables($scope.locationData);
+	init = async () => {
+		$scope.user = await authService.getUser();
+		console.log($scope.user);
+		$http.get('api/location/'+slug).then(
+			function(success){
+				if (success.status == 200) {
+					success = success.data;
+					$scope.longitude = success['location']['longitude'];
+					$scope.latitude = success['location']['latitude'];
+					$scope.sections = success['sections'];
+					$scope.tableOfContents = processTableContents($scope.sections);
+					$scope.locationData = success['location']
+					$scope.nearby = success['nearby'];
+					$scope.gmap = createMap('nearby-map',$scope.latitude,$scope.longitude,4, $rootScope);
+					addCloseLocations($scope.gmap, success['nearby'], $location, $rootScope);
+					addMarker($scope.gmap, $scope.latitude, $scope.longitude, success['location'], false);
 
-				LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
-					$timeout(function(){
-						setLocationHighchart(promiseQuotes, helperService.originAirportCode);
+					populateEditables($scope.locationData);
+
+					LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
+						$timeout(function(){
+							setLocationHighchart(promiseQuotes, helperService.originAirportCode);
+						});
 					});
-				});
-				$timeout(function() {FB.XFBML.parse()});
+					$timeout(function() {FB.XFBML.parse()});
+				}
 			}
-		}
-	);
+		);
+
+		$scope.posts = (await $http.get(`api/threads/${slug}?destination_category=true`)).data;
+	}
+
+	init();
+	
 
 	$scope.toggleNearby = function() {
 		$scope.nearbyShow = !$scope.nearbyShow;
+	}
+
+	$scope.submitComment = async function() {
+		if ($scope.postingComment) {
+			$scope.commentError = "You have already submitted a comment";
+			return;
+		}
+
+		if (!$scope.newPost || $scope.newPost.length < 3) {
+			$scope.commentError = "Your post must be at least 3 characters long";
+			return;
+		}
+
+		$scope.commentError = null;
+		$scope.postingComment = true;
+		try {
+			let threadId = $scope.posts && $scope.posts.length && $scope.posts[0].forum_thread_id;
+			threadId = threadId || slug;
+			let resp = await $http.post(`api/threads/${threadId}/posts`, {content: $scope.newPost});
+			$scope.posts = (await $http.get(`api/threads/${slug}?destination_category=true`)).data;
+			$scope.postingComment = false;
+			$scope.newPost = null;
+		} catch (err) {
+			console.log(err);
+			$scope.commentError = err.data;
+			$scope.postingComment = false;
+		}
+
+		$scope.$apply();
 	}
 
 	// EDITING FUNCTIONALITY BELOW
@@ -471,13 +518,12 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 
 home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', '$routeParams', 'ngToast', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService, $routeParams, ngToast){
 	$scope.authService = authService;
-	$scope.showSignUp = function() {
-		console.log('showing')
+	$rootScope.showSignUp = function() {
 		$('#loginModal').modal('show');
 		$rootScope.signUpEnabled = true;
 	}
 
-	$scope.showLogin = function() {
+	$rootScope.showLogin = function() {
 		$rootScope.signUpEnabled = false;
 		$('#loginModal').modal('show');
 	}
