@@ -9,6 +9,13 @@ label {
 	}
 }
 
+.divider {
+	height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+
 .map-info-window {
 	display: block;
 	background-color: #fff;

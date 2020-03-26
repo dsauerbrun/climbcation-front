@@ -164,12 +164,19 @@ gulp.task('webserver', ['indexHtml-dev', 'fonts-dev', 'images-dev'], function() 
   plugins.connect.server({
     root: paths.tmpFolder,
     port: 5000,
+    /*https: {
+      key: fs.readFileSync('/Users/danielsauerbrun/.localhost-ssl/localhost.key'),
+      cert: fs.readFileSync('/Users/danielsauerbrun/.localhost-ssl/localhost.crt'),
+      //ca: fs.readFileSync(''),
+      //passphrase: pass
+    },*/ 
     livereload: true,
     middleware: function(connect, o) {
       return [ (function() {
         var url = require('url');
         var proxy = require('proxy-middleware');
-        var options = url.parse('http://localhost:3000/api');
+        var options = url.parse('https://localhost:3000/api');
+        options.rejectUnauthorized = false;
         options.route = '/api';
         return proxy(options);
       })(), historyApiFallback() ];

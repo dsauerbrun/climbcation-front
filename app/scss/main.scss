@@ -5,6 +5,8 @@
 @import "css/header.scss";
 @import "css/locations.css.scss";
 @import "css/submit_location.scss";
+@import "css/user_management.scss";
+@import "css/external.scss";
 @import "./_mobile.scss";
 
 
@@ -12,4 +14,8 @@ body {
 	position: relative;
 	color: rgb(60,126,145);
 	font-family: "museo-sans-rounded", "Myriad Pro", Myriad, "Liberation Sans", "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
 }

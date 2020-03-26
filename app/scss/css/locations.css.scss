@@ -2,6 +2,49 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.location-posts-container {
+	.new-post-container {
+		margin-bottom: 10px;
+		textarea {
+			margin-bottom: 5px;
+			height: 100px;
+			&:placeholder-shown {
+				height: 30px;
+			}
+			&:focus {
+				height: 100px;
+			}
+		}
+		.submit-buttons {
+			text-align: right;
+			.btn {
+				margin-left: 5px;
+			}
+		}
+	}
+	.post {
+		padding: 10px;
+
+		&:nth-child(odd) {
+			background-color: #fff;
+		}
+
+		.post-title {
+			display: flex;
+			justify-content: space-between;
+
+			.user {
+				font-weight: 600;
+			}
+
+		}
+		.post-content {
+			padding-left: 30px;
+			font-size: 18px;
+		}
+	}
+}
+
 .location-info-container {
 	padding-bottom: 5em;
 

@@ -24,14 +24,6 @@
   <!-- End Google Tag Manager -->
   <!-- Begin Inspectlet Embed Code -->
   <script type="text/javascript" id="inspectletjs">
-  window._mfq = window._mfq || [];
-  (function() {
-    var mf = document.createElement("script");
-    mf.type = "text/javascript"; mf.async = true;
-    mf.src = "//cdn.mouseflow.com/projects/9ecec10c-3243-47d7-9ae9-959cb07c7cc4.js";
-    document.getElementsByTagName("head")[0].appendChild(mf);
-  })();
-
   window.__insp = window.__insp || [];
   __insp.push(['wid', 1730161422]);
   (function() {
@@ -46,6 +38,7 @@
   <script src="https://use.typekit.net/ndk2xbd.js"></script>
   <script>try{Typekit.load({ async: true });}catch(e){}</script>
   <link rel="stylesheet" href="<%= css %>">
+  <script data-ad-client="ca-pub-1079432560611175" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAicaxhV5yGvMKxT06tgOlKDgrWUhzjjGE&sensor=true"></script>
   <link rel="shortcut icon" href="/images/favicon.ico" />
   <base href="/">
@@ -71,8 +64,39 @@
   </script>
 
   <toast></toast>
-  <nav class="navbar home navbar-inverse">
-    <div class="container">
+  <nav class="navbar home navbar-inverse" ng-controller="HeaderController">
+    <div class="visible-sm visible-xs">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" style="width: 80%; padding: 5px 15px; cursor: pointer;" href="home">
+          <img src="/images/climbcation-header-logo.png" style="width: inherit">
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li ng-cloak ng-if="authService.user"><a>Welcome {{authService.user.username}}</a></li>
+          <li role="separator" class="divider" ng-if="authService.user"></li>
+          <li role="presentation" ng-if="authService.user"><a role="menuitem" ng-click="resetPassword(authService.user.email)">Change Password</a></li>
+          <li role="presentation" ng-if="authService.user"><a role="menuitem" tabindex="-1" href="/profile">Change Username</a></li>
+          <li role="presentation" ng-if="authService.user"><a role="menuitem" tabindex="-1" href="/api/user/logout" target="_self">Logout</a></li>
+          <li ng-cloak ng-if="!authService.user"><a ng-click="showLogin()" style="display: inline">Login</a> / <a ng-click="showSignUp()" style="display: inline">Signup</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="new-location">Submit a New Location</a></li>
+          <li><a data-toggle="modal" data-target="#aboutModal">What is Climbcation?</a></li>
+          <li><a href="mailto:info@climbcation.com">Email me!</a></li>
+          <li><a href="https://www.instagram.com/climbcation/?ref=badge" class="contact-link"><img class="instagram-badge" src="//badges.instagram.com/static/images/ig-badge-24.png" alt="Instagram" /></a></li>
+          <li><a><div class="fb-like display-inline-block contact-link" data-href="https://www.facebook.com/climbcation" data-width="20" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
+          
+        </ul>
+        
+      </div>
+    </div>
+    <div class="container visible-md visible-lg" style="width: 90%; margin: 0 auto">
       <div class="col-md-2 nav-link text">
         <a href="new-location">Submit a New Location</a>
       </div>
@@ -84,8 +108,22 @@
           <img src="/images/climbcation-header-logo.png">
         </a>
       </div>
-      <div class="col-md-4 nav-link text">
-        <a href="mailto:info@climbcation.com">Email me at info@climbcation.com</a>
+      <div class="col-md-3 nav-link text" ng-cloak>
+        <div class="dropdown" ng-cloak ng-if="authService.user">
+          <div class="dropdown-toggle" type="button" id="dropdownMenu12" data-toggle="dropdown" style="cursor: pointer;">
+            Welcome {{authService.user.username}}
+            <span class="caret"></span>
+          </div>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu12" style="left: 60%">
+            <li role="presentation"><a role="menuitem" style="color: inherit" ng-click="resetPassword(authService.user.email)">Change Password</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" style="color: inherit" href="/profile">Change Username</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" style="color: inherit" href="/api/user/logout" target="_self">Logout</a></li>
+          </ul>
+        </div>
+        <div ng-cloak ng-if="!authService.user"><a ng-click="showLogin()">Login</a> / <a ng-click="showSignUp()">Signup</a></div>
+      </div>
+      <div class="col-md-1 nav-link text">
+        <a href="mailto:info@climbcation.com">Email me!</a>
         <!-- instagram badge script -->
         <a href="https://www.instagram.com/climbcation/?ref=badge" class="contact-link"><img class="instagram-badge" src="//badges.instagram.com/static/images/ig-badge-24.png" alt="Instagram" /></a>
         <div class="fb-like display-inline-block contact-link" data-href="https://www.facebook.com/climbcation" data-width="20" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
@@ -138,6 +176,123 @@
           <p>
             I also want to give a thank you to Bryan Zavestoski for lending a hand on the UI. If you like the look and feel of Climbcation and you're looking for a UI/UX guy, you can find his information at <a href="http://zavzen.com/" target="_blank">www.zavzen.com</a>
           </p>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <div id="loginModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">{{ signUpEnabled ? 'Sign Up': 'Log In' }}</h4>
+        </div>
+        <div class="modal-body login-modal" ng-controller="AuthController">
+          <div class="alert alert-warning alert-dismissable" ng-if="authError">
+            <button type="button" class="close" ng-click="authError = null">&times;</button>
+            <div ng-bind-html="authError"></div>
+          </div>
+          <div ng-show="!signUpEnabled && !forgotPasswordEnabled">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="external-sign-in">
+                  <a href='https://www.climbcation.com/auth/facebook?state={{getState()}}' class="fb connect" target="_self">
+                    Sign In with Facebook
+                  </a>
+                  <a ng-href="https://www.climbcation.com/auth/google_oauth2?state={{getState()}}" target="_self">
+                    <div class="google-btn">
+                      <div class="google-icon-wrapper">
+                        <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                      </div>
+                      <p class="btn-text"><b>Sign In with Google</b></p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-md-12">
+                <label>Email</label>
+                <input class="form-control" type="text" ng-model="username" ng-keydown="$event.keyCode === 13 && signin()"/>
+                <div class="password-label">
+                  <label>Password</label>
+                  <a ng-click="forgotPasswordEnabled = true">Forgot password?</a>
+                </div>
+                <input class="form-control" type="password" ng-model="password" ng-keydown="$event.keyCode === 13 && signin()"/>
+                <div class="go-row">
+                  <div>
+                    Don't have an account? <a href="" ng-click="showSignUp()">Sign Up!</a>
+                  </div>
+                  <div>
+                    <div class="btn btn-primary pull-right" ng-click="signin()" ng-disabled="signingIn">
+                      Go!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-show="forgotPasswordEnabled">
+            <div class="row">
+              <div class="col-md-12">
+                <label>Email</label>
+                <input class="form-control" type="text" ng-model="username" ng-keydown="$event.keyCode === 13 && resetPassword()"/>
+
+                <div class="go-row">
+                  <div>
+                    <div class="btn btn-primary pull-right" ng-click="resetPassword()" ng-disabled="signingIn">
+                      Reset Password
+                    </div>
+                    <div class="btn btn-default pull-right" ng-click="forgotPasswordEnabled = false" ng-disabled="signingIn" style="margin-right:10px">
+                      Cancel
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-show="signUpEnabled && !forgotPasswordEnabled">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="external-sign-in">
+                  <a href='https://www.climbcation.com/auth/facebook?state={{getState()}}' class="fb connect" target="_self">
+                    Sign Up with Facebook
+                  </a>
+                  <a href="https://www.climbcation.com/auth/google_oauth2?state={{getState()}}" target="_self">
+                    <div class="google-btn">
+                      <div class="google-icon-wrapper">
+                        <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                      </div>
+                      <p class="btn-text"><b>Sign Up with Google</b></p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-md-12">
+                <label>Email</label>
+                <input class="form-control" type="text" ng-model="email" ng-keydown="$event.keyCode === 13 && signUp()"/>
+                <label>Username</label>
+                <input class="form-control" type="text" ng-model="username" ng-keydown="$event.keyCode === 13 && signUp()"/>
+                <label>Password</label>
+                <input class="form-control" type="password" ng-model="password" ng-keydown="$event.keyCode === 13 && signUp()"/>
+                <div class="go-row">
+                  <div>
+                    Already have an account? <a href="" ng-click="showLogin()">Sign In!</a>
+                  </div>
+                  <div>
+                    <div class="btn btn-primary pull-right" ng-click="signUp()" ng-disabled="signingIn">
+                      Go!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

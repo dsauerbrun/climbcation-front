@@ -1,4 +1,4 @@
-var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','filter-directives','location-list-item-directives','section-form-directive','ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
+var home = angular.module('app', ['ngToast','ngSanitize','trackScroll','infinite-scroll','ui.bootstrap','helperService','authService','filter-directives','location-list-item-directives','section-form-directive', 'UserManagement', 'ngRoute','facebookComments','ezfb','ui.bootstrap','duScroll','customFilters', 'ngAnimate', 'mgcrea.ngStrap', 'LocalStorageModule', 'angularMoment']);
 
 home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider', function($routeProvider, $locationProvider, localStorageServiceProvider) {
 	//localStorageServiceProvider.setStorageType('sessionStorage');
@@ -20,6 +20,12 @@ home.config(['$routeProvider', '$locationProvider', 'localStorageServiceProvider
 	})
 	.when('/home', {
 		templateUrl: 'views/home/home.tpl.html',
+	})
+	.when('/resetpass', {
+		templateUrl: 'views/user_management/reset_password.tpl.html',
+	})
+	.when('/profile', {
+		templateUrl: 'views/user_management/profile.tpl.html',
 	})
 	.when('/new-location', {
 		templateUrl: 'views/new_location/submitpage.tpl.html',
@@ -43,7 +49,7 @@ home.filter('removeSpaces', function () {
 	};
 });
 
-home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', 'localStorageService', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter, localStorageService){
+home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'helperService', '$http', '$routeParams', '$location', '$anchorScroll', '$timeout', 'LocationsGetter', 'localStorageService', 'moment', 'authService', function(ngToast,$scope,$rootScope,helperService,$http,$routeParams,$location,$anchorScroll,$timeout, LocationsGetter, localStorageService, moment, authService){
 	slug = $routeParams.slug;
 	var editMessage = 'Your edit has been submitted and will be approved by a moderator shortly!';
 	$scope.name = 'hello';
@@ -54,6 +60,14 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	$scope.editingFoodOptions = false;
 	$scope.helperService = helperService;
 	$rootScope.hoveredLocation = {location: null};
+	$scope.moment = moment;
+	$scope.posts = [];
+	$scope.newPost = null;
+	$scope.postingComment = false;
+	$scope.authService = authService;
+
+	$scope.showSignUp = $rootScope.showSignUp;
+	
 
 	$scope.getAirport = function(item, model, label, event) {
 		helperService.originAirportCode = item.iata;
@@ -87,34 +101,71 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 			scrollTop: $('#'+id.replace(/\s+/g, '')).offset().top
 		}, 1000);
 	};
-	$http.get('api/location/'+slug).then(
-		function(success){
-			if (success.status == 200) {
-				success = success.data;
-				$scope.longitude = success['location']['longitude'];
-				$scope.latitude = success['location']['latitude'];
-				$scope.sections = success['sections'];
-				$scope.tableOfContents = processTableContents($scope.sections);
-				$scope.locationData = success['location']
-				$scope.nearby = success['nearby'];
-				$scope.gmap = createMap('nearby-map',$scope.latitude,$scope.longitude,4, $rootScope);
-				addCloseLocations($scope.gmap, success['nearby'], $location, $rootScope);
-				addMarker($scope.gmap, $scope.latitude, $scope.longitude, success['location'], false);
 
-				populateEditables($scope.locationData);
+	init = async () => {
+		$http.get('api/location/'+slug).then(
+			function(success){
+				if (success.status == 200) {
+					success = success.data;
+					$scope.longitude = success['location']['longitude'];
+					$scope.latitude = success['location']['latitude'];
+					$scope.sections = success['sections'];
+					$scope.tableOfContents = processTableContents($scope.sections);
+					$scope.locationData = success['location']
+					$scope.nearby = success['nearby'];
+					$scope.gmap = createMap('nearby-map',$scope.latitude,$scope.longitude,4, $rootScope);
+					addCloseLocations($scope.gmap, success['nearby'], $location, $rootScope);
+					addMarker($scope.gmap, $scope.latitude, $scope.longitude, success['location'], false);
 
-				LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
-					$timeout(function(){
-						setLocationHighchart(promiseQuotes, helperService.originAirportCode);
+					populateEditables($scope.locationData);
+
+					LocationsGetter.getFlightQuotes([$scope.locationData.slug], helperService.originAirportCode).then(function(promiseQuotes) {
+						$timeout(function(){
+							setLocationHighchart(promiseQuotes, helperService.originAirportCode);
+						});
 					});
-				});
-				$timeout(function() {FB.XFBML.parse()});
+					$timeout(function() {FB.XFBML.parse()});
+				}
 			}
-		}
-	);
+		);
+
+		$scope.posts = (await $http.get(`api/threads/${slug}?destination_category=true`)).data;
+	}
+
+	init();
+	
 
 	$scope.toggleNearby = function() {
 		$scope.nearbyShow = !$scope.nearbyShow;
+	}
+
+	$scope.submitComment = async function() {
+		if ($scope.postingComment) {
+			$scope.commentError = "You have already submitted a comment";
+			return;
+		}
+
+		if (!$scope.newPost || $scope.newPost.length < 3) {
+			$scope.commentError = "Your post must be at least 3 characters long";
+			return;
+		}
+
+		$scope.commentError = null;
+		$scope.postingComment = true;
+		try {
+			let threadId = $scope.posts && $scope.posts.length && $scope.posts[0].forum_thread_id;
+			threadId = threadId || slug;
+			let resp = await $http.post(`api/threads/${threadId}/posts`, {content: $scope.newPost});
+			$scope.posts = (await $http.get(`api/threads/${slug}?destination_category=true`)).data;
+			$scope.postingComment = false;
+			$scope.newPost = null;
+		} catch (err) {
+			console.log(err);
+			$scope.commentError = err.data;
+			$scope.postingComment = false;
+		}
+
+		$scope.$apply();
 	}
 
 	// EDITING FUNCTIONALITY BELOW
@@ -325,7 +376,7 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 
 }]);
 
-home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function($rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+home.controller('LocationsController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
 	var locations = this;
 	$scope.locationData = [];
 	$scope.LocationsGetter = LocationsGetter;
@@ -459,8 +510,146 @@ home.controller('LocationsController', ['$rootScope', '$scope', '$timeout', 'Loc
 				})
 			}
 		}
+	};
+
+}]);
+
+home.controller('HeaderController', ['authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', '$routeParams', 'ngToast', function(authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService, $routeParams, ngToast){
+	$scope.authService = authService;
+	$rootScope.showSignUp = function() {
+		$('#loginModal').modal('show');
+		$rootScope.signUpEnabled = true;
 	}
 
+	$rootScope.showLogin = function() {
+		$rootScope.signUpEnabled = false;
+		$('#loginModal').modal('show');
+	}
+
+	$scope.resetPassword = async function(email) {
+		try {
+			await authService.resetPassword(email);
+			ngToast.create({
+				additionalClasses: 'climbcation-toast',
+				content: 'A link to reset your password has been sent to your email!'
+			});
+		} catch (err) {
+		}
+		$scope.$apply();
+	}
+}]);
+
+home.controller('AuthController', ['ngToast', 'authService','$rootScope', '$scope', '$timeout', 'LocationsGetter', '$location', '$document', '$http', 'helperService', function(ngToast, authService, $rootScope, $scope, $timeout,LocationsGetter, $location, $document, $http, helperService){
+	$scope.username = null;
+	$scope.password = null;
+	$rootScope.signUpEnabled = false;
+	$scope.authError = null;
+	$scope.signingIn = false;
+
+	$scope.getState = function() {
+		return encodeURIComponent($location.url());
+	}
+
+	$scope.showSignUp = function() {
+		$rootScope.signUpEnabled = true;
+	}
+
+	$scope.showLogin = function() {
+		$rootScope.signUpEnabled = false;
+	}
+
+	$scope.signin = async function() {
+		$scope.signingIn = true;
+		this.authError = null;
+		try {
+			await authService.login($scope.username, $scope.password);
+			$scope.signingIn = false;
+			$('#loginModal').modal('hide');
+			$scope.$apply();
+		} catch (err) {
+			if (err.status == 400) {
+				$scope.authError = 'Invalid Username or Password';
+				$scope.signingIn = false;
+				$scope.$apply();
+			} else {
+				$scope.authError = `Unknown Error: ${err.data}`;
+			}
+		}
+		
+	}
+
+	$scope.signUpValid = function() {
+		function emailIsValid (email) {
+		  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+		}
+
+		let invalidString = '';
+		if (!$scope.password || $scope.password.length < 6) {
+			invalidString += `Password must be at least 6 characters <br />`;
+		}
+		if (!$scope.username || $scope.username.length < 3) {
+			invalidString += `Username must be at least 3 characters <br />`;
+		}
+
+		if (!$scope.email || !emailIsValid($scope.email)) {
+			invalidString += `Must enter a valid email <br />`;
+		}
+
+		if (invalidString == '') {
+			return true;
+		} else {
+			return invalidString;
+		}
+	}
+
+	$scope.signUp = async function() {
+		$scope.authError = null;
+		$scope.signingIn = true;
+		let signUpValid = $scope.signUpValid();
+		if (signUpValid === true) {
+			try {
+				await authService.signUp($scope.email, $scope.username, $scope.password);
+				ngToast.create({
+					additionalClasses: 'climbcation-toast',
+					content: 'A link to verify your account has been sent to your email!'
+				});
+				$('#loginModal').modal('hide');
+			} catch (err) {
+				$scope.authError = err;
+			}
+			
+			$scope.signingIn = false;
+		} else {
+			// form not valid
+			$scope.authError = signUpValid;
+			$scope.signingIn = false;
+		}
+		
+		$scope.$apply();
+	}
+
+	$scope.resetPassword = async function() {
+		$scope.authError = null;
+		$scope.signingIn = true;
+		try {
+			await authService.resetPassword($scope.username);
+			ngToast.create({
+				additionalClasses: 'climbcation-toast',
+				content: 'A link to reset your password has been sent to your email!'
+			});
+			$('#loginModal').modal('hide');
+		} catch (err) {
+			$scope.authError = err;
+		}
+		$scope.signingIn = false;
+		$scope.$apply();
+	}
+
+	async function init() {
+		await authService.getUser();
+	}
+
+	init();
 }]);
 
 home.directive('mapFilter', function() {
