@@ -430,8 +430,8 @@
 							ng-focus="(newPost && newPost.length) ? false : newPost = ''" ng-blur="newPost == '' ? newPost = null : false"
 						></textarea>
 						<div class="submit-buttons" ng-show="newPost != null">
-							<div class="btn btn-default" ng-click="newPost = null" ng-if="!postingComment">Cancel</div>
-							<div class="btn btn-climbcation" ng-click="submitComment()" ng-if="!postingComment">Submit</div>
+							<div class="btn btn-default" ng-click="newPost = null" ng-show="!postingComment">Cancel</div>
+							<div class="btn btn-climbcation" ng-click="submitComment()" ng-show="!postingComment">Submit</div>
 							<div ng-if="postingComment"><img src="/images/climbcation-loading.gif" /></div>
 						</div>
 					</div>
