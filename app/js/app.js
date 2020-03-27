@@ -168,6 +168,32 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 		$scope.$apply();
 	}
 
+	$scope.editComment = async function(post) {
+		if ($scope.postingComment) {
+			post.commentError = "You have already submitted a comment";
+			return;
+		}
+
+		if (!post.editedContent || post.editedContent.length < 3) {
+			post.commentError = "Your post must be at least 3 characters long";
+			return;
+		}
+
+		post.commentError = null;
+		$scope.postingComment = true;
+		try {
+			let resp = await $http.post(`api/posts/${post.id}`, {newContent: post.editedContent});
+			$scope.posts = (await $http.get(`api/threads/${slug}?destination_category=true`)).data;
+			$scope.postingComment = false;
+		} catch (err) {
+			console.log(err);
+			post.commentError = err.data;
+			$scope.postingComment = false;
+		}
+
+		$scope.$apply();
+	}
+
 	// EDITING FUNCTIONALITY BELOW
 
 	$scope.locationObj = {

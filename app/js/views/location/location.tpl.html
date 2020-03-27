@@ -440,8 +440,22 @@
 							<div class="user">{{post.username}}</div>
 							<div class="time">{{moment().diff(moment(post.created_at), 'days') > 6 ? moment(post.created_at).format('MMM D, YYYY') : moment(post.created_at).fromNow()}}</div>
 						</div>
-						<p class="post-content preserve-line-breaks" ng-bind-html="post.content | linky">
+						<p class="post-content preserve-line-breaks" ng-bind-html="post.content | linky" ng-show="!post.editing">
 						</p>
+						<div class="alert alert-danger alert-dismissable" ng-show="post.editing && post.commentError">
+						  <button type="button" class="close" ng-click="post.commentError = null">&times;</button>
+						  {{post.commentError}}
+						</div>
+						<textarea 
+							ng-model="post.editedContent" 
+							class="form-control"
+							ng-show="post.editing"
+						></textarea>
+						<div class="post-actions" ng-show="authService.user && post.user_id == authService.user.user_id">
+							<a ng-click="post.editing = true; post.editedContent = post.content" ng-show="!post.editing">Edit</a>
+							<a ng-click="post.editing = false" ng-show="post.editing">Cancel</a>
+							<span class="btn btn-climbcation" ng-click="editComment(post)" ng-show="post.editing">Submit</a>
+						</div>
 					</div>
 				</div>
 			</div>
