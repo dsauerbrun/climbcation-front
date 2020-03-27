@@ -9,6 +9,16 @@ locationListItemDir.directive('location', function(){
 });
 locationListItemDir.controller('LocationListItemController',function($scope,$element,LocationsGetter, helperService){
 	$scope.helperService = helperService;
+
+	$scope.noCarNeeded = function() {
+		console.log($scope.locationData)
+		if ($scope.locationData.location.walking_distance && ($scope.locationData.location.closest_accommodation == '<1 mile' || $scope.locationData.location.closest_accommodation == '1-2 miles')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	$($element).mouseenter(function(){
 		for (let key in LocationsGetter.maps) {
 			let currentMap = LocationsGetter.maps[key];

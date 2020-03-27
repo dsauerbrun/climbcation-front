@@ -393,6 +393,14 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 		LocationsGetter.setFilterTimer(0);
 	}
 
+	$scope.noCarNeeded = function() {
+		if ($scope.locationData.location.walking_distance && ($scope.locationData.location.closest_accommodation == '<1 mile' || $scope.locationData.location.closest_accommodation == '1-2 miles')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	$scope.toggleLargeMap = function () {
 		$scope.largeMapEnabled = !$scope.largeMapEnabled;
 		LocationsGetter.reloadMapMarkers();
@@ -740,6 +748,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 	filter['sort'] = [];
 	filter['search'] = '';
 	filter.solo_friendly = null;
+	filter.no_car = null;
 	filter.start_month = 1;
 	filter.end_month = 12;
 
@@ -779,6 +788,10 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			filterList.push({title: climbingType, id: climbingType, type: 'climbing_types'});
 		});
 
+		filter.rating && filter.rating.forEach(function(rating) {
+			filterList.push({title: rating == 1 ? '1 Star' : `${rating} stars`, id: rating, type: 'rating'});
+		})
+
 		if (filter.grades) {
 			for (let grade in filter.grades) {
 				let climbingType = _.findKey(filterKeys.grades, function(type) {return type.type.id == grade});
@@ -803,11 +816,16 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			filterList.push({title: `Solo Traveler Friendly`, id: 'solo_friendly', type: 'solo_friendly'});
 		}
 
+		if (filter.no_car && filter.no_car === true) {
+			filterList.push({title: `No Car Needed`, id: 'no_car', type: 'no_car'});
+		}
+
 		LocationsGetter.appliedFilters = filterList;
 		$rootScope.$apply();
 	}
 
 	LocationsGetter.removeAppliedFilter = function(appliedFilter) {
+		//debugger;
 		if (appliedFilter.type == 'accommodations' || appliedFilter.type == 'climbing_types') {
 			LocationsGetter.filter[appliedFilter.type] = LocationsGetter.filter[appliedFilter.type].filter(x => x != appliedFilter.id);
 		} else if (appliedFilter.type == 'grades') {
@@ -821,6 +839,10 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 			LocationsGetter.filter.start_month_name = 'January';
 		} else if (appliedFilter.type == 'solo_friendly') {
 			LocationsGetter.filter.solo_friendly = null;
+		} else if (appliedFilter.type == 'no_car') {
+			LocationsGetter.filter.no_car = null;
+		} else if (appliedFilter.type == 'rating') {
+			LocationsGetter.filter[appliedFilter.type] = LocationsGetter.filter[appliedFilter.type].filter(x => x != appliedFilter.id);
 		}
 
 		let appliedFilterIndex = LocationsGetter.appliedFilters.findIndex(x => x.id == appliedFilter.id && x.type == appliedFilter.type);
@@ -946,6 +968,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 		filter['start_month'] = 1;
 		filter['end_month'] = 12;
 		filter.solo_friendly = null;
+		filter.no_car = null;
 		filter.start_month_name = monthNames[filter.start_month - 1];
 		filter.end_month_name = monthNames[filter.end_month - 1];;
 		this.mapFilter['northeast'] = {};
@@ -1117,7 +1140,6 @@ function createMap(mapId,latitude,longitude,zoom, $rootScope){
 function addCloseLocations(map, locationMap, $location, $rootScope){
 	$.each(locationMap,function(){
 		let clickFunc = function(e) {
-			console.log('here i am')
 			$location.path('/location/' + e.details.location.slug);
 			$rootScope.$apply();
 		}
