@@ -825,7 +825,6 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 	}
 
 	LocationsGetter.removeAppliedFilter = function(appliedFilter) {
-		//debugger;
 		if (appliedFilter.type == 'accommodations' || appliedFilter.type == 'climbing_types') {
 			LocationsGetter.filter[appliedFilter.type] = LocationsGetter.filter[appliedFilter.type].filter(x => x != appliedFilter.id);
 		} else if (appliedFilter.type == 'grades') {
@@ -1067,7 +1066,7 @@ home.service('LocationsGetter', ['$http', '$timeout', '$rootScope', 'localStorag
 		LocationsGetter.loading = true;
 		return $http.post('/api/filter_locations', {filter: filter, mapFilter: LocationsGetter.mapFilter, page: LocationsGetter.pageNum}).then(function(response) {
 			LocationsGetter.loading = false;
-			if (response.data.unpaginated.length != LocationsGetter.unpaginatedLocations.length && response.data.unpaginated.length != 0) {
+			if (JSON.stringify(response.data.unpaginated.map(x => x.id).sort()) != JSON.stringify(LocationsGetter.unpaginatedLocations.map(x => x.id).sort()) && response.data.unpaginated.length != 0) {
 				LocationsGetter.unpaginatedLocations = response.data.unpaginated;
 			}
 			var promiseLocations = response.data.paginated;
