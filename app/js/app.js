@@ -67,6 +67,14 @@ home.controller('LocationPageController',['ngToast', '$scope', '$rootScope', 'he
 	$scope.authService = authService;
 
 	$scope.showSignUp = $rootScope.showSignUp;
+
+	$scope.noCarNeeded = function() {
+		if ($scope.locationData.location.walking_distance && ($scope.locationData.location.closest_accommodation == '<1 mile' || $scope.locationData.location.closest_accommodation == '1-2 miles')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 
 	$scope.getAirport = function(item, model, label, event) {
@@ -417,14 +425,6 @@ home.controller('LocationsController', ['authService','$rootScope', '$scope', '$
 		LocationsGetter.locations = [];
 		LocationsGetter.clearFilters();
 		LocationsGetter.setFilterTimer(0);
-	}
-
-	$scope.noCarNeeded = function() {
-		if ($scope.locationData.location.walking_distance && ($scope.locationData.location.closest_accommodation == '<1 mile' || $scope.locationData.location.closest_accommodation == '1-2 miles')) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	$scope.toggleLargeMap = function () {
