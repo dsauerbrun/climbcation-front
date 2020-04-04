@@ -4,6 +4,7 @@ exports.javascript = [
   'node_modules/jquery-visible/jquery.visible.min.js',
   'node_modules/bootstrap3/dist/js/bootstrap.min.js',
   'node_modules/angular/angular.min.js',
+  'node_modules/cookieconsent/build/cookieconsent.min.js',
 	'vendor/ng-file-upload/ng-file-upload.min.js',
 	'node_modules/angular-sanitize/angular-sanitize.min.js',
   'vendor/angular-route/angular-route.min.js',
@@ -27,7 +28,8 @@ exports.css = [
   'node_modules/bootstrap3/dist/css/bootstrap.min.css',
 	'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css',
 	'node_modules/ng-toast/dist/ngToast.min.css',
-	'vendor/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css'
+	'vendor/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css',
+  'node_modules/cookieconsent/build/cookieconsent.min.css'
 
 ];
 

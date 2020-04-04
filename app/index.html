@@ -309,5 +309,52 @@
   ga('send', 'pageview');
 
 </script>
+
+<script>
+   window.cookieconsent.initialise({
+    enabled: true,
+    container: null,
+    position: 'bottom-right',
+    palette:{
+     popup: {background: "#fff"},
+     button: {background: "#aa0000"},
+    },
+    revokable:true,
+    onStatusChange: function(status) {
+     console.log(this.hasConsented() ?
+      'enable cookies' : 'disable cookies');
+    },
+    law: {
+     regionalLaw: true,
+    },
+    theme: 'block',
+    location: {
+      timeout: 5000,
+      services: [ 'ipinfo' ],
+      serviceDefinitions: {
+        ipinfo: function() {
+          return {
+            // This service responds with JSON, so we simply need to parse it and return the country code
+            url: '//ipinfo.io?token=3f8c28aed01c85',
+            headers: ['Accept: application/json'],
+            callback: function(done, response) {
+              try {
+                var json = JSON.parse(response);
+                return json.error
+                  ? toError(json)
+                  : {
+                      code: json.country,
+                    };
+              } catch (err) {
+                return toError({error: 'Invalid response (' + err + ')'});
+              }
+            }
+          };
+        },
+       
+      }
+    },
+   });
+  </script>
 </body>
 </html>
