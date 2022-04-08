@@ -61,7 +61,7 @@
     "dice-coefficient": "^1.0.0",
     "gmaps": "^0.4.24",
     "jquery-visible": "^1.2.0",
-    "moment": "^2.22.1",
+    "moment": "^2.29.2",
     "ng-toast": "^2.0.0",
     "promise-polyfill": "^6.0.2",
     "requirejs": "^2.2.0",
